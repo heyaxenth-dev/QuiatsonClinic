@@ -54,9 +54,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         if (password_verify($password, $row['password'])) {
+            $_SESSION['admin_auth'] = true;
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['username'] = $row['username'];
             $_SESSION['role'] = $row['role'];
+            $_SESSION['logged'] = "Welcome back, " . $row['username'];
+            $_SESSION['logged_icon'] = "success";
             header("Location: admin/home.php"); // Redirect to the dashboard or home page
             exit;
         } else {

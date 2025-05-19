@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
 
     // Define urgent symptoms
     $urgent_symptoms = [
-        "Chest Pain (Moderate to severe)",
+        "Chest Pain",
         "Abdominal Pain",
         "Shortness of Breath",
         "Toxic Looking"

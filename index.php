@@ -284,7 +284,8 @@ session_start();
                             <label for="time_slot">Time Slot</label>
                             <select name="time_slot" id="time_slot" class="form-select" required>
                                 <option value="">Select Time Slot</option>
-                                <option value="8:30 AM - 9:30 AM">8:30 AM - 9:30 AM</option>
+                                <option value="8:30 AM - 9:30 AM">8:30 AM - 9:30 AM <span class="text-danger">Fully
+                                        Booked</span></option>
                                 <option value="9:30 AM - 10:30 AM">9:30 AM - 10:30 AM</option>
                                 <option value="10:30 AM - 11:30 AM">10:30 AM - 11:30 AM</option>
                                 <option value="11:30 AM - 12:30 PM">11:30 AM - 12:30 PM</option>
@@ -350,8 +351,8 @@ session_start();
                             </div>
                             <div class="col-md-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="chestPain" value="Chest Pain (Moderate to
-                                        severe)" required>
+                                    <input class="form-check-input" type="radio" name="symptom" id="chestPain"
+                                        value="Chest Pain" required>
                                     <label class="form-check-label" for="chestPain">Chest Pain (Moderate to
                                         severe)</label>
                                 </div>
@@ -375,7 +376,7 @@ session_start();
                             <div class="col-md-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="symptom" id="abdominalPain"
-                                        value="Abdominal Pain (Moderate to severe)" required>
+                                        value="Abdominal Pain" required>
                                     <label class="form-check-label" for="abdominalPain">Abdominal Pain (Moderate to
                                         severe)</label>
                                 </div>
