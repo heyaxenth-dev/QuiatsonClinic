@@ -1,6 +1,6 @@
 <?php 
-// include 'authentication.php';
-// checkLogin();
+include 'authentication.php';
+checkLogin();
 include '../database/conn.php';
 include './utils/header.php';
 include './utils/sidebar.php';

@@ -4,12 +4,12 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Starter Page - Medilab Bootstrap Template</title>
+    <title>Sign Up - Quiatson Clinic</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
 
     <!-- Favicons -->
-    <link href="assets/img/favicon.png" rel="icon" />
+    <link href="assets/img/favicon.ico" rel="icon" />
     <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon" />
 
     <!-- Fonts -->
@@ -55,7 +55,7 @@
                 <a href="index.html" class="logo d-flex align-items-center me-auto">
                     <!-- Uncomment the line below if you also wish to use an image logo -->
                     <!-- <img src="assets/img/logo.png" alt=""> -->
-                    <h1 class="sitename">Medilab</h1>
+                    <h1 class="sitename">Quiatson Clinic</h1>
                 </a>
 
                 <nav id="navmenu" class="navmenu">
@@ -64,31 +64,9 @@
                             <a href="#hero">Home<br /></a>
                         </li>
                         <li><a href="#about">About</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#departments">Departments</a></li>
                         <li><a href="#doctors">Doctors</a></li>
-                        <li class="dropdown">
-                            <a href="#"><span>Dropdown</span>
-                                <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                            <ul>
-                                <li><a href="#">Dropdown 1</a></li>
-                                <li class="dropdown">
-                                    <a href="#"><span>Deep Dropdown</span>
-                                        <i class="bi bi-chevron-down toggle-dropdown"></i></a>
-                                    <ul>
-                                        <li><a href="#">Deep Dropdown 1</a></li>
-                                        <li><a href="#">Deep Dropdown 2</a></li>
-                                        <li><a href="#">Deep Dropdown 3</a></li>
-                                        <li><a href="#">Deep Dropdown 4</a></li>
-                                        <li><a href="#">Deep Dropdown 5</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Dropdown 2</a></li>
-                                <li><a href="#">Dropdown 3</a></li>
-                                <li><a href="#">Dropdown 4</a></li>
-                            </ul>
-                        </li>
                         <li><a href="#contact">Contact</a></li>
+                        <li><a href="login">Admin</a></li>
                     </ul>
                     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
                 </nav>
@@ -105,7 +83,7 @@
                 <div class="container">
                     <div class="row d-flex justify-content-center text-center">
                         <div class="col-lg-8">
-                            <h1>Starter Page</h1>
+                            <h1>Patient's Sign Up Form</h1>
                             <p class="mb-0">
                                 Odio et unde deleniti. Deserunt numquam exercitationem.
                                 Officiis quo odio sint voluptas consequatur ut a odio
@@ -116,42 +94,131 @@
                     </div>
                 </div>
             </div>
-            <nav class="breadcrumbs">
-                <div class="container">
-                    <ol>
-                        <li><a href="index.html">Home</a></li>
-                        <li class="current">Starter Page</li>
-                    </ol>
-                </div>
-            </nav>
         </div>
         <!-- End Page Title -->
 
         <!-- Starter Section Section -->
         <section id="starter-section" class="starter-section section">
             <!-- Section Title -->
-            <div class="container section-title" data-aos="fade-up">
+            <!-- <div class="container section-title" data-aos="fade-up">
                 <h2>Starter Section</h2>
                 <p>
                     Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
                     consectetur velit
                 </p>
-            </div>
+            </div> -->
             <!-- End Section Title -->
 
-            <div class="container" data-aos="fade-up">
-                <p>Use this page as a starter for your own custom pages.</p>
+            <div class="container d-flex justify-content-center align-items-center" data-aos="fade-up">
+                <div class="card">
+                    <div class="card-body m-4">
+                        <form action="signup.php" method="POST">
+                            <div class="row g-3">
+                                <!-- First Name -->
+                                <div class="col-md-6">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="firstName" name="firstName" required />
+                                </div>
+                                <!-- Last Name -->
+                                <div class="col-md-6">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="lastName" name="lastName" required />
+                                </div>
+                                <!-- Email -->
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required />
+                                </div>
+                                <!-- Phone -->
+                                <div class="col-md-6">
+                                    <label for="phone" class="form-label">Mobile Number</label>
+                                    <input type="tel" class="form-control" id="phone" name="phone" required />
+                                </div>
+                                <!-- Date of Birth -->
+                                <div class="col-md-6">
+                                    <label for="dob" class="form-label">Date of Birth</label>
+                                    <input type="date" class="form-control" id="dob" name="dob" required />
+                                </div>
+                                <!-- Sex -->
+                                <div class="col-md-6">
+                                    <label for="gender" class="form-label">Sex</label>
+                                    <select id="gender" name="gender" class="form-select" required>
+                                        <option value="">Select...</option>
+                                        <option>Male</option>
+                                        <option>Female</option>
+                                    </select>
+                                </div>
+
+                                <!-- Password -->
+                                <div class="col-md-6">
+                                    <label for="password" class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="password" name="password"
+                                            required />
+                                        <a href="#" class="input-group-text toggle-password" data-target="password">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Confirm Password -->
+                                <div class="col-md-6">
+                                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="confirmPassword"
+                                            name="confirmPassword" required />
+                                        <a href="#" class="input-group-text toggle-password"
+                                            data-target="confirmPassword">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Address -->
+                                <div class="col-12">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea class="form-control" id="address" name="address" rows="2"
+                                        required></textarea>
+                                </div>
+                                <!-- Submit Button -->
+                                <div class="col-12 text-center mt-4">
+                                    <button type="submit" class="btn btn-primary px-5">Sign Up</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
+
+            <script>
+            document.querySelectorAll('.toggle-password').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault(); // prevent page jump from #
+                    const targetId = this.getAttribute('data-target');
+                    const input = document.getElementById(targetId);
+                    const icon = this.querySelector('i');
+
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.replace('bi-eye', 'bi-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.replace('bi-eye-slash', 'bi-eye');
+                    }
+                });
+            });
+            </script>
+
+
         </section>
         <!-- /Starter Section Section -->
     </main>
-
     <footer id="footer" class="footer light-background">
         <div class="container footer-top">
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6 footer-about">
                     <a href="index.html" class="logo d-flex align-items-center">
-                        <span class="sitename">Medilab</span>
+                        <span class="sitename">Quiatson Clinic</span>
                     </a>
                     <div class="footer-contact pt-3">
                         <p>A108 Adam Street</p>
@@ -218,14 +285,10 @@
         <div class="container copyright text-center mt-4">
             <p>
                 © <span>Copyright</span>
-                <strong class="px-1 sitename">Medilab</strong>
+                <strong class="px-1 sitename">Quiatson Clinic</strong>
                 <span>All Rights Reserved</span>
             </p>
             <div class="credits">
-                <!-- All the links in the footer should remain intact. -->
-                <!-- You can delete the links only if you've purchased the pro version. -->
-                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
                 Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
             </div>
         </div>
