@@ -71,7 +71,7 @@ session_start();
                         <li><a href="#about">About</a></li>
                         <li><a href="#doctors">Doctors</a></li>
                         <li><a href="#contact">Contact</a></li>
-                        <li><a href="login">Log in</a></li>
+                        <li><a href="login">Admin</a></li>
                     </ul>
                     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
                 </nav>
@@ -152,248 +152,56 @@ session_start();
         </section>
         <!-- /Stats Section -->
 
-        <!-- Appointment Section -->
+        <!-- Client Section -->
         <section id="appointment" class="appointment section">
-            <!-- Section Title -->
-            <div class="container section-title" data-aos="fade-up">
-                <h2>Appointment</h2>
-                <p>
-                    Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
-                    consectetur velit
-                </p>
-            </div>
-            <!-- End Section Title -->
-
-
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
-                <form action="forms/appointment.php" method="POST" role="form">
-                    <h5 class="mb-3">Patient's Information</h5>
-
-                    <div class="row">
-                        <!-- Last Name -->
-                        <div class="col-md-4 form-group">
-                            <label for="lastname">Last Name</label>
-                            <input type="text" name="lastname" id="lastname" class="form-control" required />
-                        </div>
-
-                        <!-- First Name -->
-                        <div class="col-md-4 form-group">
-                            <label for="firstname">First Name</label>
-                            <input type="text" name="firstname" id="firstname" class="form-control" required />
-                        </div>
-
-                        <!-- Middle Initial -->
-                        <div class="col-md-4 form-group">
-                            <label for="middle_initial">Middle Initial</label>
-                            <input type="text" name="middle_initial" id="middle_initial" class="form-control"
-                                maxlength="1" required />
-                        </div>
+            <div class="container" data-aos="fade-up">
+                <div class="row justify-content-center align-items-center">
+                    <div class="section-title">
+                        <h2>Client Login</h2>
+                        <p class="mt-3">
+                            Access your patient profile, appointment schedules, and records. Please log in using
+                            your registered email and password.
+                        </p>
                     </div>
 
-                    <div class="row mt-3">
-                        <!-- Address -->
-                        <div class="col-md-6 form-group">
-                            <label for="address">Address</label>
-                            <input type="text" name="address" id="address" class="form-control" required
-                                autocomplete="off" />
-                        </div>
-
-                        <!-- Age -->
-                        <div class="col-md-2 form-group">
-                            <label for="age">Age</label>
-                            <input type="number" name="age" id="age" class="form-control" min="0" required />
-                        </div>
-
-                        <!-- Sex -->
-                        <div class="col-md-2 form-group">
-                            <label for="sex">Sex</label>
-                            <select name="sex" id="sex" class="form-control" required>
-                                <option value="">Select Sex</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </div>
-
-                        <!-- Birthdate -->
-                        <div class="col-md-2 form-group">
-                            <label for="birthdate">Birthdate</label>
-                            <input type="date" name="birthdate" id="birthdate" class="form-control" required />
-                        </div>
+                    <!-- Left Column: Title & Description -->
+                    <div class="col-md-7 mb-4 mb-md-0">
+                        <img src="assets/img//undraw_doctor_aum1.svg" class="img-fluid" alt="">
                     </div>
 
-                    <div class="row mt-3">
-                        <!-- Civil Status -->
-                        <div class="col-md-3 form-group">
-                            <label for="civil_status">Civil Status</label>
-                            <select name="civil_status" id="civil_status" class="form-control" required>
-                                <option value="">Select Civil Status</option>
-                                <option value="Single">Single</option>
-                                <option value="Married">Married</option>
-                                <option value="Widowed">Widowed</option>
-                                <option value="Separated">Separated</option>
-                            </select>
-                        </div>
+                    <!-- Right Column: Login Form -->
+                    <div class="col-md-5">
+                        <form action="forms/login.php" method="POST" role="form" class="bg-light p-4 rounded shadow">
+                            <h5 class="mb-4 text-center">Login to Your Account</h5>
 
-                        <!-- Phone Number -->
-                        <div class="col-md-3 form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" name="phone" id="phone" class="form-control" required
-                                autocomplete="off" />
-                        </div>
+                            <!-- Email -->
+                            <div class="form-group mb-3">
+                                <label for="email">Email Address</label>
+                                <input type="email" name="email" id="email" class="form-control" required />
+                            </div>
 
-                        <!-- Weight -->
-                        <div class="col-md-2 form-group">
-                            <label for="weight">Weight (kg)</label>
-                            <input type="text" name="weight" id="weight" class="form-control" required />
-                        </div>
+                            <!-- Password -->
+                            <div class="form-group mb-3">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control" required />
+                            </div>
 
-                        <!-- Height -->
-                        <div class="col-md-2 form-group">
-                            <label for="height">Height (cm)</label>
-                            <input type="text" name="height" id="height" class="form-control" required />
-                        </div>
+                            <!-- Submit Button -->
+                            <div class="text-center">
+                                <button type="submit" name="login" class="btn btn-primary w-100">Login</button>
+                            </div>
 
-                        <!-- Blood Type -->
-                        <div class="col-md-2 form-group">
-                            <label for="bloodtype">Blood Type</label>
-                            <select name="bloodtype" id="bloodtype" class="form-control" required>
-                                <option value="">Select Blood Type</option>
-                                <option value="A+">A+</option>
-                                <option value="A-">A-</option>
-                                <option value="B+">B+</option>
-                                <option value="B-">B-</option>
-                                <option value="AB+">AB+</option>
-                                <option value="AB-">AB-</option>
-                                <option value="O+">O+</option>
-                                <option value="O-">O-</option>
-                            </select>
-                        </div>
+                            <!-- Optional Links -->
+                            <div class="text-center mt-3">
+                                <a href="#">Forgot Password?</a> | <a href="#">Register</a>
+                            </div>
+                        </form>
                     </div>
 
-                    <h5 class="mb-3 mt-3">Select Schedule</h5>
-
-                    <div class="row">
-                        <!-- Appointment Date -->
-                        <div class="col-md-4 form-group mt-3">
-                            <label for="date">Appointment Date</label>
-                            <input type="date" name="date" id="date" class="form-control datepicker" required />
-                        </div>
-
-                        <!-- Time Slot -->
-                        <div class="col-md-4 form-group mt-3">
-                            <label for="time_slot">Time Slot</label>
-                            <select name="time_slot" id="time_slot" class="form-select" required>
-                                <option value="">Select Time Slot</option>
-                                <option value="8:30 AM - 9:30 AM">8:30 AM - 9:30 AM <span class="text-danger">Fully
-                                        Booked</span></option>
-                                <option value="9:30 AM - 10:30 AM">9:30 AM - 10:30 AM</option>
-                                <option value="10:30 AM - 11:30 AM">10:30 AM - 11:30 AM</option>
-                                <option value="11:30 AM - 12:30 PM">11:30 AM - 12:30 PM</option>
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group mt-3 mb-3">
-                        <h6>Select Symptoms:</h6>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="fever" value="Fever"
-                                        required>
-                                    <label class="form-check-label" for="fever">Fever</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="cough" value="Cough"
-                                        required>
-                                    <label class="form-check-label" for="cough">Cough</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="fatigue"
-                                        value="Fatigue" required>
-                                    <label class="form-check-label" for="fatigue">Fatigue</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="toxicLooking"
-                                        value="Toxic Looking" required>
-                                    <label class="form-check-label" for="toxicLooking">Toxic Looking</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="headache"
-                                        value="Headache" required>
-                                    <label class="form-check-label" for="headache">Headache</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="sore_throat"
-                                        value="Sore Throat" required>
-                                    <label class="form-check-label" for="sore_throat">Sore Throat</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="shortness_of_breath"
-                                        value="Shortness of Breath" required>
-                                    <label class="form-check-label" for="shortness_of_breath">Shortness of
-                                        Breath</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="chestPain"
-                                        value="Chest Pain" required>
-                                    <label class="form-check-label" for="chestPain">Chest Pain (Moderate to
-                                        severe)</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="nausea"
-                                        value="Nausea" required>
-                                    <label class="form-check-label" for="nausea">Nausea</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="no_symptoms"
-                                        value="No Symptoms" required>
-                                    <label class="form-check-label" for="no_symptoms">No Symptoms</label>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="symptom" id="abdominalPain"
-                                        value="Abdominal Pain" required>
-                                    <label class="form-check-label" for="abdominalPain">Abdominal Pain (Moderate to
-                                        severe)</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="mt-3">
-                        <div class="text-center">
-                            <button type="submit" name="makeAppointment">Make an Appointment</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </section>
-        <!-- /Appointment Section -->
+        <!-- /Client Section -->
 
         <!-- Doctors Section -->
         <section id="doctors" class="doctors section">
@@ -602,7 +410,7 @@ session_start();
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6 footer-about">
                     <a href="index.html" class="logo d-flex align-items-center">
-                        <span class="sitename">Medilab</span>
+                        <span class="sitename">Quiatson Clinic</span>
                     </a>
                     <div class="footer-contact pt-3">
                         <p>A108 Adam Street</p>
@@ -669,14 +477,10 @@ session_start();
         <div class="container copyright text-center mt-4">
             <p>
                 © <span>Copyright</span>
-                <strong class="px-1 sitename">Medilab</strong>
+                <strong class="px-1 sitename">Quiatson Clinic</strong>
                 <span>All Rights Reserved</span>
             </p>
             <div class="credits">
-                <!-- All the links in the footer should remain intact. -->
-                <!-- You can delete the links only if you've purchased the pro version. -->
-                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
                 Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
             </div>
         </div>
