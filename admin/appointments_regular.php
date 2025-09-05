@@ -28,7 +28,7 @@ include 'alert.php';
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Pending Appointments</h5>
+                        <h5 class="card-title">Regular Appointments</h5>
 
                         <!-- Table with stripped rows -->
                         <table class="table datatable">
@@ -52,16 +52,7 @@ include 'alert.php';
 
                                 <?php 
                                 // Fetch appointments from database
-                                $sql = "SELECT * 
-                                        FROM appointments 
-                                        WHERE status IN ('Pending', 'Urgent')
-                                        ORDER BY 
-                                            CASE 
-                                                WHEN severity = 'Urgent' THEN 1
-                                                ELSE 2
-                                            END, 
-                                            appointment_date ASC, time_slot ASC;
-                                        ";
+                                $sql = "SELECT * FROM appointments WHERE status != 'Concluded' AND patient_type != 'senior_pwd' AND severity = 'Regular'";
                                 $result = mysqli_query($conn, $sql);
                                 while ($row = mysqli_fetch_assoc($result)) {
 
@@ -87,8 +78,7 @@ include 'alert.php';
                                 
                             ?>
                                 <tr>
-                                    <td><span
-                                            class="fw-bold <?=$row['severity'] == 'Urgent' ? 'text-danger' : 'text-primary'?>"><?=$row['severity']?></span>
+                                    <td><span class="fw-bold text-primary"><?=$row['severity']?></span></td>
                                     </td>
                                     <td><?= $fullname ?></td>
                                     <td><?=$row['address']?></td>
@@ -108,12 +98,6 @@ include 'alert.php';
                                             </button>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <button data-approve-id="<?=$row['id']?>"
-                                                        class="dropdown-item approve-appointment text-success">
-                                                        <i class="bi bi-check-circle"></i> Approve
-                                                    </button>
-                                                </li>
-                                                <li>
                                                     <button data-reschedule-id="<?=$row['id']?>"
                                                         class="dropdown-item reschedule-appointment text-info">
                                                         <i class="bi bi-clock-history"></i> Reschedule
@@ -125,9 +109,17 @@ include 'alert.php';
                                                         <i class="bi bi-x-circle"></i> Cancel
                                                     </button>
                                                 </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <button data-conclude-id="<?=$row['id']?>"
+                                                        class="dropdown-item text-success conclude-appointment">
+                                                        <i class="bi bi-check-circle"></i> Conclude Appointment
+                                                    </button>
+                                                </li>
                                             </ul>
                                         </div>
-
                                     </td>
                                 </tr>
                                 <?php }

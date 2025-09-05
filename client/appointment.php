@@ -41,8 +41,8 @@ include 'alert.php';
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="patient_type" id="senior"
-                                            value="senior" required>
+                                        <input class="form-check-input" type="radio" name="patient_type" id="senior_pwd"
+                                            value="senior_pwd" required>
                                         <label class="form-check-label" for="senior">
                                             Senior Citizen / PWD
                                         </label>
@@ -52,7 +52,7 @@ include 'alert.php';
 
                             <script>
                             document.addEventListener("DOMContentLoaded", function() {
-                                const seniorRadio = document.getElementById("senior");
+                                const seniorRadio = document.getElementById("senior_pwd");
                                 const regularRadio = document.getElementById("regular");
                                 const uploadDiv = document.getElementById("seniorIdUpload");
                                 const uploadInput = document.getElementById("upload_id");

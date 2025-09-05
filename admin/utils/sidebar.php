@@ -25,24 +25,25 @@ function get_page_link($page_name) {
         <!-- End Dashboard Nav -->
 
         <li class="nav-item">
-            <a class="nav-link <?= ($current_page == 'appointments_today' || $current_page == 'appointments_pending' || $current_page == 'appointments_history') ? '' : 'collapsed' ?> "
+            <a class="nav-link <?= ($current_page == 'appointments_urgent' || $current_page == 'appointments_regular' || $current_page == 'appointments_history') ? '' : 'collapsed' ?> "
                 data-bs-toggle="collapse" href="#appointments-nav">
                 <i class="bi bi-calendar4-week"></i><span>Appointments</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="appointments-nav"
-                class="nav-content collapse<?= $current_page == 'appointments_today' || $current_page == 'appointments_pending' || $current_page == 'appointments_history' ? 'show' : ''; ?>">
+                class="nav-content collapse<?= $current_page == 'appointments_urgent' || $current_page == 'appointments_regular' || $current_page == 'appointments_history' ? 'show' : ''; ?>">
                 <li>
-                    <a class="<?= ($current_page == 'appointments_today') ? 'active' : '' ?> "
-                        href="<?= get_page_link('appointments_today')?>">
-                        <i class="bi bi-circle"></i><span>Today</span>
+                    <a class="<?= ($current_page == 'appointments_urgent') ? 'active' : '' ?> "
+                        href="<?= get_page_link('appointments_urgent')?>">
+                        <i class="bi bi-circle"></i><span class="text-danger">Urgent/Priority</span>
                     </a>
                 </li>
                 <li>
-                    <a class="<?= ($current_page == 'appointments_pending') ? 'active' : '' ?> "
-                        href="<?= get_page_link('appointments_pending')?>">
-                        <i class="bi bi-circle"></i><span>Pendings</span>
+                    <a class="<?= ($current_page == 'appointments_regular') ? 'active' : '' ?> "
+                        href="<?= get_page_link('appointments_regular')?>">
+                        <i class="bi bi-circle"></i><span>Regular</span>
                     </a>
                 </li>
+
                 <li>
                     <a class="<?= ($current_page == 'appointments_history') ? 'active' : '' ?> "
                         href="<?= get_page_link('appointments_history')?>">
