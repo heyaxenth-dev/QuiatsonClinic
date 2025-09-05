@@ -58,12 +58,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // If cancelled, log the reason
-        if ($status === 'Cancelled' && $reason) {
-            $sql = "INSERT INTO appointment_logs (appointment_id, action, reason) VALUES (?, 'Cancelled', ?)";
-            $stmt = mysqli_prepare($conn, $sql);
-            mysqli_stmt_bind_param($stmt, "is", $id, $reason);
-            mysqli_stmt_execute($stmt);
+        // If cancelled, log the reason and send SMS
+        if ($status === 'Cancelled') {
+            if ($reason) {
+                $sql = "INSERT INTO appointment_logs (appointment_id, action, reason) VALUES (?, 'Cancelled', ?)";
+                $stmt = mysqli_prepare($conn, $sql);
+                mysqli_stmt_bind_param($stmt, "is", $id, $reason);
+                mysqli_stmt_execute($stmt);
+            }
+
+            // Send SMS notification about cancellation
+            require_once __DIR__ . '/../client/utils/sms_sender.php';
+            require_once __DIR__ . '/api/api_key.php';
+            $smsCancelResult = sendCanceledSMS($api_key, $sender_name, $appointment['phone'], $appointment['firstname']);
+            if (!$smsCancelResult['success']) {
+                $smsWarning = ($smsWarning ?? '') . ' | Cancel SMS: ' . ($smsCancelResult['error'] ?? 'Unknown SMS error');
+            }
         }
 
         // Commit transaction
