@@ -164,65 +164,91 @@ include 'alert.php';
                                     Appointment Tracking
                                 </h5>
 
+                                <?php
+                                // Compute today's slot availability
+                                $selected_date = date('Y-m-d');
+
+                                $time_slots = [
+                                    '8:30 AM - 9:30 AM',
+                                    '9:30 AM - 10:30 AM',
+                                    '10:30 AM - 11:30 AM',
+                                    '11:30 AM - 12:30 PM',
+                                    '1:30 PM - 2:30 PM',
+                                    '2:30 PM - 3:30 PM',
+                                    '3:30 PM - 4:30 PM',
+                                    '4:30 PM - 5:30 PM'
+                                ];
+
+                                $booked_counts = [];
+                                if ($stmt = mysqli_prepare($conn, "SELECT time_slot, COUNT(*) as booked_count FROM appointments WHERE appointment_date = ? GROUP BY time_slot")) {
+                                    mysqli_stmt_bind_param($stmt, "s", $selected_date);
+                                    mysqli_stmt_execute($stmt);
+                                    $result = mysqli_stmt_get_result($stmt);
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        $booked_counts[$row['time_slot']] = (int)$row['booked_count'];
+                                    }
+                                    mysqli_stmt_close($stmt);
+                                }
+
+                                $available_rows = [];
+                                $total_available = 0;
+                                $total_booked = 0;
+                                foreach ($time_slots as $slot) {
+                                    $booked = isset($booked_counts[$slot]) ? (int)$booked_counts[$slot] : 0;
+                                    $available = 10 - $booked; // capacity per slot
+                                    if ($available > 0) {
+                                        $available_rows[] = [
+                                            'time_slot' => $slot,
+                                            'available' => $available,
+                                            'booked' => $booked
+                                        ];
+                                        $total_available += $available;
+                                        $total_booked += $booked;
+                                    }
+                                }
+                                ?>
+
+                                <div class="mb-2">
+                                    <small class="text-muted">Availability for
+                                        <?= htmlspecialchars($selected_date); ?></small>
+                                </div>
+
                                 <table class="table table-borderless datatable">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">Name</th>
-                                            <th scope="col">Address</th>
-                                            <th scope="col">Severity</th>
+                                            <th scope="col">Time Slot</th>
+                                            <th scope="col">Available</th>
+                                            <th scope="col">Booked</th>
                                             <th scope="col">Status</th>
                                         </tr>
                                     </thead>
-
-                                    <?php 
-                                    $sql = "SELECT * FROM appointments ORDER BY created_at DESC";
-                                    $result = mysqli_query($conn, $sql);
-                                    $number = 1;
-                                    ?>
-
                                     <tbody>
-                                        <?php 
-                                    if (mysqli_num_rows($result) > 0) {
-                                        while ($row = mysqli_fetch_assoc($result)) {
-                                            switch ($row['status']) {
-                                                case 'Pending':
-                                                    $status = '<span class="badge bg-warning">Pending</span>';
-                                                    break;
-                                                case 'Approved':
-                                                    $status = '<span class="badge bg-success">Approved</span>';
-                                                    break;
-                                                case 'Concluded':
-                                                    $status = '<span class="badge bg-success">Concluded</span>';
-                                                    break;
-                                                case 'Rescheduled':
-                                                    $status = '<span class="badge bg-info">Rescheduled</span>';
-                                                    break;
-                                                default:
-                                                    $status = '<span class="badge bg-danger">Cancelled</span>';
-                                                    break;
-                                            }
-                                    ?>
-                                        <tr></tr>
-                                        <th><?= $number++; ?></th>
-                                        <td><?= $row['firstname'] . ' ' . $row['middle_initial'] . '. ' . $row['lastname']; ?>
-                                        </td>
-                                        <td><?= $row['address']; ?></td>
-                                        <td><?= $row['severity']; ?></td>
-                                        <td><?= $status; ?></td>
-                                        </tr>
-                                        <?php 
-                                        }
-                                    } else {
-                                    ?>
+                                        <?php if (count($available_rows) > 0) { ?>
+                                        <?php foreach ($available_rows as $row) {
+                                            $statusClass = $row['available'] <= 3 ? 'text-warning' : 'text-success';
+                                            $statusText = $row['available'] <= 3 ? 'Limited' : 'Available';
+                                        ?>
                                         <tr>
-                                            <td colspan="5" class="text-center">No appointments found</td>
+                                            <td><?= htmlspecialchars($row['time_slot']); ?></td>
+                                            <td><?= (int)$row['available']; ?></td>
+                                            <td><?= (int)$row['booked']; ?></td>
+                                            <td class="<?= $statusClass; ?>"><?= $statusText; ?></td>
                                         </tr>
-                                        <?php 
-                                    }
-                                    ?>
+                                        <?php } ?>
+                                        <?php } else { ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center">All slots are fully booked for today.
+                                            </td>
+                                        </tr>
+                                        <?php } ?>
                                     </tbody>
                                 </table>
+
+                                <div class="alert alert-info mt-2">
+                                    <strong>Summary:</strong> <?= count($available_rows); ?> time slots available with
+                                    <?= (int)$total_available; ?> total openings. <?= (int)$total_booked; ?>
+                                    appointments already booked.
+                                </div>
                             </div>
                         </div>
                     </div>

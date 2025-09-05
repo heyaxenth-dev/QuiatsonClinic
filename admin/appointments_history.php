@@ -86,10 +86,17 @@ include 'alert.php';
                                         <button data-id="<?=$row['id']?>"
                                             class="btn btn-sm btn-primary view-appointment"><i class="bi bi-eye"></i>
                                             View</button>
-                                        <button data-conclude-id="<?=$row['id']?>"
-                                            class="btn btn-sm btn-success conclude-appointment"><i
-                                                class="bi bi-check-circle"></i>
-                                            Conclude Appointment</button>
+                                        <button class="btn btn-sm btn-outline-primary btn-lab-slip"
+                                            data-id="<?=$row['id']?>" data-labno="<?=$row['id']?>"
+                                            data-date="<?= date('m-d-Y'); ?>"
+                                            data-name="<?= htmlspecialchars($fullname); ?>"
+                                            data-gender="<?= htmlspecialchars($row['sex']); ?>"
+                                            data-age="<?= htmlspecialchars($row['age']); ?>"
+                                            data-civil="<?= htmlspecialchars($row['civil_status']); ?>"
+                                            data-address="<?= htmlspecialchars($row['address']); ?>"
+                                            data-email="<?= htmlspecialchars($row['email'] ?? ''); ?>">
+                                            <i class="bi bi-printer"></i> Lab Slip
+                                        </button>
                                     </td>
                                 </tr>
                                 <?php }
@@ -103,8 +110,10 @@ include 'alert.php';
 
                 <?php 
                 include './includes/viewModal.php';
+                include './includes/labSlipModal.php';
                 ?>
                 <script src="assets/js/viewModal.js"></script>
+                <script src="assets/js/labSlip.js"></script>
 
             </div>
         </div>

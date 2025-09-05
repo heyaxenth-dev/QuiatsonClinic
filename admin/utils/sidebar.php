@@ -56,13 +56,13 @@ function get_page_link($page_name) {
         <!-- End Appointments Nav -->
 
 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'laboratory_slip') ? '' : 'collapsed' ?> "
                 href="<?= get_page_link('laboratory_slip')?>">
                 <i class="bi bi-file-earmark-text"></i>
                 <span>Laboratory Slip</span>
             </a>
-        </li>
+        </li> -->
         <!-- End Laboratory Slip Page Nav -->
 
         <li class="nav-item">
