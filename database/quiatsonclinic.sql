@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 05, 2025 at 11:18 AM
+-- Generation Time: Sep 07, 2025 at 02:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,8 +31,10 @@ CREATE TABLE `admin_staff` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
+  `mobile_no` varchar(255) NOT NULL,
   `role` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `password_token` varchar(255) NOT NULL,
   `date_created` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -40,8 +42,8 @@ CREATE TABLE `admin_staff` (
 -- Dumping data for table `admin_staff`
 --
 
-INSERT INTO `admin_staff` (`id`, `username`, `email`, `role`, `password`, `date_created`) VALUES
-(1, 'hyacynth', 'hyacynth.mulaveintern@gmail.com', 'Clinic Assistant', '$2y$10$CwhpZsDPewy247qgBRWS0.r91MFnDKWyGVXEZlQg2MdMEIPzvA8ci', '2025-05-02 00:14:54');
+INSERT INTO `admin_staff` (`id`, `username`, `email`, `mobile_no`, `role`, `password`, `password_token`, `date_created`) VALUES
+(1, 'hyacynth', 'hyacynth.mulaveintern@gmail.com', '', 'Clinic Assistant', '$2y$10$CwhpZsDPewy247qgBRWS0.r91MFnDKWyGVXEZlQg2MdMEIPzvA8ci', '', '2025-05-02 00:14:54');
 
 -- --------------------------------------------------------
 
@@ -111,8 +113,32 @@ CREATE TABLE `client` (
 --
 
 INSERT INTO `client` (`id`, `firstname`, `lastname`, `mobile_no`, `email`, `dob`, `sex`, `password`, `address`, `password_token`, `verification_status`, `created_at`) VALUES
-(1, 'Hya Cynth', 'Dojillo', '09651168472', 'hyacynth.mulaveintern@gmail.com', '2000-08-04', 'Female', '$2y$10$xxE.Nn/y6jacC9IZ5vTn.O2f23BDlt/xXCXczJKNDEABJCMzSuwwO', 'Kksajdksajd', '', 0, ''),
+(1, 'Hya Cynth', 'Dojillo', '09651168472', 'hyacynth.mulaveintern@gmail.com', '2000-08-04', 'Female', '$2y$10$khUtiE09.R9ZMLVVoaK1A.uEw/siTheQ9p6FLgpbeHHHLJ8NX8rge', 'Kksajdksajd', '', 0, ''),
 (2, 'asjdhjkas', 'hsdsakjdhk', '09651168472', 'hyacynth.dev@gmail.com', '2000-09-13', 'Female', '$2y$10$M0BdCeRmvWNKn8rOJb8vRephKRXNS83S4SsaMVUSXUNq5EMUnYcb6', 'jkashdjas\\r\\n', '', 0, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `lab_results`
+--
+
+CREATE TABLE `lab_results` (
+  `id` int(11) NOT NULL,
+  `appointment_id` int(11) NOT NULL,
+  `patient_id` varchar(255) NOT NULL,
+  `file_path` varchar(500) NOT NULL,
+  `original_name` varchar(255) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `uploaded_by` int(11) DEFAULT NULL,
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `lab_results`
+--
+
+INSERT INTO `lab_results` (`id`, `appointment_id`, `patient_id`, `file_path`, `original_name`, `notes`, `uploaded_by`, `uploaded_at`) VALUES
+(1, 1, '09042025-01', 'uploads/lab_results/lab_result_68bd78216a95a9.74539524.jpg', 'cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA3L2pvYjEwMjgtYmctMTQuanBn.jpg', 'testing', 1, '2025-09-07 12:18:41');
 
 --
 -- Indexes for dumped tables
@@ -139,6 +165,13 @@ ALTER TABLE `client`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `lab_results`
+--
+ALTER TABLE `lab_results`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_appt` (`appointment_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -158,6 +191,12 @@ ALTER TABLE `appointments`
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `lab_results`
+--
+ALTER TABLE `lab_results`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
