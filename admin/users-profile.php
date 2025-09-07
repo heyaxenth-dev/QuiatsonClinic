@@ -12,7 +12,7 @@ include 'alert.php';
         <h1>Profile</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="home.php">Home</a></li>
                 <li class="breadcrumb-item">Users</li>
                 <li class="breadcrumb-item active">Profile</li>
             </ol>
@@ -26,15 +26,9 @@ include 'alert.php';
                 <div class="card">
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
 
-                        <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle">
-                        <h2>Kevin Anderson</h2>
-                        <h3>Web Designer</h3>
-                        <div class="social-links mt-2">
-                            <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                            <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-                        </div>
+                        <img src="assets/img/user-profile.png" alt="Profile" class="rounded-circle">
+                        <h2><?= $username?></h2>
+                        <h3><?= $role?></h3>
                     </div>
                 </div>
 
@@ -59,11 +53,6 @@ include 'alert.php';
 
                             <li class="nav-item">
                                 <button class="nav-link" data-bs-toggle="tab"
-                                    data-bs-target="#profile-settings">Settings</button>
-                            </li>
-
-                            <li class="nav-item">
-                                <button class="nav-link" data-bs-toggle="tab"
                                     data-bs-target="#profile-change-password">Change Password</button>
                             </li>
 
@@ -71,12 +60,6 @@ include 'alert.php';
                         <div class="tab-content pt-2">
 
                             <div class="tab-pane fade show active profile-overview" id="profile-overview">
-                                <h5 class="card-title">About</h5>
-                                <p class="small fst-italic">Sunt est soluta temporibus accusantium neque nam maiores
-                                    cumque temporibus. Tempora libero non est unde veniam est qui dolor. Ut sunt iure
-                                    rerum quae quisquam autem eveniet perspiciatis odit. Fuga sequi sed ea saepe at
-                                    unde.</p>
-
                                 <h5 class="card-title">Profile Details</h5>
 
                                 <div class="row">

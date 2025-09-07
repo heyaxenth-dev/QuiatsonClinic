@@ -46,6 +46,8 @@
     if ($result && mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
             $role = $row['role'];
+            $firstname = $row['firstname'];
+            $lastname = $row['lastname'];
             $email = $row['email'];
             $user = $row['username'];
             $dc = date("M d, Y", strtotime($row['date_created']));
