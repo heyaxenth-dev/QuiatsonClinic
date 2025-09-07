@@ -193,7 +193,8 @@ session_start();
 
                             <!-- Optional Links -->
                             <div class="text-center mt-3">
-                                <a href="#">Forgot Password?</a> | <a href="sign-up.php">Register</a>
+                                <a href="client/forgot_password.php">Forgot Password?</a> | <a
+                                    href="sign-up.php">Register</a>
                             </div>
                         </form>
                     </div>

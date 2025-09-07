@@ -55,7 +55,8 @@ session_start();
                                         href="index.php">SIGN IN</button>
                                 </div>
                                 <div class="my-2 d-flex justify-content-end align-items-end">
-                                    <a href="#" class="auth-link text-black">Forgot password?</a>
+                                    <a href="admin/forgot_password.php" class="auth-link text-black">Forgot
+                                        password?</a>
                                 </div>
 
                                 <div class="text-center mt-4 font-weight-light">

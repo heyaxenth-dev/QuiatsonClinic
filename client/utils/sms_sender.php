@@ -240,4 +240,56 @@ function sendCanceledSMS($api_key, $sender_name, $phone, $firstname) {
     return array('success' => false, 'error' => 'SMS failed to send. Response: ' . $output);
 }
 
+/**
+ * Send a one-time password (OTP) via SMS using Semaphore API
+ */
+function sendOTP_SMS($api_key, $sender_name, $phone, $firstname, $otp_code, $valid_minutes = 10) {
+    $connection_test = testSemaphoreConnection();
+    if (!$connection_test['reachable']) {
+        return array(
+            'success' => false,
+            'error' => 'Cannot reach Semaphore API. Network issue: ' . $connection_test['error']
+        );
+    }
+
+    $ch = curl_init();
+    $formatted_phone = formatPhoneNumber($phone);
+
+    $message = "Hello $firstname,\n\nYour password reset OTP is: $otp_code\nThis code will expire in $valid_minutes minutes.\n\n- Quiatson Clinic";
+
+    $parameters = array(
+        'apikey' => $api_key,
+        'number' => $formatted_phone,
+        'message' => $message,
+        'sendername' => $sender_name
+    );
+
+    curl_setopt($ch, CURLOPT_URL, 'https://semaphore.co/api/v4/messages');
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($parameters));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+
+    $output = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_error = curl_error($ch);
+    curl_close($ch);
+
+    if ($curl_error) return array('success' => false, 'error' => 'CURL Error: ' . $curl_error);
+    if ($http_code !== 200) return array('success' => false, 'error' => 'HTTP Error: ' . $http_code . ' - ' . $output);
+
+    $response_data = json_decode($output, true);
+    if (json_last_error() !== JSON_ERROR_NONE) return array('success' => false, 'error' => 'Invalid JSON response: ' . $output);
+
+    if (isset($response_data[0]['message_id']) || isset($response_data['message_id'])) {
+        return array('success' => true, 'message_id' => $response_data[0]['message_id'] ?? $response_data['message_id'], 'message' => 'OTP SMS sent successfully');
+    }
+    return array('success' => false, 'error' => 'OTP SMS failed to send. Response: ' . $output);
+}
+
 ?>
