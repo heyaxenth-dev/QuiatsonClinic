@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
         }
 
         // Ensure target directory exists
-        $target_dir = "`uploads/uploaded_ids/";
+        $target_dir = "../uploads/uploaded_ids/";
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0755, true);
         }
@@ -125,10 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
         severity, lastname, firstname, middle_initial, address, age, sex, birthdate,
         civil_status, phone, weight, height, bloodtype,
         appointment_date, time_slot, symptom, uploaded_id, status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
-        "ssssssissssssssssss", $patient_type,
+        "sssssissssssssssss",
         $severity, $lastname, $firstname, $middle_initial, $address, $age, $sex, $birthdate,
         $civil_status, $phone, $weight, $height, $bloodtype,
         $appointment_date, $time_slot, $symptom, $target_file, $default_status
