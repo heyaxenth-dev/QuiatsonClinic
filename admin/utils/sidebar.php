@@ -56,14 +56,14 @@ function get_page_link($page_name) {
         <!-- End Appointments Nav -->
 
 
-        <!-- <li class="nav-item">
-            <a class="nav-link <?= ($current_page == 'laboratory_slip') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('laboratory_slip')?>">
+        <li class="nav-item">
+            <a class="nav-link <?= ($current_page == 'laboratory_result') ? '' : 'collapsed' ?> "
+                href="<?= get_page_link('laboratory_result')?>">
                 <i class="bi bi-file-earmark-text"></i>
-                <span>Laboratory Slip</span>
+                <span>Laboratory Result</span>
             </a>
-        </li> -->
-        <!-- End Laboratory Slip Page Nav -->
+        </li>
+        <!-- End Laboratory Result Page Nav -->
 
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'reports') ? '' : 'collapsed' ?> "
