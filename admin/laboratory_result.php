@@ -3,50 +3,6 @@ include 'authentication.php';
 checkLogin();
 include '../database/conn.php';
 include './utils/header.php';
-?>
-<script src="assets/js/sweetalert2.all.min.js"></script>
-<?php
-if (isset($_SESSION['logged'])) {
-?>
-<script type="text/javascript">
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-});
-
-Toast.fire({
-    background: '#53a653',
-    color: '#fff',
-    icon: '<?php echo $_SESSION['logged_icon']; ?>',
-    title: '<?php echo $_SESSION['logged']; ?>'
-});
-</script>
-<?php
-    unset($_SESSION['logged']);
-}
-
-// Ensure lab_results table exists
-$createTableSql = "CREATE TABLE IF NOT EXISTS lab_results (
-    id INT(11) NOT NULL AUTO_INCREMENT,
-    appointment_id INT(11) NOT NULL,
-    patient_id VARCHAR(255) NOT NULL,
-    file_path VARCHAR(500) NOT NULL,
-    original_name VARCHAR(255) DEFAULT NULL,
-    notes TEXT DEFAULT NULL,
-    uploaded_by INT(11) DEFAULT NULL,
-    uploaded_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    UNIQUE KEY uniq_appt (appointment_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci";
-@mysqli_query($conn, $createTableSql);
-
 include './utils/sidebar.php';
 include 'alert.php';
 ?>
