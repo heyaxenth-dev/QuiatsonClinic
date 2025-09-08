@@ -166,7 +166,7 @@ include 'alert.php';
 
                                 <?php
                                 // Compute today's slot availability
-                                $selected_date = date('Y-m-d');
+                                $selected_date = date('M d,Y');
 
                                 $time_slots = [
                                     '8:30 AM - 9:30 AM',
@@ -210,7 +210,8 @@ include 'alert.php';
 
                                 <div class="mb-2">
                                     <small class="text-muted">Availability for
-                                        <?= htmlspecialchars($selected_date); ?></small>
+                                        <span
+                                            class="fw-bold text-primary"><?= htmlspecialchars($selected_date); ?></span></small>
                                 </div>
 
                                 <table class="table table-borderless datatable">
