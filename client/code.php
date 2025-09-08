@@ -10,7 +10,7 @@ require_once( 'vendor/autoload.php' );
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
     // Get POST data safely
-    $patient_type = $conn->real_escape_string($_POST['patient_type']); // 'regular' or 'senior'
+    $patient_type = $conn->real_escape_string($_POST['patient_type']); // 'regular' or 'senior'/'senior_pwd'
     $uploaded_id = $_FILES['upload_id'] ?? null; // Uploaded file for senior ID, if any
     $lastname = $conn->real_escape_string($_POST['lastname']);
     $firstname = $conn->real_escape_string($_POST['firstname']);
@@ -51,7 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
         exit();
     }
 
-    if ($patient_type === 'senior') {
+    // Require ID upload for both 'senior' and 'senior_pwd'
+    $is_senior = ($patient_type === 'senior' || $patient_type === 'senior_pwd');
+    if ($is_senior) {
         // Validate presence
         if (!$uploaded_id || !isset($uploaded_id['error']) || $uploaded_id['error'] !== UPLOAD_ERR_OK) {
             $_SESSION['status'] = "Error";
@@ -88,16 +90,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
         }
 
         // Ensure target directory exists
-        $target_dir = "../uploads/uploaded_ids/";
+        $target_dir = "./uploads/uploaded_ids/";
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0755, true);
         }
 
         // Generate safe unique filename
         $safe_ext = preg_replace('/[^a-z0-9]+/i', '', $file_extension);
-        $target_file = $target_dir . uniqid('uploaded_id_', true) . '.' . $safe_ext;
+        $target_file = "uploads/uploaded_ids/" . uniqid('uploaded_id_', true) . '.' . $safe_ext;
 
-        if (!move_uploaded_file($uploaded_id['tmp_name'], $target_file)) {
+        // Use move_uploaded_file when available, fallback to rename for some Windows/PHP configs
+        $moved = false;
+        if (is_uploaded_file($uploaded_id['tmp_name'])) {
+            $moved = move_uploaded_file($uploaded_id['tmp_name'], $target_file);
+        }
+        if (!$moved) {
+            $moved = @rename($uploaded_id['tmp_name'], $target_file);
+        }
+        if (!$moved) {
             $_SESSION['status'] = "Error";
             $_SESSION['status_text'] = "Failed to upload Senior Citizen / PWD ID. Please try again.";
             $_SESSION['status_code'] = "error";
@@ -125,10 +135,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
         severity, lastname, firstname, middle_initial, address, age, sex, birthdate,
         civil_status, phone, weight, height, bloodtype,
         appointment_date, time_slot, symptom, uploaded_id, status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
-        "sssssissssssssssss",
+        "ssssssissssssssssss", $patient_type,
         $severity, $lastname, $firstname, $middle_initial, $address, $age, $sex, $birthdate,
         $civil_status, $phone, $weight, $height, $bloodtype,
         $appointment_date, $time_slot, $symptom, $target_file, $default_status

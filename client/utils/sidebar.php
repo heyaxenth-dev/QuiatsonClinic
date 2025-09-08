@@ -43,15 +43,6 @@ function get_page_link($page_name) {
         </li>
         <!-- End Laboratory Result Page Nav -->
 
-        <li class="nav-item">
-            <a class="nav-link <?= ($current_page == 'reports') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('reports')?>">
-                <i class="bi bi-bar-chart-line"></i>
-                <span>Reports</span>
-            </a>
-        </li>
-        <!-- End Reports Page Nav -->
-
         <li class="nav-heading">Account</li>
 
         <li class="nav-item">

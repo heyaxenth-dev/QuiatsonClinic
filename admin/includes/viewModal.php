@@ -106,7 +106,7 @@
                         <div class="row g-3 mb-0">
                             <div class="col-md-12 d-flex justify-content-end">
                                 <button type="button" id="btnViewUploadedId"
-                                    class="btn btn-outline-secondary btn-sm d-none">
+                                    class=" btn btn-outline-secondary btn-sm d-none">
                                     <i class="bi bi-card-image"></i> View ID
                                 </button>
                             </div>
@@ -171,11 +171,11 @@ document.addEventListener('click', function(e) {
                 // create modal on the fly
                 var wrapper = document.createElement('div');
                 wrapper.innerHTML =
-                    '\n<div class="modal fade" id="uploadedIdModal" tabindex="-1" aria-hidden="true">\n  <div class="modal-dialog modal-dialog-centered modal-lg">\n    <div class="modal-content">\n      <div class="modal-header">\n        <h5 class="modal-title">Uploaded ID</h5>\n        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>\n      </div>\n      <div class="modal-body text-center">\n        <img id="uploadedIdImage" src="' +
+                    '\n<div class="modal fade" id="uploadedIdModal" tabindex="-1" aria-hidden="true">\n  <div class="modal-dialog modal-dialog-centered modal-lg">\n    <div class="modal-content">\n      <div class="modal-header">\n        <h5 class="modal-title">Uploaded ID</h5>\n        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>\n      </div>\n      <div class="modal-body text-center">\n        <img id="uploadedIdImage" src=".././client/' +
                     imgSrc +
                     '" class="img-fluid rounded border" alt="Uploaded ID"/>\n      </div>\n      <div class="modal-footer">\n        <a id="downloadIdImage" href="' +
-                    imgSrc +
-                    '" class="btn btn-primary" download>Download</a>\n        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>\n      </div>\n    </div>\n  </div>\n</div>';
+                    "../../client/" + imgSrc +
+                    '" class="btn btn-primary" download><i class="bi bi-download"></i> Download</a>\n        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>\n      </div>\n    </div>\n  </div>\n</div>';
                 document.body.appendChild(wrapper.firstElementChild);
                 idModalEl = document.getElementById('uploadedIdModal');
             } else {
