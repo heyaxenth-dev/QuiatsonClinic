@@ -9,6 +9,8 @@
             </div>
             <div class="modal-body">
                 <div class="container">
+                    <input type="hidden" name="id" id="viewId" class="idNumber">
+
                     <div id="viewPrintArea">
                         <div class="text-center mb-2">
                             <h5 class="mb-0">QUIATSON MEDICAL CLINIC</h5>
@@ -17,7 +19,6 @@
                             <div>POBLACION TIBIAO, ANTIQUE</div>
                             <div class="fw-bold mt-2">RECORD OF REPORTS</div>
                         </div>
-                        <input type="hidden" name="id" id="viewId">
                         <div class="row g-3 mb-2">
                             <div class="col-md-9">
                                 <label class="fw-bold">Patient Name:</label>
@@ -103,7 +104,7 @@
                                     readonly></textarea>
                             </div>
                         </div>
-                        <div class="row g-3 mb-0">
+                        <div class="row g-3 mb-0 viewID">
                             <div class="col-md-12 d-flex justify-content-end">
                                 <button type="button" id="btnViewUploadedId"
                                     class=" btn btn-outline-secondary btn-sm d-none">
@@ -148,8 +149,22 @@ function printViewDetails() {
     printWindow.document.write(
         '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">');
     printWindow.document.write(
-        '<style>body{padding:20px;} .modal{position:static; display:block;} .form-control, .form-control-sm{box-shadow:none;} .fw-bold{font-weight:700 !important;}</style>'
+        `<style>
+        body { padding: 20px; }
+        .modal { position: static; display: block; }
+        .form-control, .form-control-sm { box-shadow: none; }
+        .fw-bold { font-weight: 700 !important; }
+        .col-md-6 { flex: 0 0 auto; width: 50%; }
+        .col-md-9 { flex: 0 0 auto; width: 75%; }
+        .col-md-3 { flex: 0 0 auto; width: 25%; }
+        .col-md-4 { flex: 0 0 auto; width: 33.333333%; }
+        .col-md-2 { flex: 0 0 auto; width: 16.666667%; }
+        .col-md-5 { flex: 0 0 auto; width: 41.666667%; }
+        .col-md-12 { flex: 0 0 auto; width: 100%; }
+        .viewID { display: none; }
+    </style>`
     );
+
     printWindow.document.write('</head><body>');
     printWindow.document.write(clone.outerHTML);
     printWindow.document.write('</body></html>');
