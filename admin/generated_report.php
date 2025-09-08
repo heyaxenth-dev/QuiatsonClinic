@@ -13,12 +13,12 @@ $filterMonthYear = isset($_GET['reportMonth']) ? $_GET['reportMonth'] : '';
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>Report</h1>
+        <h1>Report for <?= date("F Y", strtotime($filterMonthYear)) ?></h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="home">Home</a></li>
-                <li class="breadcrumb-item">Reports</li>
-                <li class="breadcrumb-item active">Report Results</li>
+                <li class="breadcrumb-item"><a href="reports">Reports</a></li>
+                <li class="breadcrumb-item active">Report for <?= date("F Y", strtotime($filterMonthYear)) ?></li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -38,10 +38,13 @@ $filterMonthYear = isset($_GET['reportMonth']) ? $_GET['reportMonth'] : '';
                                 </span>
                             </h5>
                             <div>
-                                <a href="generate_report.php" class="btn btn-secondary">Back</a>
+                                <a href="reports.php" class="btn btn-secondary">Back</a>
                                 <button type="button" class="btn btn-success" onclick="printReport()">Print</button>
+                                <a href="export_pdf.php?reportMonth=<?= urlencode($filterMonthYear) ?>"
+                                    class="btn btn-danger">Export PDF</a>
                             </div>
                         </div>
+
 
                         <!-- Report Table -->
                         <div id="reportSection">

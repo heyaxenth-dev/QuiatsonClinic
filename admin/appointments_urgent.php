@@ -26,7 +26,7 @@ include 'alert.php';
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Urgent Appointments</h5>
+                        <h5 class="card-title">Urgent/Priority Appointments</h5>
 
                         <!-- Table with stripped rows -->
                         <table class="table datatable">

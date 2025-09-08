@@ -55,8 +55,8 @@
                                 </div>
                                 <div class="col-5">
                                     <label class="fw-bold">Status:</label>
-                                    <input type="text" class="form-control form-control-sm fw-bold" name="status"
-                                        id="conclusionStatus" />
+                                    <input type="text" class="form-control form-control-sm fw-bold" name="severity"
+                                        id="conclusionSeverity" />
                                 </div>
                             </div>
                             <div class="row g-3 mb-2">
@@ -74,7 +74,7 @@
                                 <div class="col-6">
                                     <div class="fw-bold">TYPE OF APPOINTMENT</div>
                                     <input type="text" class="form-control form-control-sm mb-1" name="checkup_type"
-                                        id="conclusionCheckupType" placeholder="Check up: ..." />
+                                        id="conclusionSymptoms" placeholder="Check up: ..." />
                                     <input type="text" class="form-control form-control-sm" name="lab_type"
                                         id="conclusionLabType" placeholder="Laboratory Check up" />
                                 </div>

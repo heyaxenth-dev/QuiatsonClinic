@@ -25,7 +25,8 @@ include 'alert.php';
                 <div class="card-body text-center p-4">
                     <h5 class="card-title mb-4">Generate Report</h5>
 
-                    <form action="" method="POST" class="d-flex flex-column align-items-center gap-3">
+                    <form action="generated_report.php" method="GET"
+                        class="d-flex flex-column align-items-center gap-3">
                         <!-- Month & Year Input -->
                         <div class="w-75">
                             <label for="reportMonth" class="form-label">Select Month & Year</label>
@@ -37,6 +38,7 @@ include 'alert.php';
                             <button type="submit" class="btn btn-primary px-4">Generate Report</button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>

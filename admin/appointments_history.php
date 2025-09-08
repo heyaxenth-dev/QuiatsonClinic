@@ -86,17 +86,6 @@ include 'alert.php';
                                         <button data-id="<?=$row['id']?>"
                                             class="btn btn-sm btn-primary view-appointment"><i class="bi bi-eye"></i>
                                             View</button>
-                                        <button class="btn btn-sm btn-outline-primary btn-lab-slip"
-                                            data-id="<?=$row['id']?>" data-labno="<?=$row['id']?>"
-                                            data-date="<?= date('m-d-Y'); ?>"
-                                            data-name="<?= htmlspecialchars($fullname); ?>"
-                                            data-gender="<?= htmlspecialchars($row['sex']); ?>"
-                                            data-age="<?= htmlspecialchars($row['age']); ?>"
-                                            data-civil="<?= htmlspecialchars($row['civil_status']); ?>"
-                                            data-address="<?= htmlspecialchars($row['address']); ?>"
-                                            data-email="<?= htmlspecialchars($row['email'] ?? ''); ?>">
-                                            <i class="bi bi-printer"></i> Lab Slip
-                                        </button>
                                     </td>
                                 </tr>
                                 <?php }

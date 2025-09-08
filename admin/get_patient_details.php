@@ -18,6 +18,7 @@ if (isset($_GET['id'])) {
         $response = array(
             'id' => $data['id'],
             'severity' => $data['severity'],
+            'patient_type' => $data['patient_type'],
             'lastname' => $data['lastname'],
             'firstname' => $data['firstname'],
             'middle_initial' => $data['middle_initial'],
@@ -32,7 +33,9 @@ if (isset($_GET['id'])) {
             'bloodtype' => $data['bloodtype'],
             'symptoms' => $data['symptom'],
             'date' => $data['appointment_date'],
-            'time_slot' => $data['time_slot']
+            'time_slot' => $data['time_slot'],
+            'uploaded_id' => $data['uploaded_id'],
+            'remarks' => $data['remarks']
         );
         
         // Send JSON response

@@ -43,21 +43,55 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("viewHeight").value = data.height || "";
           document.getElementById("viewBloodtype").value = data.bloodtype || "";
 
-          // Format appointment date
+          // Format appointment date and compute day of week
           if (data.date) {
             const appointmentDate = new Date(data.date);
-            const options = {
+            const dateOptions = {
               year: "numeric",
               month: "long",
               day: "numeric",
               timeZone: "Asia/Manila",
             };
-            document.getElementById("viewDate").value =
-              appointmentDate.toLocaleDateString("en-US", options);
+            const dayOptions = { weekday: "long", timeZone: "Asia/Manila" };
+            const viewDateEl = document.getElementById("viewDate");
+            const viewDayEl = document.getElementById("viewDay");
+            if (viewDateEl) {
+              viewDateEl.value = appointmentDate.toLocaleDateString(
+                "en-US",
+                dateOptions
+              );
+            }
+            if (viewDayEl) {
+              viewDayEl.value = appointmentDate.toLocaleDateString(
+                "en-US",
+                dayOptions
+              );
+            }
           }
 
           document.getElementById("viewTime_slot").value = data.time_slot || "";
           document.getElementById("viewSymptoms").value = data.symptoms || "";
+          const remarksEl = document.getElementById("viewRemarks");
+          if (remarksEl) {
+            remarksEl.value = data.remarks || "";
+          }
+          const labTypeEl = document.getElementById("viewLabType");
+          if (labTypeEl) {
+            labTypeEl.value = "Laboratory Check up";
+          }
+
+          // Toggle View ID button
+          const btnViewUploadedId =
+            document.getElementById("btnViewUploadedId");
+          if (btnViewUploadedId) {
+            if (data.patient_type === "senior_pwd" && data.uploaded_id) {
+              btnViewUploadedId.classList.remove("d-none");
+              btnViewUploadedId.setAttribute("data-image", data.uploaded_id);
+            } else {
+              btnViewUploadedId.classList.add("d-none");
+              btnViewUploadedId.removeAttribute("data-image");
+            }
+          }
 
           // Show the modal using getOrCreateInstance for accessibility
           const viewModal = document.getElementById("viewDetails");

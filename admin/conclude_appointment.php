@@ -29,20 +29,6 @@ $checkup_type = $_POST['checkup_type'] ?? '';
 $lab_type = $_POST['lab_type'] ?? '';
 $remarks_input = $_POST['remarks'] ?? '';
 
-$compiledRemarks = trim(
-    "Patient: {$patient_name}\n" .
-    (strlen($age) ? "Age: {$age}\n" : '') .
-    (strlen($sex) ? "Sex: {$sex}\n" : '') .
-    (strlen($address) ? "Address: {$address}\n" : '') .
-    (strlen($civil_status) ? "Civil Status: {$civil_status}\n" : '') .
-    (strlen($phone) ? "Phone: {$phone}\n" : '') .
-    (strlen($status) ? "Current Status: {$status}\n" : '') .
-    (strlen($day) || strlen($date) || strlen($time) ? "Schedule: {$day} {$date} {$time}\n" : '') .
-    (strlen($checkup_type) ? "Checkup Type: {$checkup_type}\n" : '') .
-    (strlen($lab_type) ? "Lab Type: {$lab_type}\n" : '') .
-    (strlen($remarks_input) ? "Remarks: {$remarks_input}" : '')
-);
-
 try {
     // Ensure appointment exists
     $checkSql = "SELECT id FROM appointments WHERE id = ?";
@@ -58,7 +44,7 @@ try {
     // Update to Concluded and save compiled remarks
     $sql = "UPDATE appointments SET status = 'Concluded', remarks = ? WHERE id = ?";
     $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, 'si', $compiledRemarks, $id);
+    mysqli_stmt_bind_param($stmt, 'si', $remarks_input, $id);
     $ok = mysqli_stmt_execute($stmt);
 
     if (!$ok) {
