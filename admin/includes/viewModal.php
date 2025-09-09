@@ -100,6 +100,7 @@
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-12">
+                                <label class="fw-bold">Remarks:</label>
                                 <textarea class="form-control" id="viewRemarks" rows="4" placeholder="Add Remarks"
                                     readonly></textarea>
                             </div>
@@ -162,6 +163,11 @@ function printViewDetails() {
         .col-md-5 { flex: 0 0 auto; width: 41.666667%; }
         .col-md-12 { flex: 0 0 auto; width: 100%; }
         .viewID { display: none; }
+        .mb-3 { margin-bottom: 1rem !important; }
+        .mb-1 { margin-bottom: 0.25rem !important; }
+        .mb-2 { margin-bottom: 0.5rem !important; }
+        .mb-4 { margin-bottom: 1.5rem !important; }
+        .mb-5 { margin-bottom: 3rem !important; }
     </style>`
     );
 

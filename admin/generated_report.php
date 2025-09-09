@@ -39,15 +39,23 @@ $filterMonthYear = isset($_GET['reportMonth']) ? $_GET['reportMonth'] : '';
                             </h5>
                             <div>
                                 <a href="reports.php" class="btn btn-secondary">Back</a>
-                                <button type="button" class="btn btn-success" onclick="printReport()">Print</button>
+                                <button type="button" class="btn btn-success" onclick="printReport()"><i
+                                        class="bi bi-printer"></i> Print</button>
                                 <a href="export_pdf.php?reportMonth=<?= urlencode($filterMonthYear) ?>"
-                                    class="btn btn-danger">Export PDF</a>
+                                    class="btn btn-danger"><i class="bx bxs-file-pdf"></i> Export PDF</a>
                             </div>
                         </div>
 
 
                         <!-- Report Table -->
                         <div id="reportSection">
+                            <!-- Print Header (visible only when printing) -->
+                            <div class="print-header" style="display:none;">
+                                <h2 style='text-align:center; font-size:1.4rem; margin:0;'>Appointments Report</h2>
+                                <p style='text-align:center; margin:0; margin-bottom:.9rem;'>Period:
+                                    <?= !empty($filterMonthYear) ? date('F Y', strtotime($filterMonthYear)) : "All Records" ?>
+                                </p>
+                            </div>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -115,13 +123,53 @@ $filterMonthYear = isset($_GET['reportMonth']) ? $_GET['reportMonth'] : '';
                 <!-- Print Script -->
                 <style>
                 @media print {
+                    @page {
+                        size: A4 portrait;
+                        /* or letter if you're using Letter */
+                        margin: 0;
+                        margin-top: 10mm;
+                        /* remove ALL margins */
+                    }
+
+                    html,
+                    body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        height: 100%;
+                    }
+
+                    body * {
+                        visibility: hidden;
+                    }
+
+                    #reportSection,
+                    #reportSection * {
+                        visibility: visible;
+                    }
+
+                    #reportSection {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        width: 100%;
+                    }
 
                     .no-print,
                     .no-print * {
                         display: none !important;
                     }
+
+                    .print-header {
+                        display: block !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
                 }
                 </style>
+
                 <script>
                 function printReport() {
                     window.print();

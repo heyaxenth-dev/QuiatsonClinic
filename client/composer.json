@@ -1,5 +1,6 @@
 {
     "require": {
-        "kickstartph/semaphore-client": "^0.5.0"
+        "kickstartph/semaphore-client": "^0.5.0",
+        "dompdf/dompdf": "^3.1"
     }
 }

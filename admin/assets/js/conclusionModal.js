@@ -70,10 +70,21 @@ document.addEventListener('DOMContentLoaded', () => {
 				.then((response) => response.json())
 				.then((data) => {
 					if (data.success) {
-						alert('Appointment concluded successfully!');
-						location.reload();
+						Swal.fire({
+							icon: 'success',
+							title: 'Success',
+							text: 'Appointment concluded successfully!',
+							confirmButtonText: 'OK',
+						}).then(() => {
+							location.reload();
+						});
 					} else {
-						alert('Error: ' + data.message);
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: data.message,
+							confirmButtonText: 'OK',
+						});
 					}
 				});
 		});
