@@ -37,7 +37,7 @@ session_start();
                     <div class="col-lg-4 mx-auto">
                         <div class="auth-form-light text-left py-5 px-4 px-sm-5">
                             <div class="brand-logo">
-                                <img src="assets/img/logo-tag.svg" alt="logo">
+                                <a href="index"><img src="assets/img/logo-tag.svg" alt="logo" /></a>
                             </div>
                             <h4>New here?</h4>
                             <h6 class="font-weight-light">Signing up is easy. It only takes a few steps</h6>
@@ -45,6 +45,10 @@ session_start();
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-lg" id="username"
                                         name="username" placeholder="Username" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control form-control-lg" id="mobile_no"
+                                        name="mobile_no" placeholder="Mobile No." required>
                                 </div>
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-lg" id="email"

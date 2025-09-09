@@ -96,54 +96,50 @@ include 'alert.php';
                             <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
                                 <!-- Profile Edit Form -->
-                                <form>
+                                <form id="profileEditForm">
                                     <div class="row mb-3">
                                         <label for="firstname" class="col-md-4 col-lg-3 col-form-label">First
                                             Name</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="firstname" type="text" class="form-control" id="firstname"
-                                                value="<?= $firstname?>">
+                                                value="<?= htmlspecialchars($firstname) ?>">
                                         </div>
                                     </div>
-
                                     <div class="row mb-3">
-                                        <label for="lastname" class="col-md-4 col-lg-3 col-form-label">Last
-                                            Name</label>
+                                        <label for="lastname" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="lastname" type="text" class="form-control" id="lastname"
-                                                value="<?= $lastname?>">
+                                                value="<?= htmlspecialchars($lastname) ?>">
                                         </div>
                                     </div>
-
                                     <div class="row mb-3">
                                         <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="email" type="text" class="form-control" id="email"
-                                                value="<?= $email?>">
+                                                value="<?= htmlspecialchars($email) ?>">
                                         </div>
                                     </div>
-
                                     <div class="row mb-3">
                                         <label for="mobile_no" class="col-md-4 col-lg-3 col-form-label">Mobile
                                             Number</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="mobile_no" type="text" class="form-control" id="mobile_no"
-                                                value="<?= $mobile_no?>">
+                                                value="<?= htmlspecialchars($mobile_no) ?>">
                                         </div>
                                     </div>
-
                                     <div class="row mb-3">
                                         <label for="address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="address" type="text" class="form-control" id="address"
-                                                value="<?= $address?>">
+                                                value="<?= htmlspecialchars($address) ?>">
                                         </div>
                                     </div>
-
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        <button type="submit" name="update_profile" class="btn btn-primary">Save
+                                            Changes</button>
                                     </div>
-                                </form><!-- End Profile Edit Form -->
+                                </form>
+                                <div id="profileEditMsg" class="mt-2"></div>
 
                             </div>
 
@@ -195,39 +191,37 @@ include 'alert.php';
 
                             <div class="tab-pane fade pt-3" id="profile-change-password">
                                 <!-- Change Password Form -->
-                                <form>
-
+                                <form id="changePasswordForm">
                                     <div class="row mb-3">
                                         <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current
                                             Password</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="password" type="password" class="form-control"
-                                                id="currentPassword">
+                                                id="currentPassword" required>
                                         </div>
                                     </div>
-
                                     <div class="row mb-3">
                                         <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New
                                             Password</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="newpassword" type="password" class="form-control"
-                                                id="newPassword">
+                                                id="newPassword" required>
                                         </div>
                                     </div>
-
                                     <div class="row mb-3">
                                         <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New
                                             Password</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="renewpassword" type="password" class="form-control"
-                                                id="renewPassword">
+                                                id="renewPassword" required>
                                         </div>
                                     </div>
-
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Change Password</button>
+                                        <button type="submit" name="change_password" class="btn btn-primary">Change
+                                            Password</button>
                                     </div>
-                                </form><!-- End Change Password Form -->
+                                </form>
+                                <div id="changePasswordMsg" class="mt-2"></div>
 
                             </div>
 
@@ -245,3 +239,57 @@ include 'alert.php';
 <?php 
 include './utils/footer.php';
 ?>
+[3 lines of post-context]
+<script>
+// Profile Edit AJAX
+document.getElementById('profileEditForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    formData.append('update_profile', '1');
+    fetch('update_profile.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            const msgDiv = document.getElementById('profileEditMsg');
+            if (data.success) {
+                msgDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+                setTimeout(() => window.location.reload(), 1200);
+            } else {
+                msgDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+            }
+        })
+        .catch(() => {
+            document.getElementById('profileEditMsg').innerHTML =
+                '<div class="alert alert-danger">Server error.</div>';
+        });
+});
+
+// Change Password AJAX
+document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const form = e.target;
+    const formData = new FormData(form);
+    formData.append('change_password', '1');
+    fetch('update_profile.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            const msgDiv = document.getElementById('changePasswordMsg');
+            if (data.success) {
+                msgDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+                form.reset();
+            } else {
+                msgDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+            }
+        })
+        .catch(() => {
+            document.getElementById('changePasswordMsg').innerHTML =
+                '<div class="alert alert-danger">Server error.</div>';
+        });
+});
+</script>

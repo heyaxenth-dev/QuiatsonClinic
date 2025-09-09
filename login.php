@@ -12,6 +12,7 @@ session_start();
     <!-- plugins:css -->
     <link rel="stylesheet" href="assets/vendor/mdi/css/materialdesignicons.min.css" />
     <link rel="stylesheet" href="assets/vendor/css/vendor.bundle.base.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <!-- endinject -->
     <!-- plugin css for this page -->
     <!-- End plugin css for this page -->
@@ -36,7 +37,7 @@ session_start();
                     <div class="col-lg-4 mx-auto">
                         <div class="auth-form-light text-left py-5 px-4 px-sm-5">
                             <div class="brand-logo">
-                                <img src="assets/img/logo-tag.svg" alt="logo" />
+                                <a href="index"><img src="assets/img/logo-tag.svg" alt="logo" /></a>
                             </div>
                             <h4>Hello! let's get started</h4>
                             <h6 class="font-weight-light">Sign in to continue.</h6>
@@ -45,10 +46,32 @@ session_start();
                                     <input type="text" class="form-control form-control-lg" name="username"
                                         id="exampleInputEmail1" placeholder="Username" />
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group" style="position: relative;">
                                     <input type="password" class="form-control form-control-lg" name="password"
-                                        id="exampleInputPassword1" placeholder="Password" />
+                                        id="exampleInputPassword1" placeholder="Password"
+                                        style="padding-right: 40px;" />
+
+                                    <!-- Eye Icon -->
+                                    <a href="javascript:void(0)" id="togglePassword2"
+                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #333; text-decoration: none;">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
                                 </div>
+
+                                <script>
+                                const togglePassword2 = document.querySelector('#togglePassword2');
+                                const passwordInput2 = document.querySelector('#exampleInputPassword1');
+                                const icon2 = togglePassword2.querySelector('i');
+
+                                togglePassword2.addEventListener('click', () => {
+                                    const isPassword = passwordInput2.type === 'password';
+                                    passwordInput2.type = isPassword ? 'text' : 'password';
+
+                                    // Swap between eye and eye-slash
+                                    icon2.classList.toggle('bi-eye');
+                                    icon2.classList.toggle('bi-eye-slash');
+                                });
+                                </script>
                                 <div class="mt-3 d-grid gap-2">
                                     <button type="submit" name="login"
                                         class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"

@@ -5,6 +5,7 @@ include 'database/conn.php'; // Include your database connection file
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
     $username = $conn->real_escape_string($_POST["username"]);
+    $mobile_no = $conn->real_escape_string($_POST["mobile_no"]);
     $email = $conn->real_escape_string($_POST["email"]);
     $role = $conn->real_escape_string($_POST["role"]);
     $password = $conn->real_escape_string($_POST["password"]);
@@ -21,8 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register"])) {
 
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO admin_staff (username, email, role, password) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $username, $email, $role, $hashed_password);
+    $stmt = $conn->prepare("INSERT INTO admin_staff (username, mobile_no, email, role, password) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $username, $mobile_no, $email, $role, $hashed_password);
 
     if ($stmt->execute()) {
         $_SESSION['status'] = "Success";

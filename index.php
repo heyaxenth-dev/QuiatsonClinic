@@ -181,10 +181,33 @@ session_start();
                             </div>
 
                             <!-- Password -->
-                            <div class="form-group mb-3">
+                            <div class="form-group mb-3" style="position: relative;">
                                 <label for="password">Password</label>
-                                <input type="password" name="password" id="password" class="form-control" required />
+                                <input type="password" name="password" id="password" class="form-control" required
+                                    style="padding-right: 40px;" />
+
+                                <!-- Eye Icon (anchor tag) -->
+                                <a href="javascript:void(0)" id="togglePassword"
+                                    style="position: absolute; right: 12px; top: 65%; transform: translateY(-50%); cursor: pointer; color: #333; text-decoration: none;">
+                                    <i class="bi bi-eye"></i>
+                                </a>
                             </div>
+
+                            <script>
+                            const togglePassword = document.querySelector('#togglePassword');
+                            const passwordInput = document.querySelector('#password');
+                            const icon = togglePassword.querySelector('i');
+
+                            togglePassword.addEventListener('click', () => {
+                                const isPassword = passwordInput.type === 'password';
+                                passwordInput.type = isPassword ? 'text' : 'password';
+
+                                // Swap eye / eye-slash
+                                icon.classList.toggle('bi-eye');
+                                icon.classList.toggle('bi-eye-slash');
+                            });
+                            </script>
+
 
                             <!-- Submit Button -->
                             <div class="text-center">

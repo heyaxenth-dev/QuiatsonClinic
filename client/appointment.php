@@ -36,6 +36,30 @@ include 'alert.php';
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="patient_type" id="regular"
                                             value="regular" required>
+                                        <!-- Loader Overlay -->
+                                        <div id="loaderOverlay"
+                                            style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:9999;align-items:center;justify-content:center;">
+                                            <div style="text-align:center;">
+                                                <div class="spinner-border text-primary" role="status"
+                                                    style="width:3rem;height:3rem;">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                                <div style="margin-top:1rem;font-size:1.2rem;">Processing your
+                                                    appointment...</div>
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            var form = document.querySelector("form[action='code.php']");
+                                            var loader = document.getElementById("loaderOverlay");
+                                            if (form) {
+                                                form.addEventListener("submit", function(e) {
+                                                    loader.style.display = "flex";
+                                                });
+                                            }
+                                        });
+                                        </script>
                                         <label class="form-check-label" for="regular">
                                             Regular
                                         </label>
