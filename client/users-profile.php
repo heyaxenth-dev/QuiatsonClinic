@@ -99,93 +99,58 @@ include 'alert.php';
                                 <form id="profileEditForm">
                                     <div class="row mb-3">
                                         <label for="firstname" class="col-md-4 col-lg-3 col-form-label">First
-                                            Name</label>
+                                            Name <span class="text-danger">*</span></label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="firstname" type="text" class="form-control" id="firstname"
-                                                value="<?= htmlspecialchars($firstname) ?>">
+                                                value="<?= htmlspecialchars($firstname) ?>" required>
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <label for="lastname" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                                        <label for="lastname" class="col-md-4 col-lg-3 col-form-label">Last Name <span
+                                                class="text-danger">*</span></label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="lastname" type="text" class="form-control" id="lastname"
-                                                value="<?= htmlspecialchars($lastname) ?>">
+                                                value="<?= htmlspecialchars($lastname) ?>" required>
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <label for="email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                        <label for="email" class="col-md-4 col-lg-3 col-form-label">Email <span
+                                                class="text-danger">*</span></label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="email" type="text" class="form-control" id="email"
-                                                value="<?= htmlspecialchars($email) ?>">
+                                            <input name="email" type="email" class="form-control" id="email"
+                                                value="<?= htmlspecialchars($email) ?>" required>
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="mobile_no" class="col-md-4 col-lg-3 col-form-label">Mobile
                                             Number</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="mobile_no" type="text" class="form-control" id="mobile_no"
-                                                value="<?= htmlspecialchars($mobile_no) ?>">
+                                            <input name="mobile_no" type="tel" class="form-control" id="mobile_no"
+                                                value="<?= htmlspecialchars($mobile_no) ?>"
+                                                placeholder="e.g., +63 912 345 6789">
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="address" class="col-md-4 col-lg-3 col-form-label">Address</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input name="address" type="text" class="form-control" id="address"
-                                                value="<?= htmlspecialchars($address) ?>">
+                                            <textarea name="address" class="form-control" id="address"
+                                                rows="3"><?= htmlspecialchars($address) ?></textarea>
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" name="update_profile" class="btn btn-primary">Save
-                                            Changes</button>
+                                        <button type="submit" name="update_profile" class="btn btn-primary">
+                                            <span class="spinner-border spinner-border-sm d-none" role="status"
+                                                aria-hidden="true"></span>
+                                            Save Changes
+                                        </button>
                                     </div>
                                 </form>
                                 <div id="profileEditMsg" class="mt-2"></div>
-
-                            </div>
-
-                            <div class="tab-pane fade pt-3" id="profile-settings">
-
-                                <!-- Settings Form -->
-                                <form>
-
-                                    <div class="row mb-3">
-                                        <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Email
-                                            Notifications</label>
-                                        <div class="col-md-8 col-lg-9">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="changesMade"
-                                                    checked>
-                                                <label class="form-check-label" for="changesMade">
-                                                    Changes made to your account
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="newProducts"
-                                                    checked>
-                                                <label class="form-check-label" for="newProducts">
-                                                    Information on new products and services
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="proOffers">
-                                                <label class="form-check-label" for="proOffers">
-                                                    Marketing and promo offers
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="securityNotify"
-                                                    checked disabled>
-                                                <label class="form-check-label" for="securityNotify">
-                                                    Security alerts
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                                    </div>
-                                </form><!-- End settings Form -->
 
                             </div>
 
@@ -193,34 +158,74 @@ include 'alert.php';
                                 <!-- Change Password Form -->
                                 <form id="changePasswordForm">
                                     <div class="row mb-3">
-                                        <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current
-                                            Password</label>
+                                        <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">
+                                            Current Password <span class="text-danger">*</span>
+                                        </label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="password" type="password" class="form-control"
                                                 id="currentPassword" required>
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
+
                                     <div class="row mb-3">
-                                        <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New
-                                            Password</label>
+                                        <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">
+                                            New Password <span class="text-danger">*</span>
+                                        </label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="newpassword" type="password" class="form-control"
-                                                id="newPassword" required>
+                                                id="newPassword" required minlength="6">
+                                            <div class="form-text">Password must be at least 6 characters long.</div>
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
+
                                     <div class="row mb-3">
-                                        <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New
-                                            Password</label>
+                                        <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">
+                                            Re-enter New Password <span class="text-danger">*</span>
+                                        </label>
                                         <div class="col-md-8 col-lg-9">
                                             <input name="renewpassword" type="password" class="form-control"
-                                                id="renewPassword" required>
+                                                id="renewPassword" required minlength="6">
+                                            <div class="invalid-feedback"></div>
                                         </div>
                                     </div>
+
+                                    <!-- Show Password Checkbox -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-8 offset-md-4 col-lg-9 offset-lg-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="showPasswords">
+                                                <label class="form-check-label" for="showPasswords">
+                                                    Show Passwords
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="text-center">
-                                        <button type="submit" name="change_password" class="btn btn-primary">Change
-                                            Password</button>
+                                        <button type="submit" name="change_password" class="btn btn-primary">
+                                            <span class="spinner-border spinner-border-sm d-none" role="status"
+                                                aria-hidden="true"></span>
+                                            Change Password
+                                        </button>
                                     </div>
                                 </form>
+
+                                <script>
+                                const showPasswords = document.getElementById('showPasswords');
+                                const passwordFields = [
+                                    document.getElementById('currentPassword'),
+                                    document.getElementById('newPassword'),
+                                    document.getElementById('renewPassword')
+                                ];
+
+                                showPasswords.addEventListener('change', () => {
+                                    const type = showPasswords.checked ? 'text' : 'password';
+                                    passwordFields.forEach(input => input.type = type);
+                                });
+                                </script>
+
                                 <div id="changePasswordMsg" class="mt-2"></div>
 
                             </div>
@@ -245,25 +250,54 @@ include './utils/footer.php';
 document.getElementById('profileEditForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const spinner = submitBtn.querySelector('.spinner-border');
+    const msgDiv = document.getElementById('profileEditMsg');
+
+    // Clear previous messages
+    msgDiv.innerHTML = '';
+
+    // Validate form
+    if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
+    }
+
+    // Show loading state
+    submitBtn.disabled = true;
+    spinner.classList.remove('d-none');
+
     const formData = new FormData(form);
     formData.append('update_profile', '1');
+
     fetch('update_profile.php', {
             method: 'POST',
             body: formData
         })
         .then(res => res.json())
         .then(data => {
-            const msgDiv = document.getElementById('profileEditMsg');
             if (data.success) {
-                msgDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
-                setTimeout(() => window.location.reload(), 1200);
+                msgDiv.innerHTML =
+                    '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                    data.message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>';
+                setTimeout(() => window.location.reload(), 1500);
             } else {
-                msgDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+                msgDiv.innerHTML =
+                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                    data.message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>';
             }
         })
         .catch(() => {
-            document.getElementById('profileEditMsg').innerHTML =
-                '<div class="alert alert-danger">Server error.</div>';
+            msgDiv.innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                'Server error. Please try again.' +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>';
+        })
+        .finally(() => {
+            // Hide loading state
+            submitBtn.disabled = false;
+            spinner.classList.add('d-none');
         });
 });
 
@@ -271,25 +305,95 @@ document.getElementById('profileEditForm').addEventListener('submit', function(e
 document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const spinner = submitBtn.querySelector('.spinner-border');
+    const msgDiv = document.getElementById('changePasswordMsg');
+    const newPassword = form.querySelector('#newPassword').value;
+    const renewPassword = form.querySelector('#renewPassword').value;
+
+    // Clear previous messages
+    msgDiv.innerHTML = '';
+
+    // Validate form
+    if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return;
+    }
+
+    // Check if passwords match
+    if (newPassword !== renewPassword) {
+        msgDiv.innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+            'New passwords do not match.' +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>';
+        return;
+    }
+
+    // Show loading state
+    submitBtn.disabled = true;
+    spinner.classList.remove('d-none');
+
     const formData = new FormData(form);
     formData.append('change_password', '1');
+
     fetch('update_profile.php', {
             method: 'POST',
             body: formData
         })
         .then(res => res.json())
         .then(data => {
-            const msgDiv = document.getElementById('changePasswordMsg');
             if (data.success) {
-                msgDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
+                msgDiv.innerHTML =
+                    '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                    data.message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>';
                 form.reset();
+                form.classList.remove('was-validated');
             } else {
-                msgDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
+                msgDiv.innerHTML =
+                    '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                    data.message +
+                    '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>';
             }
         })
         .catch(() => {
-            document.getElementById('changePasswordMsg').innerHTML =
-                '<div class="alert alert-danger">Server error.</div>';
+            msgDiv.innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                'Server error. Please try again.' +
+                '<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>';
+        })
+        .finally(() => {
+            // Hide loading state
+            submitBtn.disabled = false;
+            spinner.classList.add('d-none');
         });
+});
+
+// Real-time password confirmation validation
+document.getElementById('renewPassword').addEventListener('input', function() {
+    const newPassword = document.getElementById('newPassword').value;
+    const renewPassword = this.value;
+    const msgDiv = document.getElementById('changePasswordMsg');
+
+    if (renewPassword && newPassword !== renewPassword) {
+        this.setCustomValidity('Passwords do not match');
+        this.classList.add('is-invalid');
+    } else {
+        this.setCustomValidity('');
+        this.classList.remove('is-invalid');
+    }
+});
+
+// Clear validation messages when user starts typing
+document.querySelectorAll('#profileEditForm input, #profileEditForm textarea').forEach(input => {
+    input.addEventListener('input', function() {
+        this.classList.remove('is-invalid');
+        document.getElementById('profileEditMsg').innerHTML = '';
+    });
+});
+
+document.querySelectorAll('#changePasswordForm input').forEach(input => {
+    input.addEventListener('input', function() {
+        this.classList.remove('is-invalid');
+        document.getElementById('changePasswordMsg').innerHTML = '';
+    });
 });
 </script>

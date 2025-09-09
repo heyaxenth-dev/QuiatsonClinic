@@ -2,8 +2,8 @@
 include '../database/conn.php';
 session_start();
 
-// Check if user is authenticated
-if (!isset($_SESSION['client_auth']) || $_SESSION['client_auth'] !== true) {
+// Check if user is authenticated as admin
+if (!isset($_SESSION['admin_auth']) || $_SESSION['admin_auth'] !== true) {
     header('Content-Type: application/json');
     echo json_encode(["success" => false, "message" => "Unauthorized access."]);
     exit;
@@ -14,44 +14,52 @@ $response = ["success" => false, "message" => "Unknown error."];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_profile'])) {
         // Validate and sanitize input
-        $new_firstname = trim($_POST['firstname'] ?? '');
-        $new_lastname = trim($_POST['lastname'] ?? '');
+        $new_username = trim($_POST['username'] ?? '');
         $new_email = trim($_POST['email'] ?? '');
         $new_mobile_no = trim($_POST['mobile_no'] ?? '');
-        $new_address = trim($_POST['address'] ?? '');
         $user_id = $_SESSION['user_id'];
 
         // Basic validation
-        if (empty($new_firstname) || empty($new_lastname)) {
-            $response["message"] = "First name and last name are required.";
+        if (empty($new_username)) {
+            $response["message"] = "Username is required.";
         } elseif (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
             $response["message"] = "Please enter a valid email address.";
         } elseif (!empty($new_mobile_no) && !preg_match('/^[0-9+\-\s()]+$/', $new_mobile_no)) {
             $response["message"] = "Please enter a valid mobile number.";
         } else {
-            // Check if email is already taken by another user
-            $stmt = $conn->prepare("SELECT id FROM client WHERE email = ? AND id != ?");
-            $stmt->bind_param("si", $new_email, $user_id);
+            // Check if username is already taken by another admin
+            $stmt = $conn->prepare("SELECT id FROM admin_staff WHERE username = ? AND id != ?");
+            $stmt->bind_param("si", $new_username, $user_id);
             $stmt->execute();
             $result = $stmt->get_result();
             $stmt->close();
 
             if ($result->num_rows > 0) {
-                $response["message"] = "Email address is already taken by another user.";
+                $response["message"] = "Username is already taken by another admin.";
             } else {
-                // Update profile
-                $stmt = $conn->prepare("UPDATE client SET firstname=?, lastname=?, email=?, mobile_no=?, address=? WHERE id=?");
-                $stmt->bind_param("sssssi", $new_firstname, $new_lastname, $new_email, $new_mobile_no, $new_address, $user_id);
-                
-                if ($stmt->execute()) {
-                    // Update session variables
-                    $_SESSION['firstname'] = $new_firstname;
-                    $_SESSION['email'] = $new_email;
-                    $response = ["success" => true, "message" => "Profile updated successfully."];
-                } else {
-                    $response["message"] = "Failed to update profile. Please try again.";
-                }
+                // Check if email is already taken by another admin
+                $stmt = $conn->prepare("SELECT id FROM admin_staff WHERE email = ? AND id != ?");
+                $stmt->bind_param("si", $new_email, $user_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
                 $stmt->close();
+
+                if ($result->num_rows > 0) {
+                    $response["message"] = "Email address is already taken by another admin.";
+                } else {
+                    // Update profile
+                    $stmt = $conn->prepare("UPDATE admin_staff SET username=?, email=?, mobile_no=? WHERE id=?");
+                    $stmt->bind_param("sssi", $new_username, $new_email, $new_mobile_no, $user_id);
+                    
+                    if ($stmt->execute()) {
+                        // Update session variables
+                        $_SESSION['username'] = $new_username;
+                        $response = ["success" => true, "message" => "Profile updated successfully."];
+                    } else {
+                        $response["message"] = "Failed to update profile. Please try again.";
+                    }
+                    $stmt->close();
+                }
             }
         }
     }
@@ -73,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response["message"] = "New password must be different from current password.";
         } else {
             // Verify current password
-            $stmt = $conn->prepare("SELECT password FROM client WHERE id=?");
+            $stmt = $conn->prepare("SELECT password FROM admin_staff WHERE id=?");
             $stmt->bind_param("i", $user_id);
             $stmt->execute();
             $stmt->bind_result($hashedPassword);
@@ -83,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (password_verify($currentPassword, $hashedPassword)) {
                 // Update password
                 $newHashed = password_hash($newPassword, PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("UPDATE client SET password=? WHERE id=?");
+                $stmt = $conn->prepare("UPDATE admin_staff SET password=? WHERE id=?");
                 $stmt->bind_param("si", $newHashed, $user_id);
                 
                 if ($stmt->execute()) {
