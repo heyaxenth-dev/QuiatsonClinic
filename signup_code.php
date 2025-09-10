@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_client'])) {
             $_SESSION['status_text'] = "Invalid password.";
             $_SESSION['status_code'] = "error";
             $_SESSION['status_btn'] = "Back";
-            header("Location: {$_SERVER['HTTP_REFERER']}");
+            header("Location: index.php#appointment");
             exit;
         }
     } else {
@@ -150,7 +150,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_client'])) {
         $_SESSION['status_text'] = "firstname not found.";
         $_SESSION['status_code'] = "error";
         $_SESSION['status_btn'] = "Back";
-        header("Location: {$_SERVER['HTTP_REFERER']}");
+        header("Location: index.php#appointment");
         exit;
     }
     $stmt->close();

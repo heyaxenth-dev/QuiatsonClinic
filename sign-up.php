@@ -89,7 +89,7 @@ session_start();
                     <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
                 </div>
                 <div class="social-links d-none d-md-flex align-items-center">
-                    <a href="#" class="t    witter"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
                     <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
                     <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
                     <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
@@ -119,7 +119,7 @@ session_start();
                     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
                 </nav>
 
-                <a class="cta-btn d-none d-sm-block" href="#appointment">Make an Appointment</a>
+                <a class="cta-btn d-none d-sm-block" href="index.php#appointment">Make an Appointment</a>
             </div>
         </div>
     </header>
