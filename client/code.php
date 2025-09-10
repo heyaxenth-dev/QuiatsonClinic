@@ -10,6 +10,7 @@ require_once( 'vendor/autoload.php' );
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
     // Get POST data safely
+    $created_by = $conn->real_escape_string($_POST['user_id']); // ID of the user creating the appointment
     $patient_type = $conn->real_escape_string($_POST['patient_type']); // 'regular' or 'senior'/'senior_pwd'
     $uploaded_id = $_FILES['upload_id'] ?? null; // Uploaded file for senior ID, if any
     $lastname = $conn->real_escape_string($_POST['lastname']);
@@ -131,14 +132,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
     $severity = in_array($symptom, $urgent_symptoms) ? 'Urgent' : 'Regular';
 
     // Insert patient record without patient_id first
-    $stmt = $conn->prepare("INSERT INTO appointments ( patient_type,
+    $stmt = $conn->prepare("INSERT INTO appointments (created_by, patient_type,
         severity, lastname, firstname, middle_initial, address, age, sex, birthdate,
         civil_status, phone, weight, height, bloodtype,
         appointment_date, time_slot, symptom, uploaded_id, status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
-        "ssssssissssssssssss", $patient_type,
+        "issssssissssssssssss", $created_by, $patient_type,
         $severity, $lastname, $firstname, $middle_initial, $address, $age, $sex, $birthdate,
         $civil_status, $phone, $weight, $height, $bloodtype,
         $appointment_date, $time_slot, $symptom, $target_file, $default_status

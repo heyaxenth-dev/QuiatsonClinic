@@ -11,40 +11,42 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['email'])) {
     exit;
 }
 
-// Fetch appointments for the current user by email if present in table or by patient identifier fields
-// The schema stores patient details inline; match by phone/email if available in session
-
-$userEmail = isset($_SESSION['email']) ? $_SESSION['email'] : null;
-$userPhone = isset($_SESSION['phone']) ? $_SESSION['phone'] : null;
-$userName = isset($_SESSION['username']) ? $_SESSION['username'] : null;
-
-// Build query to fetch all appointments; if there is a user linkage field, prefer it.
-// Current schema lacks a foreign key; show all appointments created (no strict link). As a fallback, return all approved and pending appointments for visibility.
+$userEmail = $_SESSION['email'] ?? null;
+$userPhone = $_SESSION['phone'] ?? null;
+$userName  = $_SESSION['username'] ?? null;
+$userId    = $_SESSION['user_id'] ?? null;
 
 $params = [];
-$sql = "SELECT id, firstname, lastname, appointment_date, time_slot, status, symptom FROM appointments";
+$sql = "SELECT id, firstname, lastname, appointment_date, time_slot, status, symptom 
+        FROM appointments";
 
-// Optional filters (best effort)
 $where = [];
+
+// Always restrict by created_by first
+$where[] = "created_by = ?";
+$params[] = $userId;
+
+// Optional filters
 if ($userPhone) {
     $where[] = "phone = ?";
     $params[] = $userPhone;
 }
+
 if ($userEmail && in_array('email', array_column($conn->query("SHOW COLUMNS FROM appointments")->fetch_all(MYSQLI_ASSOC), 'Field'))) {
     $where[] = "email = ?";
     $params[] = $userEmail;
 }
 
+// Apply conditions
 if (!empty($where)) {
     $sql .= " WHERE " . implode(' OR ', $where);
 } else {
-    // Default to only show future or today appointments
     $sql .= " WHERE appointment_date >= CURDATE()";
 }
 
 $sql .= " ORDER BY appointment_date ASC, time_slot ASC";
 
-// Prepare statement safely depending on params
+// Prepare & execute safely
 if (!empty($params)) {
     $types = str_repeat('s', count($params));
     $stmt = $conn->prepare($sql);
@@ -59,22 +61,17 @@ $events = [];
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         $date = $row['appointment_date'];
-        $timeRange = $row['time_slot']; // e.g., "8:30 AM - 9:30 AM"
+        $timeRange = $row['time_slot'];
         $times = explode(' - ', $timeRange);
-        $startTime = isset($times[0]) ? $times[0] : '8:30 AM';
-        $endTime = isset($times[1]) ? $times[1] : $startTime;
+        $startTime = $times[0] ?? '8:30 AM';
+        $endTime   = $times[1] ?? $startTime;
 
-        // Convert to ISO datetime
         $start = date('c', strtotime($date . ' ' . $startTime));
-        $end = date('c', strtotime($date . ' ' . $endTime));
+        $end   = date('c', strtotime($date . ' ' . $endTime));
 
         $title = trim(($row['firstname'] ?? '') . ' ' . ($row['lastname'] ?? ''));
-        if ($title === '') {
-            $title = 'Clinic Check-up';
-        }
-        if (!empty($row['symptom'])) {
-            $title .= ' - ' . $row['symptom'];
-        }
+        if ($title === '') $title = 'Clinic Check-up';
+        if (!empty($row['symptom'])) $title .= ' - ' . $row['symptom'];
 
         $events[] = [
             'id' => (string)$row['id'],
@@ -93,5 +90,3 @@ echo json_encode($events);
 
 if (isset($stmt)) { $stmt->close(); }
 $conn->close();
-
-?>

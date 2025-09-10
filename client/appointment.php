@@ -30,6 +30,8 @@ include 'alert.php';
 
                         <form action="code.php" method="POST" role="form" enctype="multipart/form-data">
 
+                            <input type="hidden" name="user_id" value="<?= $_SESSION['user_id']; ?>">
+
                             <div class="mb-3">
                                 <label class="form-label">Patient Type</label>
                                 <div>
