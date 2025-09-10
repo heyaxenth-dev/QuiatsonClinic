@@ -7,6 +7,54 @@ include 'utils/sms_sender.php'; // Include the SMS sender utility
 
 require_once( 'vendor/autoload.php' );
 
+// Function to save appointment history for future reuse
+function saveAppointmentHistory($conn, $user_id, $lastname, $firstname, $middle_initial, 
+                               $address, $age, $sex, $birthdate, $civil_status, $phone, 
+                               $weight, $height, $bloodtype, $patient_type, $symptom) {
+    try {
+        // Check if history already exists for this user
+        $check_stmt = $conn->prepare("SELECT id FROM appointment_history WHERE user_id = ?");
+        $check_stmt->bind_param("i", $user_id);
+        $check_stmt->execute();
+        $check_result = $check_stmt->get_result();
+        $check_stmt->close();
+        
+        if ($check_result->num_rows > 0) {
+            // Update existing history
+            $update_stmt = $conn->prepare("
+                UPDATE appointment_history SET 
+                    lastname = ?, firstname = ?, middle_initial = ?, address = ?, 
+                    age = ?, sex = ?, birthdate = ?, civil_status = ?, phone = ?, 
+                    weight = ?, height = ?, bloodtype = ?, patient_type = ?, symptom = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE user_id = ?
+            ");
+            $update_stmt->bind_param("ssssisssssssssi", 
+                $lastname, $firstname, $middle_initial, $address, $age, $sex, 
+                $birthdate, $civil_status, $phone, $weight, $height, $bloodtype, 
+                $patient_type, $symptom, $user_id);
+            $update_stmt->execute();
+            $update_stmt->close();
+        } else {
+            // Insert new history record
+            $insert_stmt = $conn->prepare("
+                INSERT INTO appointment_history 
+                (user_id, lastname, firstname, middle_initial, address, age, sex, 
+                 birthdate, civil_status, phone, weight, height, bloodtype, patient_type, symptom)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ");
+            $insert_stmt->bind_param("isssissssssssss", 
+                $user_id, $lastname, $firstname, $middle_initial, $address, $age, $sex, 
+                $birthdate, $civil_status, $phone, $weight, $height, $bloodtype, 
+                $patient_type, $symptom);
+            $insert_stmt->execute();
+            $insert_stmt->close();
+        }
+    } catch (Exception $e) {
+        // Log error but don't interrupt the appointment process
+        error_log("Failed to save appointment history: " . $e->getMessage());
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
     // Get POST data safely
@@ -155,6 +203,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
         $update->bind_param("si", $patient_id, $insert_id);
         $update->execute();
         $update->close();
+
+        // Save appointment data to history for future reuse
+        saveAppointmentHistory($conn, $created_by, $lastname, $firstname, $middle_initial, 
+                             $address, $age, $sex, $birthdate, $civil_status, $phone, 
+                             $weight, $height, $bloodtype, $patient_type, $symptom);
 
         // Send SMS notification
         $sms_result = sendSMS($api_key, $sender_name, $phone, $firstname, $sendDate, $time_slot);

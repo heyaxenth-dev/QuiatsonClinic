@@ -28,7 +28,28 @@ include 'alert.php';
                     <div class="card-body">
                         <h5 class="card-title">Appointment Form</h5>
 
-                        <form action="code.php" method="POST" role="form" enctype="multipart/form-data">
+                        <!-- History Section -->
+                        <div class="alert alert-info" id="historyAlert" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-clock-history me-2"></i>
+                                    <strong>Previous Data Available!</strong>
+                                    <span id="historyInfo">We found your previous appointment data.</span>
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-sm btn-outline-primary me-2"
+                                        id="previewHistory">
+                                        <i class="bi bi-eye"></i> Preview
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-primary" id="useHistory">
+                                        <i class="bi bi-arrow-clockwise"></i> Use Previous Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="code.php" method="POST" role="form" enctype="multipart/form-data"
+                            id="appointmentForm">
 
                             <input type="hidden" name="user_id" value="<?= $_SESSION['user_id']; ?>">
 
@@ -338,7 +359,259 @@ include 'alert.php';
     </section>
 
 </main><!-- End #main -->
+
+<!-- History Preview Modal -->
+<div class="modal fade" id="historyPreviewModal" tabindex="-1" aria-labelledby="historyPreviewModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="historyPreviewModalLabel">
+                    <i class="bi bi-clock-history me-2"></i>Previous Appointment Data
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Personal Information</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Name:</strong></td>
+                                <td id="previewName">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Address:</strong></td>
+                                <td id="previewAddress">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Age:</strong></td>
+                                <td id="previewAge">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sex:</strong></td>
+                                <td id="previewSex">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Birthdate:</strong></td>
+                                <td id="previewBirthdate">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Civil Status:</strong></td>
+                                <td id="previewCivilStatus">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Phone:</strong></td>
+                                <td id="previewPhone">-</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Medical Information</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <td><strong>Weight:</strong></td>
+                                <td id="previewWeight">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Height:</strong></td>
+                                <td id="previewHeight">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Blood Type:</strong></td>
+                                <td id="previewBloodtype">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Patient Type:</strong></td>
+                                <td id="previewPatientType">-</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Symptom:</strong></td>
+                                <td id="previewSymptom">-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Last updated: <span id="previewLastUpdated">-</span>
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="confirmUseHistory">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Use This Data
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="assets/js/datepicker.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let historyData = null;
+
+    // Check for appointment history on page load
+    checkAppointmentHistory();
+
+    function checkAppointmentHistory() {
+        fetch('get_appointment_history.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data) {
+                    historyData = data.data;
+                    showHistoryAlert();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching appointment history:', error);
+            });
+    }
+
+    function showHistoryAlert() {
+        if (historyData) {
+            const historyAlert = document.getElementById('historyAlert');
+            const historyInfo = document.getElementById('historyInfo');
+
+            // Format the last updated date
+            const lastUpdated = new Date(historyData.created_at).toLocaleDateString();
+            historyInfo.textContent = `Last appointment: ${lastUpdated}`;
+
+            historyAlert.style.display = 'block';
+        }
+    }
+
+    function populateFormWithHistory() {
+        if (!historyData) return;
+
+        // Populate form fields with history data
+        document.getElementById('lastname').value = historyData.lastname || '';
+        document.getElementById('firstname').value = historyData.firstname || '';
+        document.getElementById('middle_initial').value = historyData.middle_initial || '';
+        document.getElementById('address').value = historyData.address || '';
+        document.getElementById('age').value = historyData.age || '';
+        document.getElementById('sex').value = historyData.sex || '';
+        document.getElementById('birthdate').value = historyData.birthdate || '';
+        document.getElementById('civil_status').value = historyData.civil_status || '';
+        document.getElementById('phone').value = historyData.phone || '';
+        document.getElementById('weight').value = historyData.weight || '';
+        document.getElementById('height').value = historyData.height || '';
+        document.getElementById('bloodtype').value = historyData.bloodtype || '';
+
+        // Set patient type
+        if (historyData.patient_type) {
+            const patientTypeRadio = document.querySelector(
+                `input[name="patient_type"][value="${historyData.patient_type}"]`);
+            if (patientTypeRadio) {
+                patientTypeRadio.checked = true;
+                // Trigger the toggle function for senior/pwd upload
+                patientTypeRadio.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Set symptom
+        if (historyData.symptom) {
+            const symptomRadio = document.querySelector(
+            `input[name="symptom"][value="${historyData.symptom}"]`);
+            if (symptomRadio) {
+                symptomRadio.checked = true;
+            }
+        }
+
+        // Show success message
+        showNotification('Previous data loaded successfully!', 'success');
+    }
+
+    function showNotification(message, type = 'info') {
+        // Create a simple notification
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 3000);
+    }
+
+    function populatePreviewModal() {
+        if (!historyData) return;
+
+        // Populate preview modal
+        document.getElementById('previewName').textContent =
+            `${historyData.firstname || ''} ${historyData.middle_initial || ''} ${historyData.lastname || ''}`
+            .trim();
+        document.getElementById('previewAddress').textContent = historyData.address || '-';
+        document.getElementById('previewAge').textContent = historyData.age || '-';
+        document.getElementById('previewSex').textContent = historyData.sex || '-';
+        document.getElementById('previewBirthdate').textContent = historyData.birthdate || '-';
+        document.getElementById('previewCivilStatus').textContent = historyData.civil_status || '-';
+        document.getElementById('previewPhone').textContent = historyData.phone || '-';
+        document.getElementById('previewWeight').textContent = historyData.weight || '-';
+        document.getElementById('previewHeight').textContent = historyData.height || '-';
+        document.getElementById('previewBloodtype').textContent = historyData.bloodtype || '-';
+        document.getElementById('previewPatientType').textContent = historyData.patient_type || '-';
+        document.getElementById('previewSymptom').textContent = historyData.symptom || '-';
+
+        // Format last updated date
+        const lastUpdated = new Date(historyData.created_at).toLocaleString();
+        document.getElementById('previewLastUpdated').textContent = lastUpdated;
+    }
+
+    // Event listeners
+    document.getElementById('useHistory').addEventListener('click', function() {
+        populateFormWithHistory();
+    });
+
+    document.getElementById('previewHistory').addEventListener('click', function() {
+        populatePreviewModal();
+        const modal = new bootstrap.Modal(document.getElementById('historyPreviewModal'));
+        modal.show();
+    });
+
+    document.getElementById('confirmUseHistory').addEventListener('click', function() {
+        populateFormWithHistory();
+        const modal = bootstrap.Modal.getInstance(document.getElementById('historyPreviewModal'));
+        modal.hide();
+    });
+
+    // Add a "Clear Form" button functionality
+    function addClearFormButton() {
+        const form = document.getElementById('appointmentForm');
+        const submitButton = form.querySelector('button[type="submit"]');
+
+        const clearButton = document.createElement('button');
+        clearButton.type = 'button';
+        clearButton.className = 'btn btn-outline-secondary me-2';
+        clearButton.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Clear Form';
+        clearButton.addEventListener('click', function() {
+            if (confirm('Are you sure you want to clear all form data?')) {
+                form.reset();
+                // Reset patient type toggle
+                document.getElementById('seniorIdUpload').classList.add('d-none');
+                document.getElementById('upload_id').removeAttribute('required');
+                showNotification('Form cleared successfully!', 'info');
+            }
+        });
+
+        submitButton.parentNode.insertBefore(clearButton, submitButton);
+    }
+
+    // Initialize clear form button
+    addClearFormButton();
+});
+</script>
 
 <?php 
 include './utils/footer.php';
