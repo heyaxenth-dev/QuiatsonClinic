@@ -32,15 +32,28 @@ function get_page_link($page_name) {
             <ul id="appointments-nav"
                 class="nav-content collapse<?= $current_page == 'appointments_urgent' || $current_page == 'appointments_regular' || $current_page == 'appointments_history' ? 'show' : ''; ?>">
                 <li>
-                    <a class="<?= ($current_page == 'appointments_urgent') ? 'active' : '' ?> "
+                    <a class="d-flex justify-content-between align-items-center <?= ($current_page == 'appointments_urgent') ? 'active' : '' ?>"
                         href="<?= get_page_link('appointments_urgent')?>">
-                        <i class="bi bi-circle"></i><span class="text-danger">Urgent/Priority</span>
+                        <span>
+                            <i class="bi bi-circle"></i>
+                            <span class="text-danger">Urgent/Priority</span>
+                        </span>
+                        <?php if ($urgentCount > 0): ?>
+                        <span class="badge bg-warning text-dark"><?= $urgentCount ?></span>
+                        <?php endif; ?>
                     </a>
                 </li>
+
                 <li>
-                    <a class="<?= ($current_page == 'appointments_regular') ? 'active' : '' ?> "
+                    <a class="d-flex justify-content-between align-items-center <?= ($current_page == 'appointments_regular') ? 'active' : '' ?>"
                         href="<?= get_page_link('appointments_regular')?>">
-                        <i class="bi bi-circle"></i><span>Regular</span>
+                        <span>
+                            <i class="bi bi-circle"></i>
+                            <span>Regular</span>
+                        </span>
+                        <?php if ($regularCount > 0): ?>
+                        <span class="badge bg-success"><?= $regularCount ?></span>
+                        <?php endif; ?>
                     </a>
                 </li>
 

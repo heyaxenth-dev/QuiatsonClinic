@@ -53,6 +53,16 @@
 
         }
     }
+
+    // Count Urgent/Priority
+    $urgentCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE patient_type = 'senior_pwd' AND (severity = 'Regular' OR severity = 'Urgent')";
+    $urgentResult = mysqli_query($conn, $urgentCountQuery);
+    $urgentCount = mysqli_fetch_assoc($urgentResult)['count'];
+
+    // Count Regular
+    $regularCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE patient_type = 'regular' AND severity = 'Regular'";
+    $regularResult = mysqli_query($conn, $regularCountQuery);
+    $regularCount = mysqli_fetch_assoc($regularResult)['count'];
     ?>
 
     <!-- ======= Header ======= -->

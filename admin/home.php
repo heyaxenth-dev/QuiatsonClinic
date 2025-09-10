@@ -120,30 +120,30 @@ include 'alert.php';
                     </div>
                     <!-- End Appointment Pendings Card -->
 
-                    <!-- Served Card -->
+                    <!-- Appointment Bookings Card -->
                     <div class="col-xxl-4 col-xl-12">
                         <div class="card info-card customers-card">
 
                             <?php 
-                            // Get the number of pending appointments today
-                            $sql = "SELECT COUNT(*) as total_pending_appointments FROM appointments WHERE status = 'Pending'";
+                            // Get the total number of appointments (all bookings)
+                            $sql = "SELECT COUNT(*) as total_appointments FROM appointments";
                             $result = mysqli_query($conn, $sql);
                             $row = mysqli_fetch_assoc($result);
-                            $total_pending_appointments = $row['total_pending_appointments'];
+                            $total_appointments = $row['total_appointments'];
                             ?>
 
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    Appointment Pendings
+                                    Appointment Bookings
                                 </h5>
 
                                 <div class="d-flex align-items-center">
                                     <div
                                         class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                        <i class="bi bi-clock-history"></i>
+                                        <i class="bi bi-calendar-check"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6><?= $total_pending_appointments == 0 ? '<small class="text-muted">No pending appointments today</small>' : $total_pending_appointments; ?>
+                                        <h6><?= $total_appointments == 0 ? '<small class="text-muted">No appointments booked</small>' : $total_appointments; ?>
                                         </h6>
                                         <!-- <span class="text-success small pt-1 fw-bold">8%</span>
                                         <span class="text-muted small pt-2 ps-1">increase</span> -->
@@ -153,7 +153,7 @@ include 'alert.php';
 
                         </div>
                     </div>
-                    <!-- End Served Card -->
+                    <!-- End Appointment Bookings Card -->
 
                     <!-- Appointment Tracking -->
                     <div class="col-12">

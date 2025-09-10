@@ -35,6 +35,48 @@ session_start();
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="assets/js/sweetalert2.all.min.js"></script>
+
+    <!-- Custom validation styles -->
+    <style>
+    .form-control.is-valid {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .form-control.is-valid:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .form-select.is-valid {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .form-select.is-valid:focus {
+        border-color: #28a745;
+        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    }
+
+    .invalid-feedback {
+        display: block !important;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #dc3545;
+    }
+
+    .valid-feedback {
+        display: block !important;
+        width: 100%;
+        margin-top: 0.25rem;
+        font-size: 0.875em;
+        color: #28a745;
+    }
+    </style>
 </head>
 
 <body class="starter-page-page">
@@ -47,7 +89,7 @@ session_start();
                     <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
                 </div>
                 <div class="social-links d-none d-md-flex align-items-center">
-                    <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="t    witter"><i class="bi bi-twitter-x"></i></a>
                     <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
                     <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
                     <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
@@ -58,7 +100,7 @@ session_start();
 
         <div class="branding d-flex align-items-center">
             <div class="container position-relative d-flex align-items-center justify-content-between">
-                <a href="index.html" class="logo d-flex align-items-center me-auto">
+                <a href="index" class="logo d-flex align-items-center me-auto">
                     <!-- Uncomment the line below if you also wish to use an image logo -->
                     <!-- <img src="assets/img/logo.png" alt=""> -->
                     <h1 class="sitename">Quiatson Clinic</h1>
@@ -120,7 +162,12 @@ session_start();
             <div class="container d-flex justify-content-center align-items-center" data-aos="fade-up">
                 <div class="card">
                     <div class="card-body m-4">
-                        <form action="signup_code.php" method="POST">
+                        <form action="signup_code.php" method="POST" id="signupForm">
+                            <div id="duplicate-warning" class="alert alert-warning" style="display:none;"></div>
+                            <div class="invalid-feedback" id="email-feedback" style="display:none;"></div>
+                            <div class="invalid-feedback" id="phone-feedback" style="display:none;"></div>
+                            <div class="invalid-feedback" id="password-feedback" style="display:none;"></div>
+                            <div class="invalid-feedback" id="confirm-password-feedback" style="display:none;"></div>
                             <div class="row g-3">
                                 <!-- First Name -->
                                 <div class="col-md-6">
@@ -173,6 +220,13 @@ session_start();
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     </div>
+                                    <div class="password-strength mt-2">
+                                        <div class="progress" style="height: 5px;">
+                                            <div class="progress-bar" id="password-strength-bar" role="progressbar"
+                                                style="width: 0%"></div>
+                                        </div>
+                                        <small class="text-muted" id="password-strength-text">Enter a password</small>
+                                    </div>
                                 </div>
 
                                 <!-- Confirm Password -->
@@ -208,25 +262,308 @@ session_start();
             </div>
 
             <script>
-            document.querySelectorAll('.toggle-password').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault(); // prevent page jump from #
-                    const targetId = this.getAttribute('data-target');
-                    const input = document.getElementById(targetId);
-                    const icon = this.querySelector('i');
+            $(document).ready(function() {
+                let emailDuplicate = false;
+                let phoneDuplicate = false;
+                let passwordValid = false;
+                let confirmPasswordValid = false;
+                let validationTimeout = null;
 
-                    if (input.type === 'password') {
-                        input.type = 'text';
-                        icon.classList.replace('bi-eye', 'bi-eye-slash');
+                // Password strength checker
+                function checkPasswordStrength(password) {
+                    let strength = 0;
+                    let feedback = '';
+
+                    if (password.length >= 8) strength += 1;
+                    if (/[a-z]/.test(password)) strength += 1;
+                    if (/[A-Z]/.test(password)) strength += 1;
+                    if (/[0-9]/.test(password)) strength += 1;
+                    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+
+                    const strengthBar = $('#password-strength-bar');
+                    const strengthText = $('#password-strength-text');
+
+                    switch (strength) {
+                        case 0:
+                        case 1:
+                            strengthBar.removeClass('bg-success bg-warning').addClass('bg-danger');
+                            strengthBar.css('width', '20%');
+                            strengthText.text('Very Weak').removeClass('text-success text-warning').addClass(
+                                'text-danger');
+                            break;
+                        case 2:
+                            strengthBar.removeClass('bg-success bg-danger').addClass('bg-warning');
+                            strengthBar.css('width', '40%');
+                            strengthText.text('Weak').removeClass('text-success text-danger').addClass(
+                                'text-warning');
+                            break;
+                        case 3:
+                            strengthBar.removeClass('bg-success bg-danger').addClass('bg-warning');
+                            strengthBar.css('width', '60%');
+                            strengthText.text('Fair').removeClass('text-success text-danger').addClass(
+                                'text-warning');
+                            break;
+                        case 4:
+                            strengthBar.removeClass('bg-warning bg-danger').addClass('bg-success');
+                            strengthBar.css('width', '80%');
+                            strengthText.text('Good').removeClass('text-warning text-danger').addClass(
+                                'text-success');
+                            break;
+                        case 5:
+                            strengthBar.removeClass('bg-warning bg-danger').addClass('bg-success');
+                            strengthBar.css('width', '100%');
+                            strengthText.text('Strong').removeClass('text-warning text-danger').addClass(
+                                'text-success');
+                            break;
+                    }
+
+                    return strength >= 3;
+                }
+
+                // Check duplicate function with improved error handling
+                function checkDuplicate(field, value, callback) {
+                    if (!value || value.length < 3) {
+                        callback({
+                            duplicate: false,
+                            fields: [],
+                            error: null
+                        });
+                        return;
+                    }
+
+                    $.ajax({
+                        url: 'check_duplicate.php',
+                        type: 'POST',
+                        data: {
+                            field: field,
+                            value: value
+                        },
+                        dataType: 'json',
+                        timeout: 5000,
+                        success: function(response) {
+                            callback(response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Duplicate check error:', error);
+                            callback({
+                                duplicate: false,
+                                fields: [],
+                                error: 'Network error. Please try again.'
+                            });
+                        }
+                    });
+                }
+
+                // Email validation
+                $('#email').on('blur input', function() {
+                    const email = $(this).val().trim();
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    const $this = $(this);
+
+                    if (email) {
+                        if (!emailRegex.test(email)) {
+                            emailDuplicate = false;
+                            $this.addClass('is-invalid').removeClass('is-valid');
+                            $('#email-feedback').text('Please enter a valid email address.').show();
+                        } else {
+                            // Clear previous timeout
+                            if (validationTimeout) {
+                                clearTimeout(validationTimeout);
+                            }
+
+                            // Debounce the duplicate check
+                            validationTimeout = setTimeout(() => {
+                                checkDuplicate('email', email, function(response) {
+                                    if (response.error) {
+                                        emailDuplicate = false;
+                                        $this.addClass('is-invalid').removeClass(
+                                            'is-valid');
+                                        $('#email-feedback').text(response.error)
+                                            .show();
+                                    } else if (response.duplicate && response.fields
+                                        .includes('email')) {
+                                        emailDuplicate = true;
+                                        $this.addClass('is-invalid').removeClass(
+                                            'is-valid');
+                                        $('#email-feedback').text(
+                                                'This email is already registered.')
+                                            .show();
+                                    } else {
+                                        emailDuplicate = false;
+                                        $this.removeClass('is-invalid').addClass(
+                                            'is-valid');
+                                        $('#email-feedback').hide();
+                                    }
+                                });
+                            }, 500);
+                        }
                     } else {
-                        input.type = 'password';
-                        icon.classList.replace('bi-eye-slash', 'bi-eye');
+                        emailDuplicate = false;
+                        $this.removeClass('is-invalid is-valid');
+                        $('#email-feedback').hide();
+                    }
+                });
+
+                // Phone validation
+                $('#phone').on('blur input', function() {
+                    const phone = $(this).val().trim();
+                    const phoneRegex = /^[0-9+\-\s()]{10,15}$/;
+                    const $this = $(this);
+
+                    if (phone) {
+                        if (!phoneRegex.test(phone)) {
+                            phoneDuplicate = false;
+                            $this.addClass('is-invalid').removeClass('is-valid');
+                            $('#phone-feedback').text('Please enter a valid phone number.').show();
+                        } else {
+                            // Clear previous timeout
+                            if (validationTimeout) {
+                                clearTimeout(validationTimeout);
+                            }
+
+                            // Debounce the duplicate check
+                            validationTimeout = setTimeout(() => {
+                                checkDuplicate('phone', phone, function(response) {
+                                    if (response.error) {
+                                        phoneDuplicate = false;
+                                        $this.addClass('is-invalid').removeClass(
+                                            'is-valid');
+                                        $('#phone-feedback').text(response.error)
+                                            .show();
+                                    } else if (response.duplicate && response.fields
+                                        .includes('phone')) {
+                                        phoneDuplicate = true;
+                                        $this.addClass('is-invalid').removeClass(
+                                            'is-valid');
+                                        $('#phone-feedback').text(
+                                            'This mobile number is already registered.'
+                                        ).show();
+                                    } else {
+                                        phoneDuplicate = false;
+                                        $this.removeClass('is-invalid').addClass(
+                                            'is-valid');
+                                        $('#phone-feedback').hide();
+                                    }
+                                });
+                            }, 500);
+                        }
+                    } else {
+                        phoneDuplicate = false;
+                        $this.removeClass('is-invalid is-valid');
+                        $('#phone-feedback').hide();
+                    }
+                });
+
+                // Password validation
+                $('#password').on('input', function() {
+                    const password = $(this).val();
+                    const $this = $(this);
+                    passwordValid = checkPasswordStrength(password);
+
+                    if (password && !passwordValid) {
+                        $this.addClass('is-invalid').removeClass('is-valid');
+                        $('#password-feedback').text(
+                            'Password must be at least 8 characters with uppercase, lowercase, and numbers.'
+                        ).show();
+                    } else if (password && passwordValid) {
+                        $this.removeClass('is-invalid').addClass('is-valid');
+                        $('#password-feedback').hide();
+                    } else {
+                        $this.removeClass('is-invalid is-valid');
+                        $('#password-feedback').hide();
+                    }
+
+                    // Re-check confirm password if it has a value
+                    if ($('#confirmPassword').val()) {
+                        $('#confirmPassword').trigger('input');
+                    }
+                });
+
+                // Confirm password validation
+                $('#confirmPassword').on('input', function() {
+                    const password = $('#password').val();
+                    const confirmPassword = $(this).val();
+                    const $this = $(this);
+
+                    if (confirmPassword) {
+                        if (password !== confirmPassword) {
+                            confirmPasswordValid = false;
+                            $this.addClass('is-invalid').removeClass('is-valid');
+                            $('#confirm-password-feedback').text('Passwords do not match.').show();
+                        } else {
+                            confirmPasswordValid = true;
+                            $this.removeClass('is-invalid').addClass('is-valid');
+                            $('#confirm-password-feedback').hide();
+                        }
+                    } else {
+                        confirmPasswordValid = false;
+                        $this.removeClass('is-invalid is-valid');
+                        $('#confirm-password-feedback').hide();
+                    }
+                });
+
+                // Toggle password visibility
+                $('.toggle-password').on('click', function(e) {
+                    e.preventDefault();
+                    const target = $(this).data('target');
+                    const input = $('#' + target);
+                    const icon = $(this).find('i');
+
+                    if (input.attr('type') === 'password') {
+                        input.attr('type', 'text');
+                        icon.removeClass('bi-eye').addClass('bi-eye-slash');
+                    } else {
+                        input.attr('type', 'password');
+                        icon.removeClass('bi-eye-slash').addClass('bi-eye');
+                    }
+                });
+
+                // Form submission validation
+                $('#signupForm').on('submit', function(e) {
+                    e.preventDefault();
+
+                    // Check all validations
+                    const hasErrors = emailDuplicate || phoneDuplicate || !passwordValid || !
+                        confirmPasswordValid;
+
+                    if (hasErrors) {
+                        let errorMessages = [];
+
+                        if (emailDuplicate) errorMessages.push('Email is already registered');
+                        if (phoneDuplicate) errorMessages.push('Mobile number is already registered');
+                        if (!passwordValid) errorMessages.push('Password does not meet requirements');
+                        if (!confirmPasswordValid) errorMessages.push('Passwords do not match');
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            text: errorMessages.join(', '),
+                            confirmButtonText: 'OK'
+                        });
+                        return false;
+                    }
+
+                    // If all validations pass, submit the form
+                    this.submit();
+                });
+
+                // Real-time form validation feedback
+                $('input, select, textarea').on('blur', function() {
+                    const $this = $(this);
+                    const fieldId = $this.attr('id');
+
+                    if ($this.prop('required') && !$this.val()) {
+                        $this.addClass('is-invalid').removeClass('is-valid');
+                    } else if ($this.hasClass('is-invalid') && $this.val()) {
+                        // Only remove invalid class if it's not a duplicate error or password validation
+                        if (!fieldId || (!fieldId.includes('email') && !fieldId.includes('phone') &&
+                                !fieldId.includes('password'))) {
+                            $this.removeClass('is-invalid').addClass('is-valid');
+                        }
                     }
                 });
             });
             </script>
-
-
         </section>
         <!-- /Starter Section Section -->
     </main>
@@ -252,7 +589,6 @@ session_start();
                         <a href=""><i class="bi bi-linkedin"></i></a>
                     </div>
                 </div>
-
                 <div class="col-lg-2 col-md-3 footer-links">
                     <h4>Useful Links</h4>
                     <ul>
@@ -263,7 +599,6 @@ session_start();
                         <li><a href="#">Privacy policy</a></li>
                     </ul>
                 </div>
-
                 <div class="col-lg-2 col-md-3 footer-links">
                     <h4>Our Services</h4>
                     <ul>
@@ -274,7 +609,6 @@ session_start();
                         <li><a href="#">Graphic Design</a></li>
                     </ul>
                 </div>
-
                 <div class="col-lg-2 col-md-3 footer-links">
                     <h4>Hic solutasetp</h4>
                     <ul>
@@ -285,7 +619,6 @@ session_start();
                         <li><a href="#">Sit quas consectetur</a></li>
                     </ul>
                 </div>
-
                 <div class="col-lg-2 col-md-3 footer-links">
                     <h4>Nobis illum</h4>
                     <ul>
@@ -298,7 +631,6 @@ session_start();
                 </div>
             </div>
         </div>
-
         <div class="container copyright text-center mt-4">
             <p>
                 © <span>Copyright</span>
@@ -310,14 +642,11 @@ session_start();
             </div>
         </div>
     </footer>
-
     <!-- Scroll Top -->
     <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
             class="bi bi-arrow-up-short"></i></a>
-
     <!-- Preloader -->
     <div id="preloader"></div>
-
     <!-- Vendor JS Files -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/php-email-form/validate.js"></script>
@@ -325,7 +654,6 @@ session_start();
     <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
     <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
     <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
 </body>
