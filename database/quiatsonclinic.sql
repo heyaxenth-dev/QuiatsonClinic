@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 07, 2025 at 02:48 PM
+-- Generation Time: Sep 10, 2025 at 04:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -43,7 +43,7 @@ CREATE TABLE `admin_staff` (
 --
 
 INSERT INTO `admin_staff` (`id`, `username`, `email`, `mobile_no`, `role`, `password`, `password_token`, `date_created`) VALUES
-(1, 'hyacynth', 'hyacynth.mulaveintern@gmail.com', '', 'Clinic Assistant', '$2y$10$CwhpZsDPewy247qgBRWS0.r91MFnDKWyGVXEZlQg2MdMEIPzvA8ci', '', '2025-05-02 00:14:54');
+(1, 'hyacynth', 'hyacynth.mulaveintern@gmail.com', '09651168472', 'Clinic Assistant', '$2y$10$F3vIGEcVhaoXRLOr9oPbeeUr./6aPynOL8jQ0Bs9nY33bpwxxJ9hu', '', '2025-05-02 00:14:54');
 
 -- --------------------------------------------------------
 
@@ -53,6 +53,7 @@ INSERT INTO `admin_staff` (`id`, `username`, `email`, `mobile_no`, `role`, `pass
 
 CREATE TABLE `appointments` (
   `id` int(11) NOT NULL,
+  `created_by` int(11) NOT NULL,
   `patient_id` varchar(255) NOT NULL,
   `patient_type` varchar(50) NOT NULL,
   `severity` varchar(150) NOT NULL,
@@ -77,15 +78,32 @@ CREATE TABLE `appointments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `appointments`
+-- Table structure for table `appointment_history`
 --
 
-INSERT INTO `appointments` (`id`, `patient_id`, `patient_type`, `severity`, `lastname`, `firstname`, `middle_initial`, `address`, `age`, `sex`, `birthdate`, `civil_status`, `phone`, `weight`, `height`, `bloodtype`, `appointment_date`, `time_slot`, `symptom`, `uploaded_id`, `status`, `remarks`, `created_at`) VALUES
-(1, '09042025-01', 'senior_pwd', 'Urgent', 'hasdhja', 'dhjasgdhjg', 'h', 'jdahjds4', 65, 'Female', '1955-12-25', 'Married', '09651168472', '50', '150', 'B+', '2025-09-05', '9:30 AM - 10:30 AM', 'Chest Pain', 'uploads/uploaded_ids/uploaded_id_68b949d77dce47.56443506.jpg', 'Concluded', 'Patient: dhjasgdhjg h. hasdhja\nAge: 65\nSex: Female\nAddress: jdahjds4\nCivil Status: Married\nPhone: 09651168472\nSchedule: Friday September 5, 2025 9:30 AM - 10:30 AM\nRemarks: Testing the remarks form', '2025-09-04 08:12:07'),
-(2, '09042025-02', 'regular', 'Regular', 'ahdjhasd', 'jsahdjh', 'j', 'ajhksdjas', 25, 'Female', '2000-08-04', 'Single', '09651168472', '50', '150', 'A+', '2025-09-12', '10:30 AM - 11:30 AM', 'Fever', '', 'Rescheduled', '', '2025-09-04 08:54:05'),
-(3, '09042025-03', 'regular', 'Regular', 'ahdjhasd', 'jsahdjh', 'j', 'shjdgahjsd', 25, 'Female', '2000-08-04', 'Single', '09651168472', '50', '150', 'A+', '2025-09-05', '10:30 AM - 11:30 AM', 'Fever', '', 'Approved', '', '2025-09-04 08:55:49'),
-(4, '09052025-04', 'senior_pwd', 'Regular', 'Dojillo', 'Hya Cynth', 'G', 'Villavert-Jimenez, Hamtic, Antique', 25, 'Female', '2000-08-04', 'Single', '09651168472', '65', '150', 'A+', '2025-09-08', '11:30 AM - 12:30 PM', 'Cough', '', 'Approved', '', '2025-09-05 08:26:05');
+CREATE TABLE `appointment_history` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `lastname` varchar(50) DEFAULT NULL,
+  `firstname` varchar(50) DEFAULT NULL,
+  `middle_initial` char(1) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `sex` enum('Male','Female') DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `civil_status` varchar(20) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `weight` varchar(10) DEFAULT NULL,
+  `height` varchar(10) DEFAULT NULL,
+  `bloodtype` varchar(3) DEFAULT NULL,
+  `patient_type` varchar(50) DEFAULT NULL,
+  `symptom` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -108,14 +126,6 @@ CREATE TABLE `client` (
   `created_at` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `client`
---
-
-INSERT INTO `client` (`id`, `firstname`, `lastname`, `mobile_no`, `email`, `dob`, `sex`, `password`, `address`, `password_token`, `verification_status`, `created_at`) VALUES
-(1, 'Hya Cynth', 'Dojillo', '09651168472', 'hyacynth.mulaveintern@gmail.com', '2000-08-04', 'Female', '$2y$10$khUtiE09.R9ZMLVVoaK1A.uEw/siTheQ9p6FLgpbeHHHLJ8NX8rge', 'Kksajdksajd', '', 0, ''),
-(2, 'asjdhjkas', 'hsdsakjdhk', '09651168472', 'hyacynth.dev@gmail.com', '2000-09-13', 'Female', '$2y$10$M0BdCeRmvWNKn8rOJb8vRephKRXNS83S4SsaMVUSXUNq5EMUnYcb6', 'jkashdjas\\r\\n', '', 0, '');
-
 -- --------------------------------------------------------
 
 --
@@ -134,13 +144,6 @@ CREATE TABLE `lab_results` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `lab_results`
---
-
-INSERT INTO `lab_results` (`id`, `appointment_id`, `patient_id`, `file_path`, `original_name`, `notes`, `uploaded_by`, `uploaded_at`) VALUES
-(1, 1, '09042025-01', 'uploads/lab_results/lab_result_68bd78216a95a9.74539524.jpg', 'cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA3L2pvYjEwMjgtYmctMTQuanBn.jpg', 'testing', 1, '2025-09-07 12:18:41');
-
---
 -- Indexes for dumped tables
 --
 
@@ -157,6 +160,13 @@ ALTER TABLE `admin_staff`
 --
 ALTER TABLE `appointments`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `appointment_history`
+--
+ALTER TABLE `appointment_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `client`
@@ -185,19 +195,35 @@ ALTER TABLE `admin_staff`
 -- AUTO_INCREMENT for table `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `appointment_history`
+--
+ALTER TABLE `appointment_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `lab_results`
 --
 ALTER TABLE `lab_results`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `appointment_history`
+--
+ALTER TABLE `appointment_history`
+  ADD CONSTRAINT `appointment_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `client` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

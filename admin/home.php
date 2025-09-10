@@ -262,6 +262,15 @@ include 'alert.php';
             <!-- Right side columns -->
             <div class="col-lg-4">
                 <!-- Recent Activity -->
+                <?php
+                $sql = "SELECT id, firstname, lastname, symptom, status, created_at
+                FROM appointments
+                ORDER BY created_at DESC
+                LIMIT 10";
+                $result = $conn->query($sql);
+                ?>
+
+                <!-- Recent Activity -->
                 <div class="card">
                     <div class="filter">
                         <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
@@ -269,7 +278,6 @@ include 'alert.php';
                             <li class="dropdown-header text-start">
                                 <h6>Filter</h6>
                             </li>
-
                             <li><a class="dropdown-item" href="#">Today</a></li>
                             <li><a class="dropdown-item" href="#">This Month</a></li>
                             <li><a class="dropdown-item" href="#">This Year</a></li>
@@ -277,66 +285,61 @@ include 'alert.php';
                     </div>
 
                     <div class="card-body">
-                        <h5 class="card-title">Recent Activity <span>| Today</span></h5>
+                        <h5 class="card-title">Recent Activity <span>| Latest</span></h5>
 
                         <div class="activity">
+                            <?php if ($result && $result->num_rows > 0): ?>
+                            <?php while ($row = $result->fetch_assoc()): ?>
+                            <?php
+                        // Calculate "time ago"
+                        $createdAt = new DateTime($row['created_at']);
+                        $now = new DateTime();
+                        $diff = $now->diff($createdAt);
+
+                        if ($diff->y > 0) {
+                            $timeAgo = $diff->y . " yr" . ($diff->y > 1 ? "s" : "");
+                        } elseif ($diff->m > 0) {
+                            $timeAgo = $diff->m . " mo" . ($diff->m > 1 ? "s" : "");
+                        } elseif ($diff->d > 0) {
+                            $timeAgo = $diff->d . " day" . ($diff->d > 1 ? "s" : "");
+                        } elseif ($diff->h > 0) {
+                            $timeAgo = $diff->h . " hr" . ($diff->h > 1 ? "s" : "");
+                        } elseif ($diff->i > 0) {
+                            $timeAgo = $diff->i . " min";
+                        } else {
+                            $timeAgo = "Just now";
+                        }
+
+                        // Badge color by status
+                        $statusColors = [
+                            'Pending'   => 'text-warning',
+                            'Approved'  => 'text-success',
+                            'Concluded' => 'text-primary',
+                            'Canceled'  => 'text-danger'
+                        ];
+                        $badgeColor = $statusColors[$row['status']] ?? 'text-muted';
+
+                        $patientName = trim($row['firstname'] . ' ' . $row['lastname']);
+                        $activityText = $patientName . " - " . ($row['symptom'] ?? 'Appointment');
+                    ?>
                             <div class="activity-item d-flex">
-                                <div class="activite-label">32 min</div>
-                                <i class="bi bi-circle-fill activity-badge text-success align-self-start"></i>
+                                <div class="activite-label"><?= htmlspecialchars($timeAgo) ?></div>
+                                <i class="bi bi-circle-fill activity-badge <?= $badgeColor ?> align-self-start"></i>
                                 <div class="activity-content">
-                                    Quia quae rerum
-                                    <a href="#" class="fw-bold text-dark">explicabo officiis</a>
-                                    beatae
+                                    <?= htmlspecialchars($activityText) ?>
+                                    <span class="fw-bold text-dark">(<?= htmlspecialchars($row['status']) ?>)</span>
                                 </div>
                             </div>
-                            <!-- End activity item-->
-
+                            <?php endwhile; ?>
+                            <?php else: ?>
                             <div class="activity-item d-flex">
-                                <div class="activite-label">56 min</div>
-                                <i class="bi bi-circle-fill activity-badge text-danger align-self-start"></i>
-                                <div class="activity-content">
-                                    Voluptatem blanditiis blanditiis eveniet
-                                </div>
-                            </div>
-                            <!-- End activity item-->
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">2 hrs</div>
-                                <i class="bi bi-circle-fill activity-badge text-primary align-self-start"></i>
-                                <div class="activity-content">
-                                    Voluptates corrupti molestias voluptatem
-                                </div>
-                            </div>
-                            <!-- End activity item-->
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">1 day</div>
-                                <i class="bi bi-circle-fill activity-badge text-info align-self-start"></i>
-                                <div class="activity-content">
-                                    Tempore autem saepe
-                                    <a href="#" class="fw-bold text-dark">occaecati voluptatem</a>
-                                    tempore
-                                </div>
-                            </div>
-                            <!-- End activity item-->
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">2 days</div>
-                                <i class="bi bi-circle-fill activity-badge text-warning align-self-start"></i>
-                                <div class="activity-content">
-                                    Est sit eum reiciendis exercitationem
-                                </div>
-                            </div>
-                            <!-- End activity item-->
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">4 weeks</div>
+                                <div class="activite-label">-</div>
                                 <i class="bi bi-circle-fill activity-badge text-muted align-self-start"></i>
                                 <div class="activity-content">
-                                    Dicta dolorem harum nulla eius. Ut quidem quidem sit quas
+                                    No recent activity.
                                 </div>
                             </div>
-                            <!-- End activity item-->
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
