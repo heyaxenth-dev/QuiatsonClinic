@@ -24655,7 +24655,7 @@ select.tt-hint,
   outline: 1px solid #f3f3f3;
   color: #c9c8c8;
   appearance: none;
-  background: url("../../../assets/images/arrow-down.svg");
+  /* background: url("../../../assets/images/arrow-down.svg"); */
   background-repeat: no-repeat;
   background-position: 99% center;
 }
@@ -24876,7 +24876,7 @@ select.form-select {
   outline: 1px solid #f3f3f3;
   color: #c9c8c8;
   appearance: none;
-  background: url("../../../assets/images/arrow-down.svg");
+  /* background: url("../../../assets/images/arrow-down.svg"); */
   background-repeat: no-repeat;
   background-position: 99% center;
 }

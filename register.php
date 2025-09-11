@@ -10,9 +10,6 @@ session_start();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Sign Up | Admin - Quiatson Clinic</title>
-    <!-- plugins:css -->
-    <link rel="stylesheet" href="assets/vendors/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
     <!-- plugin css for this page -->
     <!-- End plugin css for this page -->
@@ -155,7 +152,6 @@ session_start();
     </div>
     <!-- container-scroller -->
     <!-- plugins:js -->
-    <script src="assets/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
     <!-- Plugin js for this page-->
     <!-- End plugin js for this page-->
@@ -168,339 +164,219 @@ session_start();
     <!-- endinject -->
 
     <script>
-    $(document).ready(function() {
-        let usernameDuplicate = false;
-        let emailDuplicate = false;
-        let mobileDuplicate = false;
-        let passwordValid = false;
-        let confirmPasswordValid = false;
-        let validationTimeout = null;
+    // $(document).ready(function() {
+    //     let usernameDuplicate = false;
+    //     let emailDuplicate = false;
+    //     let mobileDuplicate = false;
+    //     let passwordValid = false;
+    //     let confirmPasswordValid = false;
+    //     let validationTimeout = null;
 
-        // Password strength checker
-        function checkPasswordStrength(password) {
-            let strength = 0;
+    //     // Password strength checker
+    //     function checkPasswordStrength(password) {
+    //         let strength = 0;
 
-            if (password.length >= 8) strength += 1;
-            if (/[a-z]/.test(password)) strength += 1;
-            if (/[A-Z]/.test(password)) strength += 1;
-            if (/[0-9]/.test(password)) strength += 1;
-            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+    //         if (password.length >= 8) strength++;
+    //         if (/[a-z]/.test(password)) strength++;
+    //         if (/[A-Z]/.test(password)) strength++;
+    //         if (/[0-9]/.test(password)) strength++;
+    //         if (/[^A-Za-z0-9]/.test(password)) strength++;
 
-            const strengthBar = $('#password-strength-bar');
-            const strengthText = $('#password-strength-text');
+    //         const strengthBar = $('#password-strength-bar');
+    //         const strengthText = $('#password-strength-text');
 
-            switch (strength) {
-                case 0:
-                case 1:
-                    strengthBar.removeClass('bg-success bg-warning').addClass('bg-danger');
-                    strengthBar.css('width', '20%');
-                    strengthText.text('Very Weak').removeClass('text-success text-warning').addClass(
-                        'text-danger');
-                    break;
-                case 2:
-                    strengthBar.removeClass('bg-success bg-danger').addClass('bg-warning');
-                    strengthBar.css('width', '40%');
-                    strengthText.text('Weak').removeClass('text-success text-danger').addClass('text-warning');
-                    break;
-                case 3:
-                    strengthBar.removeClass('bg-success bg-danger').addClass('bg-warning');
-                    strengthBar.css('width', '60%');
-                    strengthText.text('Fair').removeClass('text-success text-danger').addClass('text-warning');
-                    break;
-                case 4:
-                    strengthBar.removeClass('bg-warning bg-danger').addClass('bg-success');
-                    strengthBar.css('width', '80%');
-                    strengthText.text('Good').removeClass('text-warning text-danger').addClass('text-success');
-                    break;
-                case 5:
-                    strengthBar.removeClass('bg-warning bg-danger').addClass('bg-success');
-                    strengthBar.css('width', '100%');
-                    strengthText.text('Strong').removeClass('text-warning text-danger').addClass(
-                    'text-success');
-                    break;
-            }
+    //         switch (strength) {
+    //             case 0:
+    //             case 1:
+    //                 strengthBar.attr('class', 'progress-bar bg-danger').css('width', '20%');
+    //                 strengthText.text('Very Weak').attr('class', 'text-danger');
+    //                 break;
+    //             case 2:
+    //                 strengthBar.attr('class', 'progress-bar bg-warning').css('width', '40%');
+    //                 strengthText.text('Weak').attr('class', 'text-warning');
+    //                 break;
+    //             case 3:
+    //                 strengthBar.attr('class', 'progress-bar bg-warning').css('width', '60%');
+    //                 strengthText.text('Fair').attr('class', 'text-warning');
+    //                 break;
+    //             case 4:
+    //                 strengthBar.attr('class', 'progress-bar bg-success').css('width', '80%');
+    //                 strengthText.text('Good').attr('class', 'text-success');
+    //                 break;
+    //             case 5:
+    //                 strengthBar.attr('class', 'progress-bar bg-success').css('width', '100%');
+    //                 strengthText.text('Strong').attr('class', 'text-success');
+    //                 break;
+    //         }
+    //         return strength >= 3;
+    //     }
 
-            return strength >= 3;
-        }
+    //     // AJAX duplicate checker
+    //     function checkDuplicate(field, value, callback) {
+    //         if (!value || value.length < 3) {
+    //             callback({
+    //                 duplicate: false,
+    //                 fields: [],
+    //                 error: null
+    //             });
+    //             return;
+    //         }
+    //         $.ajax({
+    //             url: 'check_admin_duplicate.php',
+    //             type: 'POST',
+    //             data: {
+    //                 field: field,
+    //                 value: value
+    //             },
+    //             dataType: 'json',
+    //             success: callback,
+    //             error: () => callback({
+    //                 duplicate: false,
+    //                 fields: [],
+    //                 error: 'Network error.'
+    //             })
+    //         });
+    //     }
 
-        // Check duplicate function with improved error handling
-        function checkDuplicate(field, value, callback) {
-            if (!value || value.length < 3) {
-                callback({
-                    duplicate: false,
-                    fields: [],
-                    error: null
-                });
-                return;
-            }
+    //     // Generalized field validator
+    //     function validateField($el, regex, feedbackEl, duplicateFlag, duplicateMsg, fieldName) {
+    //         const value = $el.val().trim();
+    //         if (!value) {
+    //             $el.removeClass('is-valid is-invalid');
+    //             $(feedbackEl).hide();
+    //             window[duplicateFlag] = false;
+    //             return;
+    //         }
 
-            $.ajax({
-                url: 'check_admin_duplicate.php',
-                type: 'POST',
-                data: {
-                    field: field,
-                    value: value
-                },
-                dataType: 'json',
-                timeout: 5000,
-                success: function(response) {
-                    callback(response);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Duplicate check error:', error);
-                    callback({
-                        duplicate: false,
-                        fields: [],
-                        error: 'Network error. Please try again.'
-                    });
-                }
-            });
-        }
+    //         if (!regex.test(value)) {
+    //             $el.addClass('is-invalid').removeClass('is-valid');
+    //             $(feedbackEl).text(`Invalid ${fieldName}.`).show();
+    //             window[duplicateFlag] = false;
+    //             return;
+    //         }
 
-        // Username validation
-        $('#username').on('blur input', function() {
-            const username = $(this).val().trim();
-            const $this = $(this);
-            const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+    //         if (validationTimeout) clearTimeout(validationTimeout);
+    //         validationTimeout = setTimeout(() => {
+    //             checkDuplicate(fieldName, value, (res) => {
+    //                 if (res.error) {
+    //                     $el.addClass('is-invalid').removeClass('is-valid');
+    //                     $(feedbackEl).text(res.error).show();
+    //                     window[duplicateFlag] = false;
+    //                 } else if (res.duplicate && res.fields.includes(fieldName)) {
+    //                     $el.addClass('is-invalid').removeClass('is-valid');
+    //                     $(feedbackEl).text(duplicateMsg).show();
+    //                     window[duplicateFlag] = true;
+    //                 } else {
+    //                     $el.removeClass('is-invalid').addClass('is-valid');
+    //                     $(feedbackEl).hide();
+    //                     window[duplicateFlag] = false;
+    //                 }
+    //             });
+    //         }, 300);
+    //     }
 
-            if (username) {
-                if (!usernameRegex.test(username)) {
-                    usernameDuplicate = false;
-                    $this.addClass('is-invalid').removeClass('is-valid');
-                    $('#username-feedback').text(
-                            'Username must be 3-20 characters, letters, numbers, and underscores only.')
-                        .show();
-                } else {
-                    // Clear previous timeout
-                    if (validationTimeout) {
-                        clearTimeout(validationTimeout);
-                    }
+    //     // Username
+    //     $('#username').on('input', function() {
+    //         validateField(
+    //             $(this),
+    //             /^[a-zA-Z0-9_]{3,20}$/,
+    //             '#username-feedback',
+    //             'usernameDuplicate',
+    //             'This username is already taken.',
+    //             'username'
+    //         );
+    //     });
 
-                    // Debounce the duplicate check
-                    validationTimeout = setTimeout(() => {
-                        checkDuplicate('username', username, function(response) {
-                            if (response.error) {
-                                usernameDuplicate = false;
-                                $this.addClass('is-invalid').removeClass('is-valid');
-                                $('#username-feedback').text(response.error).show();
-                            } else if (response.duplicate && response.fields.includes(
-                                    'username')) {
-                                usernameDuplicate = true;
-                                $this.addClass('is-invalid').removeClass('is-valid');
-                                $('#username-feedback').text(
-                                    'This username is already taken.').show();
-                            } else {
-                                usernameDuplicate = false;
-                                $this.removeClass('is-invalid').addClass('is-valid');
-                                $('#username-feedback').hide();
-                            }
-                        });
-                    }, 500);
-                }
-            } else {
-                usernameDuplicate = false;
-                $this.removeClass('is-invalid is-valid');
-                $('#username-feedback').hide();
-            }
-        });
+    //     // Email
+    //     $('#email').on('input', function() {
+    //         validateField(
+    //             $(this),
+    //             /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    //             '#email-feedback',
+    //             'emailDuplicate',
+    //             'This email is already registered.',
+    //             'email'
+    //         );
+    //     });
 
-        // Email validation
-        $('#email').on('blur input', function() {
-            const email = $(this).val().trim();
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const $this = $(this);
+    //     // Mobile
+    //     $('#mobile_no').on('input', function() {
+    //         validateField(
+    //             $(this),
+    //             /^(\+63|0)\d{10}$/,
+    //             '#mobile_no-feedback',
+    //             'mobileDuplicate',
+    //             'This mobile number is already registered.',
+    //             'mobile_no'
+    //         );
+    //     });
 
-            if (email) {
-                if (!emailRegex.test(email)) {
-                    emailDuplicate = false;
-                    $this.addClass('is-invalid').removeClass('is-valid');
-                    $('#email-feedback').text('Please enter a valid email address.').show();
-                } else {
-                    // Clear previous timeout
-                    if (validationTimeout) {
-                        clearTimeout(validationTimeout);
-                    }
+    //     // Role
+    //     $('#role').on('change input', function() {
+    //         if ($(this).val()) {
+    //             $(this).removeClass('is-invalid').addClass('is-valid');
+    //             $('#role-feedback').hide();
+    //         } else {
+    //             $(this).addClass('is-invalid').removeClass('is-valid');
+    //             $('#role-feedback').text('Please select a role.').show();
+    //         }
+    //     });
 
-                    // Debounce the duplicate check
-                    validationTimeout = setTimeout(() => {
-                        checkDuplicate('email', email, function(response) {
-                            if (response.error) {
-                                emailDuplicate = false;
-                                $this.addClass('is-invalid').removeClass('is-valid');
-                                $('#email-feedback').text(response.error).show();
-                            } else if (response.duplicate && response.fields.includes(
-                                    'email')) {
-                                emailDuplicate = true;
-                                $this.addClass('is-invalid').removeClass('is-valid');
-                                $('#email-feedback').text(
-                                    'This email is already registered.').show();
-                            } else {
-                                emailDuplicate = false;
-                                $this.removeClass('is-invalid').addClass('is-valid');
-                                $('#email-feedback').hide();
-                            }
-                        });
-                    }, 500);
-                }
-            } else {
-                emailDuplicate = false;
-                $this.removeClass('is-invalid is-valid');
-                $('#email-feedback').hide();
-            }
-        });
+    //     // Password
+    //     $('#password').on('input', function() {
+    //         const password = $(this).val().trim();
+    //         passwordValid = checkPasswordStrength(password);
+    //         if (!passwordValid && password) {
+    //             $(this).addClass('is-invalid').removeClass('is-valid');
+    //             $('#password-feedback').text(
+    //                 'Password must be at least 8 characters with uppercase, lowercase, and numbers.'
+    //             ).show();
+    //         } else if (passwordValid) {
+    //             $(this).removeClass('is-invalid').addClass('is-valid');
+    //             $('#password-feedback').hide();
+    //         } else {
+    //             $(this).removeClass('is-invalid is-valid');
+    //             $('#password-feedback').hide();
+    //         }
+    //         $('#confirm_password').trigger('input');
+    //     });
 
-        // Mobile number validation
-        $('#mobile_no').on('blur input', function() {
-            const mobile = $(this).val().trim();
-            const mobileRegex = /^[0-9+\-\s()]{10,15}$/;
-            const $this = $(this);
+    //     // Confirm password
+    //     $('#confirm_password').on('input', function() {
+    //         const password = $('#password').val().trim();
+    //         const confirmPassword = $(this).val().trim();
+    //         if (!confirmPassword) {
+    //             confirmPasswordValid = false;
+    //             $(this).removeClass('is-valid is-invalid');
+    //             $('#confirm_password-feedback').hide();
+    //         } else if (password !== confirmPassword) {
+    //             confirmPasswordValid = false;
+    //             $(this).addClass('is-invalid').removeClass('is-valid');
+    //             $('#confirm_password-feedback').text('Passwords do not match.').show();
+    //         } else {
+    //             confirmPasswordValid = true;
+    //             $(this).removeClass('is-invalid').addClass('is-valid');
+    //             $('#confirm_password-feedback').hide();
+    //         }
+    //     });
 
-            if (mobile) {
-                if (!mobileRegex.test(mobile)) {
-                    mobileDuplicate = false;
-                    $this.addClass('is-invalid').removeClass('is-valid');
-                    $('#mobile_no-feedback').text('Please enter a valid mobile number.').show();
-                } else {
-                    // Clear previous timeout
-                    if (validationTimeout) {
-                        clearTimeout(validationTimeout);
-                    }
-
-                    // Debounce the duplicate check
-                    validationTimeout = setTimeout(() => {
-                        checkDuplicate('mobile_no', mobile, function(response) {
-                            if (response.error) {
-                                mobileDuplicate = false;
-                                $this.addClass('is-invalid').removeClass('is-valid');
-                                $('#mobile_no-feedback').text(response.error).show();
-                            } else if (response.duplicate && response.fields.includes(
-                                    'mobile_no')) {
-                                mobileDuplicate = true;
-                                $this.addClass('is-invalid').removeClass('is-valid');
-                                $('#mobile_no-feedback').text(
-                                        'This mobile number is already registered.')
-                                    .show();
-                            } else {
-                                mobileDuplicate = false;
-                                $this.removeClass('is-invalid').addClass('is-valid');
-                                $('#mobile_no-feedback').hide();
-                            }
-                        });
-                    }, 500);
-                }
-            } else {
-                mobileDuplicate = false;
-                $this.removeClass('is-invalid is-valid');
-                $('#mobile_no-feedback').hide();
-            }
-        });
-
-        // Role validation
-        $('#role').on('change', function() {
-            const $this = $(this);
-            if ($this.val()) {
-                $this.removeClass('is-invalid').addClass('is-valid');
-                $('#role-feedback').hide();
-            } else {
-                $this.addClass('is-invalid').removeClass('is-valid');
-                $('#role-feedback').text('Please select a role.').show();
-            }
-        });
-
-        // Password validation
-        $('#password').on('input', function() {
-            const password = $(this).val();
-            const $this = $(this);
-            passwordValid = checkPasswordStrength(password);
-
-            if (password && !passwordValid) {
-                $this.addClass('is-invalid').removeClass('is-valid');
-                $('#password-feedback').text(
-                    'Password must be at least 8 characters with uppercase, lowercase, and numbers.'
-                    ).show();
-            } else if (password && passwordValid) {
-                $this.removeClass('is-invalid').addClass('is-valid');
-                $('#password-feedback').hide();
-            } else {
-                $this.removeClass('is-invalid is-valid');
-                $('#password-feedback').hide();
-            }
-
-            // Re-check confirm password if it has a value
-            if ($('#confirm_password').val()) {
-                $('#confirm_password').trigger('input');
-            }
-        });
-
-        // Confirm password validation
-        $('#confirm_password').on('input', function() {
-            const password = $('#password').val();
-            const confirmPassword = $(this).val();
-            const $this = $(this);
-
-            if (confirmPassword) {
-                if (password !== confirmPassword) {
-                    confirmPasswordValid = false;
-                    $this.addClass('is-invalid').removeClass('is-valid');
-                    $('#confirm_password-feedback').text('Passwords do not match.').show();
-                } else {
-                    confirmPasswordValid = true;
-                    $this.removeClass('is-invalid').addClass('is-valid');
-                    $('#confirm_password-feedback').hide();
-                }
-            } else {
-                confirmPasswordValid = false;
-                $this.removeClass('is-invalid is-valid');
-                $('#confirm_password-feedback').hide();
-            }
-        });
-
-        // Form submission validation
-        $('#adminRegisterForm').on('submit', function(e) {
-            e.preventDefault();
-
-            // Check all validations
-            const hasErrors = usernameDuplicate || emailDuplicate || mobileDuplicate || !
-                passwordValid || !confirmPasswordValid;
-
-            if (hasErrors) {
-                let errorMessages = [];
-
-                if (usernameDuplicate) errorMessages.push('Username is already taken');
-                if (emailDuplicate) errorMessages.push('Email is already registered');
-                if (mobileDuplicate) errorMessages.push('Mobile number is already registered');
-                if (!passwordValid) errorMessages.push('Password does not meet requirements');
-                if (!confirmPasswordValid) errorMessages.push('Passwords do not match');
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Validation Error',
-                    text: errorMessages.join(', '),
-                    confirmButtonText: 'OK'
-                });
-                return false;
-            }
-
-            // If all validations pass, submit the form
-            this.submit();
-        });
-
-        // Real-time form validation feedback
-        $('input, select').on('blur', function() {
-            const $this = $(this);
-            const fieldId = $this.attr('id');
-
-            if ($this.prop('required') && !$this.val()) {
-                $this.addClass('is-invalid').removeClass('is-valid');
-            } else if ($this.hasClass('is-invalid') && $this.val()) {
-                // Only remove invalid class if it's not a duplicate error or password validation
-                if (!fieldId || (!fieldId.includes('username') && !fieldId.includes('email') &&
-                        !fieldId.includes('mobile_no') && !fieldId.includes('password'))) {
-                    $this.removeClass('is-invalid').addClass('is-valid');
-                }
-            }
-        });
-    });
+    //     // Form submit
+    //     $('#adminRegisterForm').on('submit', function(e) {
+    //         e.preventDefault();
+    //         const hasErrors =
+    //             usernameDuplicate || emailDuplicate || mobileDuplicate || !passwordValid || !
+    //             confirmPasswordValid;
+    //         if (hasErrors) {
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Validation Error',
+    //                 text: 'Please fix the highlighted errors before submitting.'
+    //             });
+    //             return false;
+    //         }
+    //         this.submit();
+    //     });
+    // });
     </script>
 </body>
 
