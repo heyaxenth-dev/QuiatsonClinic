@@ -238,6 +238,23 @@ session_start();
             </div>
 
             <script>
+            // Toggle password visibility
+            $(document).on("click", ".toggle-password", function(e) {
+                e.preventDefault(); // prevent link jump
+
+                const target = $(this).data("target"); // e.g. "password" or "confirmPassword"
+                const input = $("#" + target);
+                const icon = $(this).find("i");
+
+                if (input.attr("type") === "password") {
+                    input.attr("type", "text");
+                    icon.removeClass("bi-eye").addClass("bi-eye-slash");
+                } else {
+                    input.attr("type", "password");
+                    icon.removeClass("bi-eye-slash").addClass("bi-eye");
+                }
+            });
+
             $(document).ready(function() {
                 let emailTimeout, phoneTimeout;
 
