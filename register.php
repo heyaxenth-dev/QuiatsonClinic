@@ -22,53 +22,6 @@ session_start();
 
     <!-- SweetAlert2 -->
     <script src="assets/js/sweetalert2.all.min.js"></script>
-
-    <!-- Custom validation styles -->
-    <style>
-    .form-control.is-valid {
-        border-color: #28a745;
-        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-    }
-
-    .form-control.is-valid:focus {
-        border-color: #28a745;
-        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-    }
-
-    .form-select.is-valid {
-        border-color: #28a745;
-        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-    }
-
-    .form-select.is-valid:focus {
-        border-color: #28a745;
-        box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-    }
-
-    .invalid-feedback {
-        display: block !important;
-        width: 100%;
-        margin-top: 0.25rem;
-        font-size: 0.875em;
-        color: #dc3545;
-    }
-
-    .valid-feedback {
-        display: block !important;
-        width: 100%;
-        margin-top: 0.25rem;
-        font-size: 0.875em;
-        color: #28a745;
-    }
-
-    .password-strength {
-        margin-top: 0.5rem;
-    }
-
-    .password-strength .progress {
-        height: 5px;
-    }
-    </style>
 </head>
 
 <body>
@@ -90,58 +43,66 @@ session_start();
                             <h6 class="font-weight-light">Signing up is easy. It only takes a few steps</h6>
                             <form class="pt-3" method="POST" action="admin-register.php" id="adminRegisterForm">
                                 <div id="duplicate-warning" class="alert alert-warning" style="display:none;"></div>
-                                <div class="invalid-feedback" id="username-feedback" style="display:none;"></div>
-                                <div class="invalid-feedback" id="mobile_no-feedback" style="display:none;"></div>
-                                <div class="invalid-feedback" id="email-feedback" style="display:none;"></div>
-                                <div class="invalid-feedback" id="role-feedback" style="display:none;"></div>
-                                <div class="invalid-feedback" id="password-feedback" style="display:none;"></div>
-                                <div class="invalid-feedback" id="confirm_password-feedback" style="display:none;">
-                                </div>
 
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-lg" id="username"
                                         name="username" placeholder="Username" required>
+                                    <div class="invalid-feedback" id="username-feedback">Please enter a username.</div>
                                 </div>
+
                                 <div class="form-group">
                                     <input type="text" class="form-control form-control-lg" id="mobile_no"
                                         name="mobile_no" placeholder="Mobile No." required>
+                                    <div class="invalid-feedback" id="mobile_no-feedback">Please enter a valid mobile
+                                        number.</div>
                                 </div>
+
                                 <div class="form-group">
                                     <input type="email" class="form-control form-control-lg" id="email"
                                         placeholder="Email" name="email" required>
+                                    <div class="invalid-feedback" id="email-feedback">Please enter a valid email.</div>
                                 </div>
+
                                 <div class="form-group">
                                     <select class="form-select form-select-lg" id="role" name="role" required>
                                         <option value="">Select Role</option>
                                         <option value="Doctor">Doctor</option>
                                         <option value="Clinic Assistant">Clinic Assistant</option>
                                     </select>
+                                    <div class="invalid-feedback" id="role-feedback">Please select a role.</div>
                                 </div>
 
                                 <div class="form-group">
                                     <input type="password" class="form-control form-control-lg" id="password"
                                         name="password" placeholder="Password" required>
-                                    <div class="password-strength">
-                                        <div class="progress">
+                                    <div class="invalid-feedback" id="password-feedback">Password is too weak.</div>
+                                    <div class="password-strength mt-2">
+                                        <div class="progress" style="height: 5px;">
                                             <div class="progress-bar" id="password-strength-bar" role="progressbar"
                                                 style="width: 0%"></div>
                                         </div>
                                         <small class="text-muted" id="password-strength-text">Enter a password</small>
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <input type="password" class="form-control form-control-lg" id="confirm_password"
                                         name="confirm_password" placeholder="Confirm Password" required>
+                                    <div class="invalid-feedback" id="confirm_password-feedback">Passwords do not match.
+                                    </div>
                                 </div>
+
                                 <div class="mt-3 d-grid gap-2">
                                     <button name="register"
                                         class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
-                                        href="index.php">SIGN UP</button>
+                                        type="submit">SIGN UP</button>
                                 </div>
+
                                 <div class="text-center mt-4 font-weight-light">
                                     Already have an account? <a href="login.php" class="text-primary">Login</a>
                                 </div>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -164,219 +125,183 @@ session_start();
     <!-- endinject -->
 
     <script>
-    // $(document).ready(function() {
-    //     let usernameDuplicate = false;
-    //     let emailDuplicate = false;
-    //     let mobileDuplicate = false;
-    //     let passwordValid = false;
-    //     let confirmPasswordValid = false;
-    //     let validationTimeout = null;
+    $(document).ready(function() {
+        let emailTimeout, mobileTimeout;
 
-    //     // Password strength checker
-    //     function checkPasswordStrength(password) {
-    //         let strength = 0;
+        // === Utility: AJAX duplicate check ===
+        function checkDuplicate(field, value, callback) {
+            $.ajax({
+                url: "check_admin_duplicate.php",
+                type: "POST",
+                data: {
+                    field: field,
+                    value: value
+                },
+                success: function(response) {
+                    try {
+                        callback(JSON.parse(response));
+                    } catch (e) {
+                        callback({
+                            duplicate: false
+                        });
+                    }
+                },
+                error: function() {
+                    callback({
+                        duplicate: false
+                    });
+                }
+            });
+        }
 
-    //         if (password.length >= 8) strength++;
-    //         if (/[a-z]/.test(password)) strength++;
-    //         if (/[A-Z]/.test(password)) strength++;
-    //         if (/[0-9]/.test(password)) strength++;
-    //         if (/[^A-Za-z0-9]/.test(password)) strength++;
+        // === Username (basic required check only) ===
+        $("#username").on("input blur", function() {
+            if ($(this).val().trim().length < 3) {
+                $(this).addClass("is-invalid");
+                $("#username-feedback").text("Username must be at least 3 characters.");
+            } else {
+                $(this).removeClass("is-invalid").addClass("is-valid");
+            }
+        });
 
-    //         const strengthBar = $('#password-strength-bar');
-    //         const strengthText = $('#password-strength-text');
+        // === Mobile number ===
+        $("#mobile_no").on("input blur", function() {
+            const mobile = $(this).val().trim();
+            const regex = /^[0-9+\-\s()]{10,15}$/;
+            const $this = $(this);
 
-    //         switch (strength) {
-    //             case 0:
-    //             case 1:
-    //                 strengthBar.attr('class', 'progress-bar bg-danger').css('width', '20%');
-    //                 strengthText.text('Very Weak').attr('class', 'text-danger');
-    //                 break;
-    //             case 2:
-    //                 strengthBar.attr('class', 'progress-bar bg-warning').css('width', '40%');
-    //                 strengthText.text('Weak').attr('class', 'text-warning');
-    //                 break;
-    //             case 3:
-    //                 strengthBar.attr('class', 'progress-bar bg-warning').css('width', '60%');
-    //                 strengthText.text('Fair').attr('class', 'text-warning');
-    //                 break;
-    //             case 4:
-    //                 strengthBar.attr('class', 'progress-bar bg-success').css('width', '80%');
-    //                 strengthText.text('Good').attr('class', 'text-success');
-    //                 break;
-    //             case 5:
-    //                 strengthBar.attr('class', 'progress-bar bg-success').css('width', '100%');
-    //                 strengthText.text('Strong').attr('class', 'text-success');
-    //                 break;
-    //         }
-    //         return strength >= 3;
-    //     }
+            $this.removeClass("is-valid is-invalid");
 
-    //     // AJAX duplicate checker
-    //     function checkDuplicate(field, value, callback) {
-    //         if (!value || value.length < 3) {
-    //             callback({
-    //                 duplicate: false,
-    //                 fields: [],
-    //                 error: null
-    //             });
-    //             return;
-    //         }
-    //         $.ajax({
-    //             url: 'check_admin_duplicate.php',
-    //             type: 'POST',
-    //             data: {
-    //                 field: field,
-    //                 value: value
-    //             },
-    //             dataType: 'json',
-    //             success: callback,
-    //             error: () => callback({
-    //                 duplicate: false,
-    //                 fields: [],
-    //                 error: 'Network error.'
-    //             })
-    //         });
-    //     }
+            if (!regex.test(mobile)) {
+                $this.addClass("is-invalid");
+                $("#mobile_no-feedback").text("Please enter a valid mobile number.");
+                return;
+            }
 
-    //     // Generalized field validator
-    //     function validateField($el, regex, feedbackEl, duplicateFlag, duplicateMsg, fieldName) {
-    //         const value = $el.val().trim();
-    //         if (!value) {
-    //             $el.removeClass('is-valid is-invalid');
-    //             $(feedbackEl).hide();
-    //             window[duplicateFlag] = false;
-    //             return;
-    //         }
+            if (mobileTimeout) clearTimeout(mobileTimeout);
+            mobileTimeout = setTimeout(() => {
+                checkDuplicate("mobile_no", mobile, function(res) {
+                    if (res.duplicate) {
+                        $this.removeClass("is-valid").addClass("is-invalid");
+                        $("#mobile_no-feedback").text(
+                            "This mobile number is already registered.");
+                    } else {
+                        $this.removeClass("is-invalid").addClass("is-valid");
+                    }
+                });
+            }, 400);
+        });
 
-    //         if (!regex.test(value)) {
-    //             $el.addClass('is-invalid').removeClass('is-valid');
-    //             $(feedbackEl).text(`Invalid ${fieldName}.`).show();
-    //             window[duplicateFlag] = false;
-    //             return;
-    //         }
+        // === Email ===
+        $("#email").on("input blur", function() {
+            const email = $(this).val().trim();
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const $this = $(this);
 
-    //         if (validationTimeout) clearTimeout(validationTimeout);
-    //         validationTimeout = setTimeout(() => {
-    //             checkDuplicate(fieldName, value, (res) => {
-    //                 if (res.error) {
-    //                     $el.addClass('is-invalid').removeClass('is-valid');
-    //                     $(feedbackEl).text(res.error).show();
-    //                     window[duplicateFlag] = false;
-    //                 } else if (res.duplicate && res.fields.includes(fieldName)) {
-    //                     $el.addClass('is-invalid').removeClass('is-valid');
-    //                     $(feedbackEl).text(duplicateMsg).show();
-    //                     window[duplicateFlag] = true;
-    //                 } else {
-    //                     $el.removeClass('is-invalid').addClass('is-valid');
-    //                     $(feedbackEl).hide();
-    //                     window[duplicateFlag] = false;
-    //                 }
-    //             });
-    //         }, 300);
-    //     }
+            $this.removeClass("is-valid is-invalid");
 
-    //     // Username
-    //     $('#username').on('input', function() {
-    //         validateField(
-    //             $(this),
-    //             /^[a-zA-Z0-9_]{3,20}$/,
-    //             '#username-feedback',
-    //             'usernameDuplicate',
-    //             'This username is already taken.',
-    //             'username'
-    //         );
-    //     });
+            if (!regex.test(email)) {
+                $this.addClass("is-invalid");
+                $("#email-feedback").text("Please enter a valid email address.");
+                return;
+            }
 
-    //     // Email
-    //     $('#email').on('input', function() {
-    //         validateField(
-    //             $(this),
-    //             /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    //             '#email-feedback',
-    //             'emailDuplicate',
-    //             'This email is already registered.',
-    //             'email'
-    //         );
-    //     });
+            if (emailTimeout) clearTimeout(emailTimeout);
+            emailTimeout = setTimeout(() => {
+                checkDuplicate("email", email, function(res) {
+                    if (res.duplicate) {
+                        $this.removeClass("is-valid").addClass("is-invalid");
+                        $("#email-feedback").text("This email is already registered.");
+                    } else {
+                        $this.removeClass("is-invalid").addClass("is-valid");
+                    }
+                });
+            }, 400);
+        });
 
-    //     // Mobile
-    //     $('#mobile_no').on('input', function() {
-    //         validateField(
-    //             $(this),
-    //             /^(\+63|0)\d{10}$/,
-    //             '#mobile_no-feedback',
-    //             'mobileDuplicate',
-    //             'This mobile number is already registered.',
-    //             'mobile_no'
-    //         );
-    //     });
+        // === Role ===
+        $("#role").on("change", function() {
+            if ($(this).val()) {
+                $(this).removeClass("is-invalid").addClass("is-valid");
+            } else {
+                $(this).addClass("is-invalid");
+                $("#role-feedback").text("Please select a role.");
+            }
+        });
 
-    //     // Role
-    //     $('#role').on('change input', function() {
-    //         if ($(this).val()) {
-    //             $(this).removeClass('is-invalid').addClass('is-valid');
-    //             $('#role-feedback').hide();
-    //         } else {
-    //             $(this).addClass('is-invalid').removeClass('is-valid');
-    //             $('#role-feedback').text('Please select a role.').show();
-    //         }
-    //     });
+        // === Password strength ===
+        $("#password").on("input", function() {
+            const password = $(this).val();
+            const strengthBar = $("#password-strength-bar");
+            const strengthText = $("#password-strength-text");
 
-    //     // Password
-    //     $('#password').on('input', function() {
-    //         const password = $(this).val().trim();
-    //         passwordValid = checkPasswordStrength(password);
-    //         if (!passwordValid && password) {
-    //             $(this).addClass('is-invalid').removeClass('is-valid');
-    //             $('#password-feedback').text(
-    //                 'Password must be at least 8 characters with uppercase, lowercase, and numbers.'
-    //             ).show();
-    //         } else if (passwordValid) {
-    //             $(this).removeClass('is-invalid').addClass('is-valid');
-    //             $('#password-feedback').hide();
-    //         } else {
-    //             $(this).removeClass('is-invalid is-valid');
-    //             $('#password-feedback').hide();
-    //         }
-    //         $('#confirm_password').trigger('input');
-    //     });
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
 
-    //     // Confirm password
-    //     $('#confirm_password').on('input', function() {
-    //         const password = $('#password').val().trim();
-    //         const confirmPassword = $(this).val().trim();
-    //         if (!confirmPassword) {
-    //             confirmPasswordValid = false;
-    //             $(this).removeClass('is-valid is-invalid');
-    //             $('#confirm_password-feedback').hide();
-    //         } else if (password !== confirmPassword) {
-    //             confirmPasswordValid = false;
-    //             $(this).addClass('is-invalid').removeClass('is-valid');
-    //             $('#confirm_password-feedback').text('Passwords do not match.').show();
-    //         } else {
-    //             confirmPasswordValid = true;
-    //             $(this).removeClass('is-invalid').addClass('is-valid');
-    //             $('#confirm_password-feedback').hide();
-    //         }
-    //     });
+            let width = (strength / 4) * 100;
+            strengthBar.css("width", width + "%");
 
-    //     // Form submit
-    //     $('#adminRegisterForm').on('submit', function(e) {
-    //         e.preventDefault();
-    //         const hasErrors =
-    //             usernameDuplicate || emailDuplicate || mobileDuplicate || !passwordValid || !
-    //             confirmPasswordValid;
-    //         if (hasErrors) {
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Validation Error',
-    //                 text: 'Please fix the highlighted errors before submitting.'
-    //             });
-    //             return false;
-    //         }
-    //         this.submit();
-    //     });
-    // });
+            switch (strength) {
+                case 0:
+                    strengthText.text("Enter a password");
+                    strengthBar.removeClass().addClass("progress-bar bg-secondary");
+                    break;
+                case 1:
+                    strengthText.text("Weak");
+                    strengthBar.removeClass().addClass("progress-bar bg-danger");
+                    break;
+                case 2:
+                    strengthText.text("Fair");
+                    strengthBar.removeClass().addClass("progress-bar bg-warning");
+                    break;
+                case 3:
+                    strengthText.text("Good");
+                    strengthBar.removeClass().addClass("progress-bar bg-info");
+                    break;
+                case 4:
+                    strengthText.text("Strong");
+                    strengthBar.removeClass().addClass("progress-bar bg-success");
+                    break;
+            }
+
+            if (strength < 2) {
+                $(this).addClass("is-invalid");
+                $("#password-feedback").text("Password must be stronger.");
+            } else {
+                $(this).removeClass("is-invalid").addClass("is-valid");
+            }
+        });
+
+        // === Confirm password ===
+        $("#confirm_password, #password").on("input", function() {
+            const password = $("#password").val();
+            const confirm = $("#confirm_password").val();
+
+            if (!confirm) {
+                $("#confirm_password").removeClass("is-valid is-invalid");
+                return;
+            }
+
+            if (password === confirm) {
+                $("#confirm_password").removeClass("is-invalid").addClass("is-valid");
+            } else {
+                $("#confirm_password").removeClass("is-valid").addClass("is-invalid");
+                $("#confirm_password-feedback").text("Passwords do not match.");
+            }
+        });
+
+        // === Form submit ===
+        $("#adminRegisterForm").on("submit", function(e) {
+            if (!this.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            $(this).addClass("was-validated");
+        });
+    });
     </script>
 </body>
 

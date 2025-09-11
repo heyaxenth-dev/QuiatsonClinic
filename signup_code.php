@@ -38,47 +38,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["client_register"])) {
         $errors[] = "Please enter a valid phone number.";
     }
 
-    // Validate password strength
+
+    // Validate password strength and confirmation
     if (!empty($password)) {
-        if (strlen($password) < 8) {
-            $errors[] = "Password must be at least 8 characters long.";
+        if (strlen($password) < 8 ||
+            !preg_match('/[A-Z]/', $password) ||
+            !preg_match('/[a-z]/', $password) ||
+            !preg_match('/[0-9]/', $password)) {
+            $errors[] = "Password must be at least 8 characters long and contain uppercase, lowercase, and a number.";
         }
-        if (!preg_match('/[A-Z]/', $password)) {
-            $errors[] = "Password must contain at least one uppercase letter.";
-        }
-        if (!preg_match('/[a-z]/', $password)) {
-            $errors[] = "Password must contain at least one lowercase letter.";
-        }
-        if (!preg_match('/[0-9]/', $password)) {
-            $errors[] = "Password must contain at least one number.";
+        if ($password !== $confirm_password) {
+            $errors[] = "Passwords do not match.";
         }
     }
 
-    // Validate password confirmation
-    if ($password !== $confirm_password) {
-        $errors[] = "Passwords do not match.";
-    }
 
-    // Check for duplicate email
-    if (!empty($email)) {
-        $stmt = $conn->prepare("SELECT id FROM client WHERE email = ? LIMIT 1");
-        $stmt->bind_param("s", $email);
+    // Check for duplicate email and phone (single query for efficiency)
+    if (!empty($email) || !empty($phone)) {
+        $stmt = $conn->prepare("SELECT id, email, mobile_no FROM client WHERE email = ? OR mobile_no = ? LIMIT 1");
+        $stmt->bind_param("ss", $email, $phone);
         $stmt->execute();
-        $stmt->store_result();
-        if ($stmt->num_rows > 0) {
-            $errors[] = "This email is already registered.";
-        }
-        $stmt->close();
-    }
-
-    // Check for duplicate phone
-    if (!empty($phone)) {
-        $stmt = $conn->prepare("SELECT id FROM client WHERE mobile_no = ? LIMIT 1");
-        $stmt->bind_param("s", $phone);
-        $stmt->execute();
-        $stmt->store_result();
-        if ($stmt->num_rows > 0) {
-            $errors[] = "This mobile number is already registered.";
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            if ($row['email'] === $email) {
+                $errors[] = "This email is already registered.";
+            }
+            if ($row['mobile_no'] === $phone) {
+                $errors[] = "This mobile number is already registered.";
+            }
         }
         $stmt->close();
     }
