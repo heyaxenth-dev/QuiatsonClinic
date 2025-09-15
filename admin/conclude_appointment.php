@@ -47,7 +47,7 @@ try {
     mysqli_stmt_bind_param($stmt, 'si', $remarks_input, $id);
     $ok = mysqli_stmt_execute($stmt);
 
-    if (!$ok) {
+    if (!$ok) { 
         echo json_encode(['success' => false, 'message' => 'Database error while concluding appointment']);
         exit;
     }
