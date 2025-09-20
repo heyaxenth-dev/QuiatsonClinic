@@ -109,7 +109,7 @@
                             <div class="col-md-12 d-flex justify-content-end">
                                 <button type="button" id="btnViewUploadedId"
                                     class=" btn btn-outline-secondary btn-sm d-none">
-                                    <i class="bi bi-card-image"></i> View ID
+                                    <i class="bi bi-card-image"></i> View Attachments
                                 </button>
                             </div>
                         </div>

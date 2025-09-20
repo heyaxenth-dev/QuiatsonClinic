@@ -10,10 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['date'])) {
         '9:30 AM - 10:30 AM', 
         '10:30 AM - 11:30 AM',
         '11:30 AM - 12:30 PM',
-        '1:30 PM - 2:30 PM',
-        '2:30 PM - 3:30 PM',
-        '3:30 PM - 4:30 PM',
-        '4:30 PM - 5:30 PM'
     ];
     
     // Get booked appointments for the selected date
