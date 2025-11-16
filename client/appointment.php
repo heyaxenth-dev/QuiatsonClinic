@@ -382,6 +382,20 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                     </div>
                                 </div>
                                 <?php endif; ?>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="symptom"
+                                                id="other_symptom" value="Other" required>
+                                            <label class="form-check-label" for="other_symptom">Other</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9" id="other_symptom_input_container" style="display: none;">
+                                        <label for="other_symptom_text" class="form-label">Please specify your symptom:</label>
+                                        <input type="text" class="form-control" id="other_symptom_text" name="other_symptom_text" 
+                                            placeholder="Enter your symptom here">
+                                    </div>
+                                </div>
                             </div>
 
                             <h5 class="mb-3 mt-3">Select Schedule</h5>
@@ -548,6 +562,29 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Handle "Other" symptom option - Define variables and function first
+    const otherSymptomRadio = document.getElementById('other_symptom');
+    const otherSymptomInput = document.getElementById('other_symptom_text');
+    const otherSymptomContainer = document.getElementById('other_symptom_input_container');
+    
+    // Make toggle function available globally for history population
+    function toggleOtherSymptomInput() {
+        if (otherSymptomRadio && otherSymptomContainer) {
+            if (otherSymptomRadio.checked) {
+                otherSymptomContainer.style.display = 'block';
+                if (otherSymptomInput) {
+                    otherSymptomInput.setAttribute('required', 'required');
+                }
+            } else {
+                otherSymptomContainer.style.display = 'none';
+                if (otherSymptomInput) {
+                    otherSymptomInput.removeAttribute('required');
+                    otherSymptomInput.value = '';
+                }
+            }
+        }
+    }
+
     function populateFormWithHistory() {
         if (!historyData) return;
 
@@ -578,10 +615,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
         // Set symptom
         if (historyData.symptom) {
+            // Check if symptom is one of the predefined options
             const symptomRadio = document.querySelector(
             `input[name="symptom"][value="${historyData.symptom}"]`);
             if (symptomRadio) {
                 symptomRadio.checked = true;
+                // If it's "Other", show the input field
+                if (historyData.symptom === 'Other' && otherSymptomRadio) {
+                    toggleOtherSymptomInput();
+                }
+            } else {
+                // If symptom is not in the predefined list, it's a custom symptom
+                // Set "Other" and populate the text field
+                if (otherSymptomRadio && otherSymptomInput) {
+                    otherSymptomRadio.checked = true;
+                    otherSymptomInput.value = historyData.symptom;
+                    toggleOtherSymptomInput();
+                }
             }
         }
 
@@ -660,12 +710,48 @@ document.addEventListener("DOMContentLoaded", function() {
         clearButton.className = 'btn btn-outline-secondary me-2';
         clearButton.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Clear Form';
         clearButton.addEventListener('click', function() {
-            if (confirm('Are you sure you want to clear all form data?')) {
-                form.reset();
-                // Reset patient type toggle
-                document.getElementById('seniorIdUpload').classList.add('d-none');
-                document.getElementById('upload_id').removeAttribute('required');
-                showNotification('Form cleared successfully!', 'info');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'question',
+                    title: 'Clear Form?',
+                    text: 'Are you sure you want to clear all form data?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Clear',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#dc3545'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.reset();
+                        // Reset patient type toggle
+                        document.getElementById('seniorIdUpload').classList.add('d-none');
+                        document.getElementById('upload_id').removeAttribute('required');
+                        // Reset other symptom input
+                        if (otherSymptomContainer) {
+                            otherSymptomContainer.style.display = 'none';
+                            if (otherSymptomInput) {
+                                otherSymptomInput.removeAttribute('required');
+                                otherSymptomInput.value = '';
+                            }
+                        }
+                        showNotification('Form cleared successfully!', 'info');
+                    }
+                });
+            } else {
+                if (confirm('Are you sure you want to clear all form data?')) {
+                    form.reset();
+                    // Reset patient type toggle
+                    document.getElementById('seniorIdUpload').classList.add('d-none');
+                    document.getElementById('upload_id').removeAttribute('required');
+                    // Reset other symptom input
+                    if (otherSymptomContainer) {
+                        otherSymptomContainer.style.display = 'none';
+                        if (otherSymptomInput) {
+                            otherSymptomInput.removeAttribute('required');
+                            otherSymptomInput.value = '';
+                        }
+                    }
+                    showNotification('Form cleared successfully!', 'info');
+                }
             }
         });
 
@@ -674,6 +760,58 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Initialize clear form button
     addClearFormButton();
+    
+    // Set up "Other" symptom option handlers (variables already defined above)
+    if (otherSymptomRadio && otherSymptomContainer) {
+        otherSymptomRadio.addEventListener('change', toggleOtherSymptomInput);
+        
+        // Add change listeners to all symptom radios
+        document.querySelectorAll('input[name="symptom"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.id !== 'other_symptom') {
+                    otherSymptomContainer.style.display = 'none';
+                    otherSymptomInput.removeAttribute('required');
+                    otherSymptomInput.value = '';
+                } else {
+                    toggleOtherSymptomInput();
+                }
+            });
+        });
+        
+        // Handle form submission - replace "Other" with custom text if provided
+        const appointmentForm = document.getElementById('appointmentForm');
+        if (appointmentForm) {
+            appointmentForm.addEventListener('submit', function(e) {
+                if (otherSymptomRadio.checked) {
+                    if (!otherSymptomInput || !otherSymptomInput.value.trim()) {
+                        e.preventDefault();
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Symptom Required',
+                                text: 'Please specify your symptom in the "Other" field.',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#ffc107'
+                            });
+                        } else {
+                            alert('Please specify your symptom in the "Other" field.');
+                        }
+                        return false;
+                    }
+                    
+                    // Create a hidden input with the custom symptom value
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'symptom';
+                    hiddenInput.value = otherSymptomInput.value.trim();
+                    this.appendChild(hiddenInput);
+                    
+                    // Remove the "Other" radio value
+                    otherSymptomRadio.disabled = true;
+                }
+            });
+        }
+    }
 });
 </script>
 

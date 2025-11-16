@@ -67,9 +67,24 @@ $current_staff_id = $_SESSION['user_id'] ?? 1; // Fallback to 1 if not set
                                     </div>
                                     
                                     <div class="row">
-                                        <div class="col-md-12 mb-3">
+                                        <div class="col-md-6 mb-3">
                                             <label for="reason" class="form-label">Reason (Optional)</label>
-                                            <input type="text" class="form-control" id="reason" name="reason" placeholder="e.g., Vacation, Training, etc.">
+                                            <select class="form-control" id="reason" name="reason">
+                                                <option value="">Select a reason (optional)</option>
+                                                <option value="Vacation">Vacation</option>
+                                                <option value="Training">Training</option>
+                                                <option value="Medical Leave">Medical Leave</option>
+                                                <option value="Personal Emergency">Personal Emergency</option>
+                                                <option value="Holiday">Holiday</option>
+                                                <option value="Conference">Conference</option>
+                                                <option value="Meeting">Meeting</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3" id="other_reason_container" style="display: none;">
+                                            <label for="other_reason_text" class="form-label">Please specify reason:</label>
+                                            <input type="text" class="form-control" id="other_reason_text" name="other_reason_text" 
+                                                placeholder="Enter custom reason here">
                                         </div>
                                     </div>
                                 </form>
@@ -385,6 +400,43 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     calendarMonth.addEventListener('change', renderCalendar);
+
+    // Handle "Other" reason option
+    const reasonSelect = document.getElementById('reason');
+    const otherReasonContainer = document.getElementById('other_reason_container');
+    const otherReasonInput = document.getElementById('other_reason_text');
+    
+    if (reasonSelect && otherReasonContainer) {
+        reasonSelect.addEventListener('change', function() {
+            if (this.value === 'Other') {
+                otherReasonContainer.style.display = 'block';
+                if (otherReasonInput) {
+                    otherReasonInput.setAttribute('required', 'required');
+                }
+            } else {
+                otherReasonContainer.style.display = 'none';
+                if (otherReasonInput) {
+                    otherReasonInput.removeAttribute('required');
+                    otherReasonInput.value = '';
+                }
+            }
+        });
+        
+        // Handle form submission - replace "Other" with custom text if provided
+        scheduleForm.addEventListener('submit', function(e) {
+            if (reasonSelect.value === 'Other' && otherReasonInput && otherReasonInput.value.trim()) {
+                // Create a hidden input with the custom reason value
+                const hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'reason';
+                hiddenInput.value = otherReasonInput.value.trim();
+                this.appendChild(hiddenInput);
+                
+                // Remove the "Other" select value
+                reasonSelect.disabled = true;
+            }
+        });
+    }
 });
 </script>
 
