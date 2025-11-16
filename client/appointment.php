@@ -5,6 +5,25 @@ include '../database/conn.php';
 include './utils/header.php';
 include './utils/sidebar.php';
 include 'alert.php';
+
+// Handle re-appointment request from lab results
+$reappointment_data = null;
+$is_reappointment = isset($_GET['reappointment']) && $_GET['reappointment'] == '1';
+$lab_result_id = isset($_GET['lab_result_id']) ? intval($_GET['lab_result_id']) : 0;
+$original_appointment_id = isset($_GET['appointment_id']) ? intval($_GET['appointment_id']) : 0;
+
+if ($is_reappointment && $original_appointment_id > 0) {
+    // Fetch the original appointment data
+    $stmt = $conn->prepare("SELECT * FROM appointments WHERE id = ?");
+    $stmt->bind_param("i", $original_appointment_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $reappointment_data = $result->fetch_assoc();
+    }
+    $stmt->close();
+}
 ?>
 
 <main id="main" class="main">
@@ -27,6 +46,18 @@ include 'alert.php';
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Appointment Form</h5>
+
+                        <!-- Re-appointment Notice -->
+                        <?php if ($is_reappointment && $reappointment_data): ?>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Re-appointment for Lab Result Reading</strong>
+                            <p class="mb-0 mt-2">You are requesting a re-appointment to discuss your lab results from your appointment on 
+                                <strong><?= htmlspecialchars($reappointment_data['appointment_date']); ?></strong>. 
+                                Your previous information has been pre-filled below. Please review and select a new date and time.</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <?php endif; ?>
 
                         <!-- History Section -->
                         <div class="alert alert-info" id="historyAlert" style="display: none;">
@@ -58,7 +89,7 @@ include 'alert.php';
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="patient_type" id="regular"
-                                            value="regular" required>
+                                            value="regular" <?= $reappointment_data && $reappointment_data['patient_type'] == 'regular' ? 'checked' : ''; ?> required>
                                         <!-- Loader Overlay -->
                                         <div id="loaderOverlay"
                                             style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:9999;align-items:center;justify-content:center;">
@@ -89,7 +120,7 @@ include 'alert.php';
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="patient_type" id="senior_pwd"
-                                            value="senior_pwd" required>
+                                            value="senior_pwd" <?= $reappointment_data && $reappointment_data['patient_type'] == 'senior_pwd' ? 'checked' : ''; ?> required>
                                         <label class="form-check-label" for="senior">
                                             Senior Citizen / PWD
                                         </label>
@@ -117,7 +148,17 @@ include 'alert.php';
 
                                 seniorRadio.addEventListener("change", toggleUpload);
                                 regularRadio.addEventListener("change", toggleUpload);
+                                
+                                // Initialize on page load
                                 toggleUpload();
+                                
+                                <?php if ($reappointment_data): ?>
+                                // If re-appointment, ensure the correct patient type toggle is set
+                                if (<?= $reappointment_data['patient_type'] == 'senior_pwd' ? 'true' : 'false'; ?>) {
+                                    seniorRadio.checked = true;
+                                    toggleUpload();
+                                }
+                                <?php endif; ?>
                             });
                             </script>
 
@@ -127,19 +168,22 @@ include 'alert.php';
                                 <!-- Last Name -->
                                 <div class="col-md-4 form-group">
                                     <label for="lastname">Last Name</label>
-                                    <input type="text" name="lastname" id="lastname" class="form-control" required />
+                                    <input type="text" name="lastname" id="lastname" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['lastname']) : ''; ?>" required />
                                 </div>
 
                                 <!-- First Name -->
                                 <div class="col-md-4 form-group">
                                     <label for="firstname">First Name</label>
-                                    <input type="text" name="firstname" id="firstname" class="form-control" required />
+                                    <input type="text" name="firstname" id="firstname" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['firstname']) : ''; ?>" required />
                                 </div>
 
                                 <!-- Middle Initial -->
                                 <div class="col-md-4 form-group">
                                     <label for="middle_initial">Middle Initial</label>
                                     <input type="text" name="middle_initial" id="middle_initial" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['middle_initial']) : ''; ?>"
                                         maxlength="1" required />
                                 </div>
                             </div>
@@ -148,14 +192,16 @@ include 'alert.php';
                                 <!-- Address -->
                                 <div class="col-md-6 form-group">
                                     <label for="address">Address</label>
-                                    <input type="text" name="address" id="address" class="form-control" required
+                                    <input type="text" name="address" id="address" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['address']) : ''; ?>" required
                                         autocomplete="off" />
                                 </div>
 
                                 <!-- Age -->
                                 <div class="col-md-2 form-group">
                                     <label for="age">Age</label>
-                                    <input type="number" name="age" id="age" class="form-control" min="0" required />
+                                    <input type="number" name="age" id="age" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['age']) : ''; ?>" min="0" required />
                                 </div>
 
                                 <!-- Sex -->
@@ -163,15 +209,16 @@ include 'alert.php';
                                     <label for="sex">Sex</label>
                                     <select name="sex" id="sex" class="form-control" required>
                                         <option value="">Select Sex</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
+                                        <option value="Male" <?= $reappointment_data && $reappointment_data['sex'] == 'Male' ? 'selected' : ''; ?>>Male</option>
+                                        <option value="Female" <?= $reappointment_data && $reappointment_data['sex'] == 'Female' ? 'selected' : ''; ?>>Female</option>
                                     </select>
                                 </div>
 
                                 <!-- Birthdate -->
                                 <div class="col-md-2 form-group">
                                     <label for="birthdate">Birthdate</label>
-                                    <input type="date" name="birthdate" id="birthdate" class="form-control" required />
+                                    <input type="date" name="birthdate" id="birthdate" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['birthdate']) : ''; ?>" required />
                                 </div>
                             </div>
 
@@ -181,30 +228,33 @@ include 'alert.php';
                                     <label for="civil_status">Civil Status</label>
                                     <select name="civil_status" id="civil_status" class="form-control" required>
                                         <option value="">Select Civil Status</option>
-                                        <option value="Single">Single</option>
-                                        <option value="Married">Married</option>
-                                        <option value="Widowed">Widowed</option>
-                                        <option value="Separated">Separated</option>
+                                        <option value="Single" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Single' ? 'selected' : ''; ?>>Single</option>
+                                        <option value="Married" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Married' ? 'selected' : ''; ?>>Married</option>
+                                        <option value="Widowed" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Widowed' ? 'selected' : ''; ?>>Widowed</option>
+                                        <option value="Separated" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Separated' ? 'selected' : ''; ?>>Separated</option>
                                     </select>
                                 </div>
 
                                 <!-- Phone Number -->
                                 <div class="col-md-3 form-group">
                                     <label for="phone">Phone Number</label>
-                                    <input type="tel" name="phone" id="phone" class="form-control" required
+                                    <input type="tel" name="phone" id="phone" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['phone']) : ''; ?>" required
                                         autocomplete="off" />
                                 </div>
 
                                 <!-- Weight -->
                                 <div class="col-md-2 form-group">
                                     <label for="weight">Weight (kg)</label>
-                                    <input type="text" name="weight" id="weight" class="form-control" required />
+                                    <input type="text" name="weight" id="weight" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['weight']) : ''; ?>" required />
                                 </div>
 
                                 <!-- Height -->
                                 <div class="col-md-2 form-group">
                                     <label for="height">Height (cm )</label>
-                                    <input type="text" name="height" id="height" class="form-control" required />
+                                    <input type="text" name="height" id="height" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['height']) : ''; ?>" required />
                                 </div>
 
                                 <!-- Blood Type -->
@@ -212,14 +262,13 @@ include 'alert.php';
                                     <label for="bloodtype">Blood Type</label>
                                     <select name="bloodtype" id="bloodtype" class="form-control" required>
                                         <option value="">Select Blood Type</option>
-                                        <option value="A+">A+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B-">B-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
-                                        <option value="O+">O+</option>
-                                        <option value="O-">O-</option>
+                                        <?php 
+                                        $blood_types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+                                        foreach ($blood_types as $bt) {
+                                            $selected = ($reappointment_data && $reappointment_data['bloodtype'] == $bt) ? 'selected' : '';
+                                            echo "<option value=\"$bt\" $selected>$bt</option>";
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -320,6 +369,19 @@ include 'alert.php';
                                         </div>
                                     </div>
                                 </div>
+                                <?php if ($is_reappointment): ?>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="symptom"
+                                                id="lab_result_reading" value="Lab Result Reading" checked required>
+                                            <label class="form-check-label" for="lab_result_reading">
+                                                <strong class="text-primary">Lab Result Reading</strong>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
                             </div>
 
                             <h5 class="mb-3 mt-3">Select Schedule</h5>
@@ -448,6 +510,8 @@ include 'alert.php';
         </div>
     </div>
 </div>
+<!-- Include SweetAlert2 for better alerts -->
+<script src="assets/js/sweetalert2.all.min.js"></script>
 <script src="assets/js/datepicker.js"></script>
 
 <script>

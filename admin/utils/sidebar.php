@@ -87,6 +87,15 @@ function get_page_link($page_name) {
         </li>
         <!-- End Reports Page Nav -->
 
+        <li class="nav-item">
+            <a class="nav-link <?= ($current_page == 'staff_schedules') ? '' : 'collapsed' ?> "
+                href="<?= get_page_link('staff_schedules')?>">
+                <i class="bi bi-calendar-x"></i>
+                <span>My Schedule</span>
+            </a>
+        </li>
+        <!-- End Staff Schedule Page Nav -->
+
         <li class="nav-heading">Account</li>
 
         <li class="nav-item">

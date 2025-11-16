@@ -53,6 +53,16 @@ include 'alert.php';
                         <div class="card recent-sales overflow-auto">
                             <div class="card-body">
                                 <h5 class="card-title">Appointment Calendar</h5>
+                                
+                                <!-- Calendar Legend -->
+                                <div class="mb-3 d-flex flex-wrap gap-3 align-items-center">
+                                    <small class="text-muted"><strong>Legend:</strong></small>
+                                    <span class="badge" style="background-color: #28a745; color: white;">Approved</span>
+                                    <span class="badge" style="background-color: #ffc107; color: black;">Pending</span>
+                                    <span class="badge" style="background-color: #dc3545; color: white;">Cancelled</span>
+                                    <span class="badge" style="background-color: #6c757d; color: white;">Unavailable</span>
+                                </div>
+                                
                                 <link rel="stylesheet"
                                     href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
                                 <div id="calendar" style="min-height: 600px;"></div>
@@ -84,7 +94,18 @@ include 'alert.php';
                                             }
                                         },
                                         eventDidMount: function(info) {
-                                            // Color by status
+                                            // Check if it's an unavailable date
+                                            var eventType = info.event.extendedProps && info.event.extendedProps.type;
+                                            if (eventType === 'unavailable') {
+                                                // Unavailable dates are already styled, but ensure they're visible
+                                                info.el.style.opacity = '0.7';
+                                                info.el.style.cursor = 'not-allowed';
+                                                // Add a tooltip
+                                                info.el.setAttribute('title', 'Clinic is unavailable on this date');
+                                                return;
+                                            }
+                                            
+                                            // Color by status for regular appointments
                                             var status = info.event.extendedProps && info.event
                                                 .extendedProps.status;
                                             if (status === 'Pending') {
@@ -101,6 +122,22 @@ include 'alert.php';
                                             }
                                         },
                                         eventClick: function(info) {
+                                            // Check if it's an unavailable date
+                                            var eventType = info.event.extendedProps && info.event.extendedProps.type;
+                                            if (eventType === 'unavailable') {
+                                                var reason = info.event.extendedProps && info.event.extendedProps.reason 
+                                                    ? '\nReason: ' + info.event.extendedProps.reason 
+                                                    : '';
+                                                Swal.fire({
+                                                    icon: 'warning',
+                                                    title: 'Clinic Unavailable',
+                                                    html: 'The clinic is unavailable on this date.' + reason + '<br><br><small>Please select another date for your appointment.</small>',
+                                                    confirmButtonText: 'OK',
+                                                    confirmButtonColor: '#6c757d'
+                                                });
+                                                return;
+                                            }
+                                            
                                             var title = info.event.title || 'Appointment';
                                             var time = info.event.extendedProps && info.event
                                                 .extendedProps.time_slot ? info.event.extendedProps

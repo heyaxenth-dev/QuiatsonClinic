@@ -16,6 +16,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['date'])) {
         '4:30 PM - 5:30 PM'
     ];
     
+    // Check if date is marked as unavailable by staff
+    $unavailableStmt = $conn->prepare("SELECT COUNT(*) as count FROM staff_schedules WHERE schedule_date = ? AND is_unavailable = 1");
+    $unavailableStmt->bind_param("s", $selected_date);
+    $unavailableStmt->execute();
+    $unavailableResult = $unavailableStmt->get_result();
+    $unavailableRow = $unavailableResult->fetch_assoc();
+    $unavailableStmt->close();
+    
+    // If date is unavailable, return empty array
+    if ($unavailableRow['count'] > 0) {
+        header('Content-Type: application/json');
+        echo json_encode([]);
+        $conn->close();
+        exit;
+    }
+    
     // Get booked appointments for the selected date
     $stmt = $conn->prepare("SELECT time_slot, COUNT(*) as booked_count FROM appointments WHERE appointment_date = ? GROUP BY time_slot");
     $stmt->bind_param("s", $selected_date);
