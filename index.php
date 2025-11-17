@@ -68,7 +68,7 @@ session_start();
                         <li>
                             <a href="#hero" class="active">Home<br /></a>
                         </li>
-                        <li><a href="#about">About</a></li>
+                        <!-- <li><a href="#about">About</a></li> -->
                         <li><a href="#doctors">Doctors</a></li>
                         <li><a href="#contact">Contact</a></li>
                         <li><a href="login">Admin</a></li>
@@ -103,54 +103,6 @@ session_start();
             </div>
         </section>
         <!-- /Hero Section -->
-
-        <!-- Stats Section -->
-        <section id="stats" class="stats section light-background">
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
-                <div class="row gy-4">
-                    <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
-                        <i class="fa-solid fa-user-doctor"></i>
-                        <div class="stats-item">
-                            <span data-purecounter-start="0" data-purecounter-end="85" data-purecounter-duration="1"
-                                class="purecounter"></span>
-                            <p>Doctors</p>
-                        </div>
-                    </div>
-                    <!-- End Stats Item -->
-
-                    <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
-                        <i class="fa-regular fa-hospital"></i>
-                        <div class="stats-item">
-                            <span data-purecounter-start="0" data-purecounter-end="18" data-purecounter-duration="1"
-                                class="purecounter"></span>
-                            <p>Departments</p>
-                        </div>
-                    </div>
-                    <!-- End Stats Item -->
-
-                    <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
-                        <i class="fas fa-flask"></i>
-                        <div class="stats-item">
-                            <span data-purecounter-start="0" data-purecounter-end="12" data-purecounter-duration="1"
-                                class="purecounter"></span>
-                            <p>Research Labs</p>
-                        </div>
-                    </div>
-                    <!-- End Stats Item -->
-
-                    <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
-                        <i class="fas fa-award"></i>
-                        <div class="stats-item">
-                            <span data-purecounter-start="0" data-purecounter-end="150" data-purecounter-duration="1"
-                                class="purecounter"></span>
-                            <p>Awards</p>
-                        </div>
-                    </div>
-                    <!-- End Stats Item -->
-                </div>
-            </div>
-        </section>
-        <!-- /Stats Section -->
 
         <!-- Client Section -->
         <section id="appointment" class="appointment section">
@@ -233,8 +185,8 @@ session_start();
             <div class="container section-title" data-aos="fade-up">
                 <h2>Doctors</h2>
                 <p>
-                    Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
-                    consectetur velit
+                    We proudly serve the community with skilled and caring doctors who are dedicated
+                    to improving the health and well-being of every patient.
                 </p>
             </div>
             <!-- End Section Title -->
@@ -247,85 +199,11 @@ session_start();
                                 <img src="assets/img/doctors/doctors-1.jpg" class="img-fluid" alt="" />
                             </div>
                             <div class="member-info">
-                                <h4>Walter White</h4>
-                                <span>Chief Medical Officer</span>
+                                <h4>Dr. Roy Ilisan Quiatson</h4>
+                                <span>Specialty: Family Medicine</span>
                                 <p>
-                                    Explicabo voluptatem mollitia et repellat qui dolorum quasi
+                                    Address:Centro Pojo, Bugasong Antique
                                 </p>
-                                <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                    <a href=""> <i class="bi bi-linkedin"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Team Member -->
-
-                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                        <div class="team-member d-flex align-items-start">
-                            <div class="pic">
-                                <img src="assets/img/doctors/doctors-2.jpg" class="img-fluid" alt="" />
-                            </div>
-                            <div class="member-info">
-                                <h4>Sarah Jhonson</h4>
-                                <span>Anesthesiologist</span>
-                                <p>
-                                    Aut maiores voluptates amet et quis praesentium qui senda
-                                    para
-                                </p>
-                                <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                    <a href=""> <i class="bi bi-linkedin"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Team Member -->
-
-                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-                        <div class="team-member d-flex align-items-start">
-                            <div class="pic">
-                                <img src="assets/img/doctors/doctors-3.jpg" class="img-fluid" alt="" />
-                            </div>
-                            <div class="member-info">
-                                <h4>William Anderson</h4>
-                                <span>Cardiology</span>
-                                <p>
-                                    Quisquam facilis cum velit laborum corrupti fuga rerum quia
-                                </p>
-                                <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                    <a href=""> <i class="bi bi-linkedin"></i> </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Team Member -->
-
-                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
-                        <div class="team-member d-flex align-items-start">
-                            <div class="pic">
-                                <img src="assets/img/doctors/doctors-4.jpg" class="img-fluid" alt="" />
-                            </div>
-                            <div class="member-info">
-                                <h4>Amanda Jepson</h4>
-                                <span>Neurosurgeon</span>
-                                <p>
-                                    Dolorum tempora officiis odit laborum officiis et et
-                                    accusamus
-                                </p>
-                                <div class="social">
-                                    <a href=""><i class="bi bi-twitter-x"></i></a>
-                                    <a href=""><i class="bi bi-facebook"></i></a>
-                                    <a href=""><i class="bi bi-instagram"></i></a>
-                                    <a href=""> <i class="bi bi-linkedin"></i> </a>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -349,8 +227,8 @@ session_start();
 
             <div class="mb-5" data-aos="fade-up" data-aos-delay="200">
                 <iframe style="border: 0; width: 100%; height: 270px"
-                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d48389.78314118045!2d-74.006138!3d40.710059!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a22a3bda30d%3A0xb89d1fe6bc499443!2sDowntown%20Conference%20Center!5e0!3m2!1sen!2sus!4v1676961268712!5m2!1sen!2sus"
-                    frameborder="0" allowfullscreen="" loading="lazy"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13862.72233200135!2d122.05738423761272!3d11.049454356553682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33afb7439627d461%3A0xc823c08ca5580d4d!2sCentro%20Pojo%2C%20Bugasong%2C%20Antique!5e0!3m2!1sen!2sph!4v1763384130431!5m2!1sen!2sph"
+                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
             <!-- End Google Maps -->
@@ -362,7 +240,7 @@ session_start();
                             <i class="bi bi-geo-alt flex-shrink-0"></i>
                             <div>
                                 <h3>Location</h3>
-                                <p>A108 Adam Street, New York, NY 535022</p>
+                                <p>Centro Pojo, Bugasong Antique</p>
                             </div>
                         </div>
                         <!-- End Info Item -->
@@ -380,7 +258,7 @@ session_start();
                             <i class="bi bi-envelope flex-shrink-0"></i>
                             <div>
                                 <h3>Email Us</h3>
-                                <p>info@example.com</p>
+                                <p>quiatsonclinic@gmail.com</p>
                             </div>
                         </div>
                         <!-- End Info Item -->
@@ -437,12 +315,12 @@ session_start();
                         <span class="sitename">Quiatson Clinic</span>
                     </a>
                     <div class="footer-contact pt-3">
-                        <p>A108 Adam Street</p>
-                        <p>New York, NY 535022</p>
+                        <p>Centro Pojo, Bugasong </p>
+                        <p>Antique, Philippines</p>
                         <p class="mt-3">
                             <strong>Phone:</strong> <span>+1 5589 55488 55</span>
                         </p>
-                        <p><strong>Email:</strong> <span>info@example.com</span></p>
+                        <p><strong>Email:</strong> <span>quiatsonclinic@gmail.com</span></p>
                     </div>
                     <div class="social-links d-flex mt-4">
                         <a href=""><i class="bi bi-twitter-x"></i></a>
