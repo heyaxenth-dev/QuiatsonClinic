@@ -32,7 +32,7 @@ include 'alert.php';
                         <table class="table datatable">
                             <thead>
                                 <tr>
-                                    <th>Severity</th>
+                                    <th>#</th>
                                     <th>
                                         <b>N</b>ame
                                     </th>
@@ -49,8 +49,9 @@ include 'alert.php';
                             <tbody>
 
                                 <?php 
+                                $count = 0;
                                 // Fetch appointments from database
-                                $sql = "SELECT * FROM appointments WHERE status != 'Concluded' AND patient_type = 'senior_pwd' AND (severity = 'Urgent' OR severity = 'Regular')";
+                                $sql = "SELECT * FROM appointments WHERE status != 'Concluded' AND patient_type = 'senior_pwd' AND (severity = 'Urgent' OR severity = 'Regular') ORDER BY created_at ASC";
                                 $result = mysqli_query($conn, $sql);
                                 while ($row = mysqli_fetch_assoc($result)) {
 
@@ -73,10 +74,10 @@ include 'alert.php';
                                         $status = '<span class="badge bg-danger">Cancelled</span>';
                                         break;
                                 }
-                                
+                                $count++;
                             ?>
                                 <tr>
-                                    <td><span class="fw-bold text-danger"><?=$row['severity']?></span></td>
+                                    <td><span class="fw-bold"><?=$count?></span></td>
                                     </td>
                                     <td><?= $fullname ?></td>
                                     <td><?=$row['address']?></td>
