@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_client'])) {
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['firstname'] = $row['firstname'];
             $_SESSION['email'] = $row['email'];
-            $_SESSION['phone'] = $row['phone'];
+            $_SESSION['phone'] = $row['mobile_no'];
             $_SESSION['logged'] = "Welcome back, " . $row['firstname'] . "!";
             $_SESSION['logged_icon'] = "success";
             header("Location: client/homepage.php"); // Redirect to the dashboard or home page

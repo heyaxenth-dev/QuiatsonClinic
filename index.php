@@ -43,7 +43,7 @@ session_start();
                 <div class="contact-info d-flex align-items-center">
                     <i class="bi bi-envelope d-flex align-items-center"><a
                             href="mailto:quiatsonclinic@gmail.com">quiatsonclinic@gmail.com</a></i>
-                    <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
+                    <i class="bi bi-phone d-flex align-items-center ms-4"><span>+639150623505</span></i>
                 </div>
                 <div class="social-links d-none d-md-flex align-items-center">
                     <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
@@ -249,7 +249,7 @@ session_start();
                             <i class="bi bi-telephone flex-shrink-0"></i>
                             <div>
                                 <h3>Call Us</h3>
-                                <p>+1 5589 55488 55</p>
+                                <p>+639150623505</p>
                             </div>
                         </div>
                         <!-- End Info Item -->
@@ -318,7 +318,7 @@ session_start();
                         <p>Centro Pojo, Bugasong </p>
                         <p>Antique, Philippines</p>
                         <p class="mt-3">
-                            <strong>Phone:</strong> <span>+1 5589 55488 55</span>
+                            <strong>Phone:</strong> <span>+639150623505</span>
                         </p>
                         <p><strong>Email:</strong> <span>quiatsonclinic@gmail.com</span></p>
                     </div>
