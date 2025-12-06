@@ -164,6 +164,59 @@ if ($is_reappointment && $original_appointment_id > 0) {
 
                             <h5 class="mb-3">Patient's Information</h5>
 
+                            <!-- Relationship Field (for appointments made on behalf of someone else) -->
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="isForSomeoneElse" 
+                                            <?= $reappointment_data && !empty($reappointment_data['relationship']) ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="isForSomeoneElse">
+                                            <i class="bi bi-person-check me-1"></i>This appointment is for someone else
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4 form-group" id="relationshipField" style="display: none;">
+                                        <label for="relationship">Relationship to Patient</label>
+                                        <select name="relationship" id="relationship" class="form-control">
+                                            <option value="">Select Relationship</option>
+                                            <option value="Self" <?= $reappointment_data && $reappointment_data['relationship'] == 'Self' ? 'selected' : ''; ?>>Self</option>
+                                            <option value="Spouse" <?= $reappointment_data && $reappointment_data['relationship'] == 'Spouse' ? 'selected' : ''; ?>>Spouse</option>
+                                            <option value="Parent" <?= $reappointment_data && $reappointment_data['relationship'] == 'Parent' ? 'selected' : ''; ?>>Parent</option>
+                                            <option value="Child" <?= $reappointment_data && $reappointment_data['relationship'] == 'Child' ? 'selected' : ''; ?>>Child</option>
+                                            <option value="Sibling" <?= $reappointment_data && $reappointment_data['relationship'] == 'Sibling' ? 'selected' : ''; ?>>Sibling</option>
+                                            <option value="Relative" <?= $reappointment_data && $reappointment_data['relationship'] == 'Relative' ? 'selected' : ''; ?>>Relative</option>
+                                            <option value="Friend" <?= $reappointment_data && $reappointment_data['relationship'] == 'Friend' ? 'selected' : ''; ?>>Friend</option>
+                                            <option value="Guardian" <?= $reappointment_data && $reappointment_data['relationship'] == 'Guardian' ? 'selected' : ''; ?>>Guardian</option>
+                                            <option value="Other" <?= $reappointment_data && $reappointment_data['relationship'] == 'Other' ? 'selected' : ''; ?>>Other</option>
+                                        </select>
+                                        <small class="text-muted">Please specify your relationship to the patient</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const isForSomeoneElse = document.getElementById('isForSomeoneElse');
+                                const relationshipField = document.getElementById('relationshipField');
+                                const relationshipSelect = document.getElementById('relationship');
+                                
+                                function toggleRelationshipField() {
+                                    if (isForSomeoneElse.checked) {
+                                        relationshipField.style.display = 'block';
+                                        relationshipSelect.setAttribute('required', 'required');
+                                    } else {
+                                        relationshipField.style.display = 'none';
+                                        relationshipSelect.removeAttribute('required');
+                                        relationshipSelect.value = '';
+                                    }
+                                }
+                                
+                                isForSomeoneElse.addEventListener('change', toggleRelationshipField);
+                                
+                                // Initialize on page load
+                                toggleRelationshipField();
+                            });
+                            </script>
+
                             <div class="row">
                                 <!-- Last Name -->
                                 <div class="col-md-4 form-group">
@@ -505,6 +558,10 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                 <td><strong>Symptom:</strong></td>
                                 <td id="previewSymptom">-</td>
                             </tr>
+                            <tr>
+                                <td><strong>Relationship:</strong></td>
+                                <td id="previewRelationship">-</td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -602,6 +659,17 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('height').value = historyData.height || '';
         document.getElementById('bloodtype').value = historyData.bloodtype || '';
 
+        // Populate relationship field if it exists
+        if (historyData.relationship) {
+            const isForSomeoneElse = document.getElementById('isForSomeoneElse');
+            const relationshipSelect = document.getElementById('relationship');
+            if (isForSomeoneElse && relationshipSelect) {
+                isForSomeoneElse.checked = true;
+                isForSomeoneElse.dispatchEvent(new Event('change'));
+                relationshipSelect.value = historyData.relationship || '';
+            }
+        }
+
         // Set patient type
         if (historyData.patient_type) {
             const patientTypeRadio = document.querySelector(
@@ -677,6 +745,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('previewBloodtype').textContent = historyData.bloodtype || '-';
         document.getElementById('previewPatientType').textContent = historyData.patient_type || '-';
         document.getElementById('previewSymptom').textContent = historyData.symptom || '-';
+        document.getElementById('previewRelationship').textContent = historyData.relationship || '-';
 
         // Format last updated date
         const lastUpdated = new Date(historyData.created_at).toLocaleString();
@@ -725,6 +794,16 @@ document.addEventListener("DOMContentLoaded", function() {
                         // Reset patient type toggle
                         document.getElementById('seniorIdUpload').classList.add('d-none');
                         document.getElementById('upload_id').removeAttribute('required');
+                        // Reset relationship field
+                        const isForSomeoneElse = document.getElementById('isForSomeoneElse');
+                        const relationshipField = document.getElementById('relationshipField');
+                        const relationshipSelect = document.getElementById('relationship');
+                        if (isForSomeoneElse) isForSomeoneElse.checked = false;
+                        if (relationshipField) relationshipField.style.display = 'none';
+                        if (relationshipSelect) {
+                            relationshipSelect.removeAttribute('required');
+                            relationshipSelect.value = '';
+                        }
                         // Reset other symptom input
                         if (otherSymptomContainer) {
                             otherSymptomContainer.style.display = 'none';
@@ -742,6 +821,16 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Reset patient type toggle
                     document.getElementById('seniorIdUpload').classList.add('d-none');
                     document.getElementById('upload_id').removeAttribute('required');
+                    // Reset relationship field
+                    const isForSomeoneElse = document.getElementById('isForSomeoneElse');
+                    const relationshipField = document.getElementById('relationshipField');
+                    const relationshipSelect = document.getElementById('relationship');
+                    if (isForSomeoneElse) isForSomeoneElse.checked = false;
+                    if (relationshipField) relationshipField.style.display = 'none';
+                    if (relationshipSelect) {
+                        relationshipSelect.removeAttribute('required');
+                        relationshipSelect.value = '';
+                    }
                     // Reset other symptom input
                     if (otherSymptomContainer) {
                         otherSymptomContainer.style.display = 'none';

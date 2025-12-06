@@ -178,7 +178,7 @@ session_start();
                                         <input type="password" class="form-control" id="password" name="password"
                                             required />
                                         <a href="#" class="input-group-text toggle-password" data-target="password">
-                                            <i class="bi bi-eye"></i>
+                                            <i class="bi bi-eye-slash"></i>
                                         </a>
                                     </div>
                                     <div class="password-strength mt-2">
@@ -199,7 +199,7 @@ session_start();
                                             name="confirmPassword" required />
                                         <a href="#" class="input-group-text toggle-password"
                                             data-target="confirmPassword">
-                                            <i class="bi bi-eye"></i>
+                                            <i class="bi bi-eye-slash"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -472,10 +472,10 @@ session_start();
 
                     if (input.attr('type') === 'password') {
                         input.attr('type', 'text');
-                        icon.removeClass('bi-eye').addClass('bi-eye-slash');
+                        icon.removeClass('bi-eye-slash').addClass('bi-eye');
                     } else {
                         input.attr('type', 'password');
-                        icon.removeClass('bi-eye-slash').addClass('bi-eye');
+                        icon.removeClass('bi-eye').addClass('bi-eye-slash');
                     }
                 });
 

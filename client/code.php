@@ -10,7 +10,7 @@ require_once( 'vendor/autoload.php' );
 // Function to save appointment history for future reuse
 function saveAppointmentHistory($conn, $user_id, $lastname, $firstname, $middle_initial, 
                                $address, $age, $sex, $birthdate, $civil_status, $phone, 
-                               $weight, $height, $bloodtype, $patient_type, $symptom) {
+                               $weight, $height, $bloodtype, $patient_type, $symptom, $relationship = '') {
     try {
         // Check if history already exists for this user
         $check_stmt = $conn->prepare("SELECT id FROM appointment_history WHERE user_id = ?");
@@ -25,14 +25,14 @@ function saveAppointmentHistory($conn, $user_id, $lastname, $firstname, $middle_
                 UPDATE appointment_history SET 
                     lastname = ?, firstname = ?, middle_initial = ?, address = ?, 
                     age = ?, sex = ?, birthdate = ?, civil_status = ?, phone = ?, 
-                    weight = ?, height = ?, bloodtype = ?, patient_type = ?, symptom = ?,
+                    weight = ?, height = ?, bloodtype = ?, patient_type = ?, symptom = ?, relationship = ?,
                     updated_at = CURRENT_TIMESTAMP
                 WHERE user_id = ?
             ");
-            $update_stmt->bind_param("ssssisssssssssi", 
+            $update_stmt->bind_param("ssssissssssssssi", 
                 $lastname, $firstname, $middle_initial, $address, $age, $sex, 
                 $birthdate, $civil_status, $phone, $weight, $height, $bloodtype, 
-                $patient_type, $symptom, $user_id);
+                $patient_type, $symptom, $relationship, $user_id);
             $update_stmt->execute();
             $update_stmt->close();
         } else {
@@ -40,13 +40,13 @@ function saveAppointmentHistory($conn, $user_id, $lastname, $firstname, $middle_
             $insert_stmt = $conn->prepare("
                 INSERT INTO appointment_history 
                 (user_id, lastname, firstname, middle_initial, address, age, sex, 
-                 birthdate, civil_status, phone, weight, height, bloodtype, patient_type, symptom)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 birthdate, civil_status, phone, weight, height, bloodtype, patient_type, symptom, relationship)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
-            $insert_stmt->bind_param("isssissssssssss", 
+            $insert_stmt->bind_param("isssisssssssssss", 
                 $user_id, $lastname, $firstname, $middle_initial, $address, $age, $sex, 
                 $birthdate, $civil_status, $phone, $weight, $height, $bloodtype, 
-                $patient_type, $symptom);
+                $patient_type, $symptom, $relationship);
             $insert_stmt->execute();
             $insert_stmt->close();
         }
@@ -77,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
     $appointment_date = $conn->real_escape_string($_POST['date']);
     $time_slot = $conn->real_escape_string($_POST['time_slot']);
     $symptom = $conn->real_escape_string($_POST['symptom']);
+    $relationship = isset($_POST['relationship']) ? $conn->real_escape_string($_POST['relationship']) : '';
 
     $sendDate = date("F j, Y", strtotime($_POST['date'])); // Example: January 28, 2025
     
@@ -183,14 +184,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
     $stmt = $conn->prepare("INSERT INTO appointments (created_by, patient_type,
         severity, lastname, firstname, middle_initial, address, age, sex, birthdate,
         civil_status, phone, weight, height, bloodtype,
-        appointment_date, time_slot, symptom, uploaded_id, status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        appointment_date, time_slot, symptom, uploaded_id, status, relationship
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
-        "issssssissssssssssss", $created_by, $patient_type,
+        "issssssisssssssssssss", $created_by, $patient_type,
         $severity, $lastname, $firstname, $middle_initial, $address, $age, $sex, $birthdate,
         $civil_status, $phone, $weight, $height, $bloodtype,
-        $appointment_date, $time_slot, $symptom, $target_file, $default_status
+        $appointment_date, $time_slot, $symptom, $target_file, $default_status, $relationship
     );
 
     if ($stmt->execute()) {
@@ -207,7 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
         // Save appointment data to history for future reuse
         saveAppointmentHistory($conn, $created_by, $lastname, $firstname, $middle_initial, 
                              $address, $age, $sex, $birthdate, $civil_status, $phone, 
-                             $weight, $height, $bloodtype, $patient_type, $symptom);
+                             $weight, $height, $bloodtype, $patient_type, $symptom, $relationship);
 
         // Send SMS notification
         $sms_result = sendSMS($api_key, $sender_name, $phone, $firstname, $sendDate, $time_slot);

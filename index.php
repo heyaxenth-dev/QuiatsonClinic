@@ -141,7 +141,7 @@ session_start();
                                 <!-- Eye Icon (anchor tag) -->
                                 <a href="javascript:void(0)" id="togglePassword"
                                     style="position: absolute; right: 12px; top: 65%; transform: translateY(-50%); cursor: pointer; color: #333; text-decoration: none;">
-                                    <i class="bi bi-eye"></i>
+                                    <i class="bi bi-eye-slash"></i>
                                 </a>
                             </div>
 

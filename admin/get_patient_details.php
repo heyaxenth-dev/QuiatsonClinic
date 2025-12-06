@@ -35,7 +35,8 @@ if (isset($_GET['id'])) {
             'date' => $data['appointment_date'],
             'time_slot' => $data['time_slot'],
             'uploaded_id' => $data['uploaded_id'],
-            'remarks' => $data['remarks']
+            'remarks' => $data['remarks'],
+            'relationship' => $data['relationship'] ?? ''
         );
         
         // Send JSON response

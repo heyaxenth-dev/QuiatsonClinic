@@ -63,10 +63,9 @@ $res = mysqli_query($conn, $q);
                                 <td><?= htmlspecialchars($row['patient_id']); ?></td>
                                 <td><?= htmlspecialchars($row['uploaded_at']); ?></td>
                                 <td>
-                                    <div class="d-flex flex-column gap-2">
+                                    <div class="d-flex flex-row gap-2 flex-wrap">
                                         <a class="btn btn-sm btn-primary"
-                                            href="../<?= htmlspecialchars($row['file_path']); ?>"
-                                            target="_blank">
+                                            href="../<?= htmlspecialchars($row['file_path']); ?>" target="_blank">
                                             <i class="bi bi-eye"></i> View/Download
                                         </a>
                                         <a class="btn btn-sm btn-success"

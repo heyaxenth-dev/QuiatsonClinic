@@ -17,7 +17,7 @@ try {
         SELECT 
             lastname, firstname, middle_initial, address, age, sex, 
             birthdate, civil_status, phone, weight, height, bloodtype, 
-            patient_type, symptom, created_at
+            patient_type, symptom, relationship, created_at
         FROM appointment_history 
         WHERE user_id = ? 
         ORDER BY updated_at DESC 
