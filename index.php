@@ -219,8 +219,8 @@ session_start();
             <div class="container section-title" data-aos="fade-up">
                 <h2>Contact</h2>
                 <p>
-                    Necessitatibus eius consequatur ex aliquid fuga eum quidem sint
-                    consectetur velit
+                    Have a question or concern? Don’t hesitate to get in touch. Our staff is always ready to assist you
+                    with your inquiries and appointments.
                 </p>
             </div>
             <!-- End Section Title -->

@@ -117,12 +117,12 @@ include 'alert.php';
                                                         <i class="bi bi-clock-history"></i> Reschedule
                                                     </button>
                                                 </li>
-                                                <li>
+                                                <!-- <li>
                                                     <button data-cancel-id="<?=$row['id']?>"
                                                         class="dropdown-item cancel-appointment text-danger">
                                                         <i class="bi bi-x-circle"></i> Cancel
                                                     </button>
-                                                </li>
+                                                </li> -->
                                                 <li>
                                                     <hr class="dropdown-divider">
                                                 </li>

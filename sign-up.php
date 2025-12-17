@@ -72,9 +72,9 @@ session_start();
                         <li>
                             <a href="index">Home<br /></a>
                         </li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#doctors">Doctors</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <!-- <li><a href="#about">About</a></li> -->
+                        <li><a href="index#doctors">Doctors</a></li>
+                        <li><a href="index#contact">Contact</a></li>
                         <li><a href="login">Admin</a></li>
                     </ul>
                     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -96,10 +96,12 @@ session_start();
                         <div class="col-lg-8">
                             <h1>Patient's Sign Up Form</h1>
                             <p class="mb-0">
-                                Odio et unde deleniti. Deserunt numquam exercitationem.
-                                Officiis quo odio sint voluptas consequatur ut a odio
-                                voluptatem. Sit dolorum debitis veritatis natus dolores. Quasi
-                                ratione sint. Sit quaerat ipsum dolorem.
+                                Create your account to access our clinic services with ease.
+                                By signing up, you can manage your personal information, book appointments, and stay
+                                updated with your medical records—all in one secure place.
+
+                                Our goal is to provide a smooth and convenient experience so you can focus on what
+                                matters most: your health and well-being.
                             </p>
                         </div>
                     </div>
