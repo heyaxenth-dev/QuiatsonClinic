@@ -54,7 +54,11 @@ include 'alert.php';
                             <input type="hidden" name="user_id" value="<?= $_SESSION['user_id']; ?>">
 
                             <div class="mb-3">
-                                <label class="form-label">Patient Type</label>
+                                <label class="form-label">
+                                    Patient Type
+                                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                       title="Select Regular for standard patients, or Senior Citizen/PWD for priority appointments. Senior/PWD patients may need to upload valid ID."></i>
+                                </label>
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="patient_type" id="regular"
@@ -126,19 +130,31 @@ include 'alert.php';
                             <div class="row">
                                 <!-- Last Name -->
                                 <div class="col-md-4 form-group">
-                                    <label for="lastname">Last Name</label>
+                                    <label for="lastname">
+                                        Last Name
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter the patient's last name (surname)"></i>
+                                    </label>
                                     <input type="text" name="lastname" id="lastname" class="form-control" required />
                                 </div>
 
                                 <!-- First Name -->
                                 <div class="col-md-4 form-group">
-                                    <label for="firstname">First Name</label>
+                                    <label for="firstname">
+                                        First Name
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter the patient's first name"></i>
+                                    </label>
                                     <input type="text" name="firstname" id="firstname" class="form-control" required />
                                 </div>
 
                                 <!-- Middle Initial -->
                                 <div class="col-md-4 form-group">
-                                    <label for="middle_initial">Middle Initial</label>
+                                    <label for="middle_initial">
+                                        Middle Initial
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter only the first letter of the middle name"></i>
+                                    </label>
                                     <input type="text" name="middle_initial" id="middle_initial" class="form-control"
                                         maxlength="1" required />
                                 </div>
@@ -226,39 +242,48 @@ include 'alert.php';
 
                             <!-- Hidden input file for Senior/PWD ID -->
                             <div class="mt-4 mb-3 d-none" id="seniorIdUpload">
-                                <label for="upload_id" class="form-label">Upload Senior Citizen / PWD ID</label>
+                                <label for="upload_id" class="form-label">
+                                    Upload Senior Citizen / PWD ID
+                                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                       title="Upload a clear photo or scanned copy of your valid Senior Citizen ID or PWD ID. Accepted formats: JPG, PNG, PDF. This is required for priority appointments."></i>
+                                </label>
                                 <input class="form-control" type="file" id="upload_id" name="upload_id"
                                     accept="image/*,.pdf">
                             </div>
 
                             <div class="form-group mt-4 mb-3">
-                                <h6>Select Symptoms:</h6>
+                                <h6>
+                                    Select Symptoms:
+                                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                       title="Select all symptoms or reasons for your visit. You can choose more than one."></i>
+                                </h6>
+                                <small class="text-muted d-block mb-2">You may select multiple symptoms that apply.</small>
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom" id="fever"
-                                                value="Fever" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="fever"
+                                                value="Fever">
                                             <label class="form-check-label" for="fever">Fever</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom" id="cough"
-                                                value="Cough" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="cough"
+                                                value="Cough">
                                             <label class="form-check-label" for="cough">Cough</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom" id="fatigue"
-                                                value="Fatigue" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="fatigue"
+                                                value="Fatigue">
                                             <label class="form-check-label" for="fatigue">Fatigue</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom"
-                                                id="toxicLooking" value="Toxic Looking" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]"
+                                                id="toxicLooking" value="Toxic Looking">
                                             <label class="form-check-label" for="toxicLooking">Toxic Looking</label>
                                         </div>
                                     </div>
@@ -266,30 +291,30 @@ include 'alert.php';
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom" id="headache"
-                                                value="Headache" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="headache"
+                                                value="Headache">
                                             <label class="form-check-label" for="headache">Headache</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom" id="sore_throat"
-                                                value="Sore Throat" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="sore_throat"
+                                                value="Sore Throat">
                                             <label class="form-check-label" for="sore_throat">Sore Throat</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom"
-                                                id="shortness_of_breath" value="Shortness of Breath" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]"
+                                                id="shortness_of_breath" value="Shortness of Breath">
                                             <label class="form-check-label" for="shortness_of_breath">Shortness of
                                                 Breath</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom" id="chestPain"
-                                                value="Chest Pain" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="chestPain"
+                                                value="Chest Pain (Moderate to severe)">
                                             <label class="form-check-label" for="chestPain">Chest Pain (Moderate to
                                                 severe)</label>
                                         </div>
@@ -298,22 +323,22 @@ include 'alert.php';
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom" id="nausea"
-                                                value="Nausea" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="nausea"
+                                                value="Nausea">
                                             <label class="form-check-label" for="nausea">Nausea</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom" id="no_symptoms"
-                                                value="No Symptoms" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="no_symptoms"
+                                                value="No Symptoms">
                                             <label class="form-check-label" for="no_symptoms">No Symptoms</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom"
-                                                id="abdominalPain" value="Abdominal Pain" required>
+                                            <input class="form-check-input" type="checkbox" name="symptom[]"
+                                                id="abdominalPain" value="Abdominal Pain (Moderate to severe)">
                                             <label class="form-check-label" for="abdominalPain">Abdominal Pain (Moderate
                                                 to
                                                 severe)</label>
@@ -322,19 +347,31 @@ include 'alert.php';
                                 </div>
                             </div>
 
-                            <h5 class="mb-3 mt-3">Select Schedule</h5>
+                            <h5 class="mb-3 mt-3">
+                                Select Schedule
+                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                   title="Choose your preferred appointment date and time. Available slots are shown based on clinic schedule. Book in advance to secure your preferred time."></i>
+                            </h5>
 
                             <div class="row">
                                 <!-- Appointment Date -->
                                 <div class="col-md-4 form-group mt-3">
-                                    <label for="date">Appointment Date</label>
+                                    <label for="date">
+                                        Appointment Date
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Select your preferred appointment date. Available dates are shown. Some dates may be fully booked."></i>
+                                    </label>
                                     <input type="date" name="date" id="date" class="form-control datepicker" required />
                                     <small class="text-muted">Select a date to see available time slots</small>
                                 </div>
 
                                 <!-- Time Slot -->
                                 <div class="col-md-4 form-group mt-3">
-                                    <label for="time_slot">Time Slot</label>
+                                    <label for="time_slot">
+                                        Time Slot
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="After selecting a date, available time slots will appear here. Choose your preferred time. Slots are limited per day."></i>
+                                    </label>
                                     <select name="time_slot" id="time_slot" class="form-select" required>
                                         <option value="">Select a date first</option>
                                     </select>
@@ -512,13 +549,16 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-        // Set symptom
+        // Set symptoms (may be multiple, stored as comma-separated string)
         if (historyData.symptom) {
-            const symptomRadio = document.querySelector(
-            `input[name="symptom"][value="${historyData.symptom}"]`);
-            if (symptomRadio) {
-                symptomRadio.checked = true;
-            }
+            const symptoms = historyData.symptom.split(',').map(s => s.trim()).filter(Boolean);
+            symptoms.forEach(sym => {
+                const symptomCheckbox = document.querySelector(
+                    `input[name="symptom[]"][value="${sym}"]`);
+                if (symptomCheckbox) {
+                    symptomCheckbox.checked = true;
+                }
+            });
         }
 
         // Show success message

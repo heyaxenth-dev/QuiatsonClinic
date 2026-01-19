@@ -43,17 +43,28 @@ session_start();
                             <h6 class="font-weight-light">Sign in to continue.</h6>
                             <form class="pt-3" method="POST" action="admin-register.php">
                                 <div class="form-group">
+                                    <label for="exampleInputEmail1" class="form-label">
+                                        Username
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter the username you used when registering your admin account"></i>
+                                    </label>
                                     <input type="text" class="form-control form-control-lg" name="username"
                                         id="exampleInputEmail1" placeholder="Username" />
                                 </div>
                                 <div class="form-group" style="position: relative;">
+                                    <label for="exampleInputPassword1" class="form-label">
+                                        Password
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter your account password. Click the eye icon to show/hide your password."></i>
+                                    </label>
                                     <input type="password" class="form-control form-control-lg" name="password"
                                         id="exampleInputPassword1" placeholder="Password"
                                         style="padding-right: 40px;" />
 
                                     <!-- Eye Icon -->
                                     <a href="javascript:void(0)" id="togglePassword2"
-                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #333; text-decoration: none;">
+                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #333; text-decoration: none;"
+                                        data-bs-toggle="tooltip" title="Click to show/hide password">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                 </div>
@@ -108,6 +119,10 @@ session_start();
     <script src="assets/js/settings.js"></script>
     <script src="assets/js/todolist.js"></script>
     <!-- endinject -->
+    <!-- Bootstrap Bundle for Tooltips -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Tooltip System -->
+    <script src="assets/js/tooltips.js"></script>
 </body>
 
 </html>

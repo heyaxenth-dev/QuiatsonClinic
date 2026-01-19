@@ -45,12 +45,22 @@ session_start();
                                 <div id="duplicate-warning" class="alert alert-warning" style="display:none;"></div>
 
                                 <div class="form-group">
+                                    <label for="username" class="form-label">
+                                        Username
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Choose a unique username (3-20 characters, letters, numbers, and underscores only)"></i>
+                                    </label>
                                     <input type="text" class="form-control form-control-lg" id="username"
                                         name="username" placeholder="Username" required>
                                     <div class="invalid-feedback" id="username-feedback">Please enter a username.</div>
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="mobile_no" class="form-label">
+                                        Mobile Number
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter your mobile number (10-15 digits). This will be used for appointment notifications."></i>
+                                    </label>
                                     <input type="text" class="form-control form-control-lg" id="mobile_no"
                                         name="mobile_no" placeholder="Mobile No." required>
                                     <div class="invalid-feedback" id="mobile_no-feedback">Please enter a valid mobile
@@ -58,12 +68,22 @@ session_start();
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="email" class="form-label">
+                                        Email
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter your email address. This will be used for account verification and notifications."></i>
+                                    </label>
                                     <input type="email" class="form-control form-control-lg" id="email"
                                         placeholder="Email" name="email" required>
                                     <div class="invalid-feedback" id="email-feedback">Please enter a valid email.</div>
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="role" class="form-label">
+                                        Role
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Select your role: Doctor (can manage appointments and view reports) or Clinic Assistant (can assist with appointments and administrative tasks)."></i>
+                                    </label>
                                     <select class="form-select form-select-lg" id="role" name="role" required>
                                         <option value="">Select Role</option>
                                         <option value="Doctor">Doctor</option>
@@ -73,9 +93,14 @@ session_start();
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="password" class="form-label">
+                                        Password
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Password must contain: at least 8 characters, one uppercase letter, one lowercase letter, and one number. Special characters are recommended for stronger security."></i>
+                                    </label>
                                     <input type="password" class="form-control form-control-lg" id="password"
                                         name="password" placeholder="Password" required>
-                                    <div class="invalid-feedback" id="password-feedback">Password is too weak.</div>
+                                    <div class="invalid-feedback" id="password-feedback"></div>
                                     <div class="password-strength mt-2">
                                         <div class="progress" style="height: 5px;">
                                             <div class="progress-bar" id="password-strength-bar" role="progressbar"
@@ -86,9 +111,24 @@ session_start();
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="confirm_password" class="form-label">
+                                        Confirm Password
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Re-enter your password to confirm it matches. This helps prevent typing errors."></i>
+                                    </label>
                                     <input type="password" class="form-control form-control-lg" id="confirm_password"
                                         name="confirm_password" placeholder="Confirm Password" required>
-                                    <div class="invalid-feedback" id="confirm_password-feedback">Passwords do not match.
+                                    <div class="invalid-feedback" id="confirm_password-feedback"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="showPassword">
+                                        <label class="form-check-label" for="showPassword">
+                                            Show Password
+                                            <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                               title="Check this box to temporarily reveal your password as you type. Uncheck to hide it again."></i>
+                                        </label>
                                     </div>
                                 </div>
 
@@ -123,6 +163,10 @@ session_start();
     <script src="assets/js/settings.js"></script>
     <script src="assets/js/todolist.js"></script>
     <!-- endinject -->
+    <!-- Bootstrap Bundle for Tooltips -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Tooltip System -->
+    <script src="assets/js/tooltips.js"></script>
 
     <script>
     $(document).ready(function() {
@@ -229,49 +273,86 @@ session_start();
             }
         });
 
+        // === Password validation function ===
+        function validatePassword(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[^A-Za-z0-9]/.test(password)
+            };
+
+            const metCount = Object.values(requirements).filter(Boolean).length;
+            const allRequiredMet = requirements.length && requirements.uppercase && 
+                                   requirements.lowercase && requirements.number;
+
+            return {
+                valid: allRequiredMet,
+                requirements: requirements,
+                strength: metCount
+            };
+        }
+
         // === Password strength ===
         $("#password").on("input", function() {
             const password = $(this).val();
             const strengthBar = $("#password-strength-bar");
             const strengthText = $("#password-strength-text");
+            const $this = $(this);
 
-            let strength = 0;
-            if (password.length >= 8) strength++;
-            if (/[A-Z]/.test(password)) strength++;
-            if (/[0-9]/.test(password)) strength++;
-            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            if (!password) {
+                strengthBar.css("width", "0%");
+                strengthText.text("Enter a password");
+                strengthBar.removeClass().addClass("progress-bar bg-secondary");
+                $this.removeClass("is-valid is-invalid");
+                return;
+            }
 
-            let width = (strength / 4) * 100;
+            const validation = validatePassword(password);
+            const { requirements, strength } = validation;
+
+            // Calculate strength percentage (out of 5 requirements)
+            let width = (strength / 5) * 100;
             strengthBar.css("width", width + "%");
 
+            // Update strength indicator
             switch (strength) {
                 case 0:
-                    strengthText.text("Enter a password");
-                    strengthBar.removeClass().addClass("progress-bar bg-secondary");
-                    break;
                 case 1:
-                    strengthText.text("Weak");
+                    strengthText.text("Very Weak");
                     strengthBar.removeClass().addClass("progress-bar bg-danger");
                     break;
                 case 2:
+                    strengthText.text("Weak");
+                    strengthBar.removeClass().addClass("progress-bar bg-danger");
+                    break;
+                case 3:
                     strengthText.text("Fair");
                     strengthBar.removeClass().addClass("progress-bar bg-warning");
                     break;
-                case 3:
+                case 4:
                     strengthText.text("Good");
                     strengthBar.removeClass().addClass("progress-bar bg-info");
                     break;
-                case 4:
+                case 5:
                     strengthText.text("Strong");
                     strengthBar.removeClass().addClass("progress-bar bg-success");
                     break;
             }
 
-            if (strength < 2) {
-                $(this).addClass("is-invalid");
-                $("#password-feedback").text("Password must be stronger.");
+            // Validate and show feedback
+            if (!validation.valid) {
+                $this.addClass("is-invalid").removeClass("is-valid");
+                let missing = [];
+                if (!requirements.length) missing.push("at least 8 characters");
+                if (!requirements.uppercase) missing.push("one uppercase letter");
+                if (!requirements.lowercase) missing.push("one lowercase letter");
+                if (!requirements.number) missing.push("one number");
+                $("#password-feedback").text("Password must contain: " + missing.join(", ") + ".");
             } else {
-                $(this).removeClass("is-invalid").addClass("is-valid");
+                $this.removeClass("is-invalid").addClass("is-valid");
+                $("#password-feedback").text("");
             }
         });
 
@@ -282,24 +363,83 @@ session_start();
 
             if (!confirm) {
                 $("#confirm_password").removeClass("is-valid is-invalid");
+                $("#confirm_password-feedback").text("");
                 return;
             }
 
-            if (password === confirm) {
+            if (password && password === confirm) {
                 $("#confirm_password").removeClass("is-invalid").addClass("is-valid");
+                $("#confirm_password-feedback").text("");
             } else {
                 $("#confirm_password").removeClass("is-valid").addClass("is-invalid");
                 $("#confirm_password-feedback").text("Passwords do not match.");
             }
         });
 
+        // === Show/Hide Password ===
+        $("#showPassword").on("change", function() {
+            const isChecked = $(this).is(":checked");
+            const passwordField = $("#password");
+            const confirmPasswordField = $("#confirm_password");
+
+            if (isChecked) {
+                passwordField.attr("type", "text");
+                confirmPasswordField.attr("type", "text");
+            } else {
+                passwordField.attr("type", "password");
+                confirmPasswordField.attr("type", "password");
+            }
+        });
+
         // === Form submit ===
         $("#adminRegisterForm").on("submit", function(e) {
-            if (!this.checkValidity()) {
-                e.preventDefault();
-                e.stopPropagation();
+            e.preventDefault();
+            let isValid = true;
+
+            // Validate password
+            const password = $("#password").val();
+            const passwordValidation = validatePassword(password);
+            if (!passwordValidation.valid) {
+                $("#password").addClass("is-invalid").removeClass("is-valid");
+                let missing = [];
+                if (!passwordValidation.requirements.length) missing.push("at least 8 characters");
+                if (!passwordValidation.requirements.uppercase) missing.push("one uppercase letter");
+                if (!passwordValidation.requirements.lowercase) missing.push("one lowercase letter");
+                if (!passwordValidation.requirements.number) missing.push("one number");
+                $("#password-feedback").text("Password must contain: " + missing.join(", ") + ".");
+                isValid = false;
             }
-            $(this).addClass("was-validated");
+
+            // Validate confirm password
+            const confirmPassword = $("#confirm_password").val();
+            if (password && confirmPassword) {
+                if (password !== confirmPassword) {
+                    $("#confirm_password").addClass("is-invalid").removeClass("is-valid");
+                    $("#confirm_password-feedback").text("Passwords do not match.");
+                    isValid = false;
+                } else {
+                    $("#confirm_password").removeClass("is-invalid").addClass("is-valid");
+                    $("#confirm_password-feedback").text("");
+                }
+            } else if (confirmPassword) {
+                $("#confirm_password").addClass("is-invalid").removeClass("is-valid");
+                $("#confirm_password-feedback").text("Passwords do not match.");
+                isValid = false;
+            }
+
+            // Check HTML5 validity
+            if (!this.checkValidity()) {
+                isValid = false;
+            }
+
+            if (!isValid) {
+                $(this).addClass("was-validated");
+                e.stopPropagation();
+                return false;
+            }
+
+            // If all validations pass, submit the form
+            this.submit();
         });
     });
     </script>

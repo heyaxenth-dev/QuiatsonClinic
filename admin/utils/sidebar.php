@@ -17,7 +17,8 @@ function get_page_link($page_name) {
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link <?= ($current_page == 'home') ? '' : 'collapsed' ?> " href="<?= get_page_link('home')?>">
+            <a class="nav-link <?= ($current_page == 'home') ? '' : 'collapsed' ?> " href="<?= get_page_link('home')?>"
+               data-bs-toggle="tooltip" data-bs-placement="right" title="View dashboard with appointment statistics, today's appointments, and concluded appointments">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
@@ -26,14 +27,17 @@ function get_page_link($page_name) {
 
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'appointments_urgent' || $current_page == 'appointments_regular' || $current_page == 'appointments_history') ? '' : 'collapsed' ?> "
-                data-bs-toggle="collapse" href="#appointments-nav">
+                data-bs-toggle="collapse" href="#appointments-nav"
+                data-bs-toggle-tooltip="tooltip" data-bs-placement="right" 
+                title="Manage all patient appointments - view urgent/priority appointments, regular appointments, and appointment history">
                 <i class="bi bi-calendar4-week"></i><span>Appointments</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="appointments-nav"
                 class="nav-content collapse<?= $current_page == 'appointments_urgent' || $current_page == 'appointments_regular' || $current_page == 'appointments_history' ? 'show' : ''; ?>">
                 <li>
                     <a class="d-flex justify-content-between align-items-center <?= ($current_page == 'appointments_urgent') ? 'active' : '' ?>"
-                        href="<?= get_page_link('appointments_urgent')?>">
+                        href="<?= get_page_link('appointments_urgent')?>"
+                        data-bs-toggle="tooltip" data-bs-placement="right" title="View and manage urgent/priority appointments for senior citizens and PWD patients. These require immediate attention.">
                         <span>
                             <i class="bi bi-circle"></i>
                             <span class="text-danger">Urgent/Priority</span>
@@ -46,7 +50,8 @@ function get_page_link($page_name) {
 
                 <li>
                     <a class="d-flex justify-content-between align-items-center <?= ($current_page == 'appointments_regular') ? 'active' : '' ?>"
-                        href="<?= get_page_link('appointments_regular')?>">
+                        href="<?= get_page_link('appointments_regular')?>"
+                        data-bs-toggle="tooltip" data-bs-placement="right" title="View and manage regular appointments for standard patients. Approve, reschedule, or cancel appointments here.">
                         <span>
                             <i class="bi bi-circle"></i>
                             <span>Regular</span>
@@ -59,7 +64,8 @@ function get_page_link($page_name) {
 
                 <li>
                     <a class="<?= ($current_page == 'appointments_history') ? 'active' : '' ?> "
-                        href="<?= get_page_link('appointments_history')?>">
+                        href="<?= get_page_link('appointments_history')?>"
+                        data-bs-toggle="tooltip" data-bs-placement="right" title="View all past appointments including concluded, cancelled, and completed appointments. Search and filter by date or patient.">
                         <i class="bi bi-circle"></i><span>History</span>
                     </a>
                 </li>
@@ -71,7 +77,8 @@ function get_page_link($page_name) {
 
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'laboratory_result') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('laboratory_result')?>">
+                href="<?= get_page_link('laboratory_result')?>"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Upload, view, and manage laboratory test results for patients. Attach results to specific appointments.">
                 <i class="bi bi-file-earmark-text"></i>
                 <span>Laboratory Result</span>
             </a>
@@ -80,7 +87,8 @@ function get_page_link($page_name) {
 
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'reports') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('reports')?>">
+                href="<?= get_page_link('reports')?>"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Generate and view reports including appointment statistics, patient demographics, and clinic performance metrics. Export reports as PDF.">
                 <i class="bi bi-bar-chart-line"></i>
                 <span>Reports</span>
             </a>
@@ -91,7 +99,8 @@ function get_page_link($page_name) {
 
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'users-profile') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('users-profile')?>">
+                href="<?= get_page_link('users-profile')?>"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="View and update your profile information, change password, and manage account settings">
                 <i class="bi bi-person"></i>
                 <span>Profile</span>
             </a>

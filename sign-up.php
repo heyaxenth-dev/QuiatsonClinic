@@ -127,42 +127,58 @@ session_start();
                             <div id="duplicate-warning" class="alert alert-warning" style="display:none;"></div>
                             <div class="invalid-feedback" id="email-feedback" style="display:none;"></div>
                             <div class="invalid-feedback" id="phone-feedback" style="display:none;"></div>
-                            <div class="invalid-feedback" id="password-feedback" style="display:none;"></div>
-                            <div class="invalid-feedback" id="confirm-password-feedback" style="display:none;"></div>
                             <div class="row g-3">
                                 <!-- First Name -->
                                 <div class="col-md-6">
                                     <label for="firstName" class="form-label">First Name <span
-                                            class="text-danger">*</span></label>
+                                            class="text-danger">*</span>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter your legal first name as it appears on your ID"></i>
+                                    </label>
                                     <input type="text" class="form-control" id="firstName" name="firstName" required />
                                 </div>
                                 <!-- Last Name -->
                                 <div class="col-md-6">
                                     <label for="lastName" class="form-label">Last Name <span
-                                            class="text-danger">*</span></label>
+                                            class="text-danger">*</span>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter your legal last name (surname) as it appears on your ID"></i>
+                                    </label>
                                     <input type="text" class="form-control" id="lastName" name="lastName" required />
                                 </div>
                                 <!-- Email -->
                                 <div class="col-md-6">
                                     <label for="email" class="form-label">Email <span
-                                            class="text-danger">*</span></label>
+                                            class="text-danger">*</span>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter a valid email address. You'll receive appointment confirmations and updates here."></i>
+                                    </label>
                                     <input type="email" class="form-control" id="email" name="email" required />
                                 </div>
                                 <!-- Phone -->
                                 <div class="col-md-6">
                                     <label for="phone" class="form-label">Mobile Number <span
-                                            class="text-danger">*</span></label>
+                                            class="text-danger">*</span>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter your mobile number (10-15 digits). You'll receive SMS notifications for appointments."></i>
+                                    </label>
                                     <input type="tel" class="form-control" id="phone" name="phone" required />
                                 </div>
                                 <!-- Date of Birth -->
                                 <div class="col-md-6">
                                     <label for="dob" class="form-label">Date of Birth <span
-                                            class="text-danger">*</span></label>
+                                            class="text-danger">*</span>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Select your date of birth. This helps us provide age-appropriate care and verify your identity."></i>
+                                    </label>
                                     <input type="date" class="form-control" id="dob" name="dob" required />
                                 </div>
                                 <!-- Sex -->
                                 <div class="col-md-6">
-                                    <label for="sex" class="form-label">Sex <span class="text-danger">*</span></label>
+                                    <label for="sex" class="form-label">Sex <span class="text-danger">*</span>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Select your biological sex. This information is required for medical records."></i>
+                                    </label>
                                     <select id="sex" name="sex" class="form-select" required>
                                         <option value="">Select...</option>
                                         <option value="Male">Male</option>
@@ -173,14 +189,19 @@ session_start();
                                 <!-- Password -->
                                 <div class="col-md-6">
                                     <label for="password" class="form-label">Password <span
-                                            class="text-danger">*</span></label>
+                                            class="text-danger">*</span>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Password must contain: at least 8 characters, one uppercase letter, one lowercase letter, and one number. Special characters are recommended."></i>
+                                    </label>
                                     <div class="input-group">
                                         <input type="password" class="form-control" id="password" name="password"
                                             required />
-                                        <a href="#" class="input-group-text toggle-password" data-target="password">
+                                        <a href="#" class="input-group-text toggle-password" data-target="password"
+                                           data-bs-toggle="tooltip" title="Click to show/hide password">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     </div>
+                                    <div class="invalid-feedback" id="password-feedback" style="display:none;"></div>
                                     <div class="password-strength mt-2">
                                         <div class="progress" style="height: 5px;">
                                             <div class="progress-bar" id="password-strength-bar" role="progressbar"
@@ -193,21 +214,29 @@ session_start();
                                 <!-- Confirm Password -->
                                 <div class="col-md-6">
                                     <label for="confirmPassword" class="form-label">Confirm Password <span
-                                            class="text-danger">*</span></label>
+                                            class="text-danger">*</span>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Re-enter your password exactly as you typed it above to confirm there are no typing errors."></i>
+                                    </label>
                                     <div class="input-group">
                                         <input type="password" class="form-control" id="confirmPassword"
                                             name="confirmPassword" required />
                                         <a href="#" class="input-group-text toggle-password"
-                                            data-target="confirmPassword">
+                                            data-target="confirmPassword"
+                                            data-bs-toggle="tooltip" title="Click to show/hide password">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                     </div>
+                                    <div class="invalid-feedback" id="confirm-password-feedback" style="display:none;"></div>
                                 </div>
 
                                 <!-- Address -->
                                 <div class="col-12">
                                     <label for="address" class="form-label">Address <span
-                                            class="text-danger">*</span></label>
+                                            class="text-danger">*</span>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
+                                           title="Enter your complete residential address including street, city, and postal code. This is used for medical records and emergency contact."></i>
+                                    </label>
                                     <textarea class="form-control" id="address" name="address" rows="2"
                                         required></textarea>
                                 </div>
@@ -230,55 +259,72 @@ session_start();
                 let confirmPasswordValid = false;
                 let validationTimeout = null;
 
+                // Password validation function
+                function validatePassword(password) {
+                    const requirements = {
+                        length: password.length >= 8,
+                        uppercase: /[A-Z]/.test(password),
+                        lowercase: /[a-z]/.test(password),
+                        number: /[0-9]/.test(password),
+                        special: /[^A-Za-z0-9]/.test(password)
+                    };
+
+                    const metCount = Object.values(requirements).filter(Boolean).length;
+                    // Require: length, uppercase, lowercase, and number (special is optional but recommended)
+                    const allRequiredMet = requirements.length && requirements.uppercase && 
+                                           requirements.lowercase && requirements.number;
+
+                    return {
+                        valid: allRequiredMet,
+                        requirements: requirements,
+                        strength: metCount
+                    };
+                }
+
                 // Password strength checker
                 function checkPasswordStrength(password) {
-                    let strength = 0;
-                    let feedback = '';
+                    if (!password) {
+                        $('#password-strength-bar').css('width', '0%');
+                        $('#password-strength-text').text('Enter a password');
+                        $('#password-strength-bar').removeClass('bg-success bg-warning bg-danger').addClass('bg-secondary');
+                        return false;
+                    }
 
-                    if (password.length >= 8) strength += 1;
-                    if (/[a-z]/.test(password)) strength += 1;
-                    if (/[A-Z]/.test(password)) strength += 1;
-                    if (/[0-9]/.test(password)) strength += 1;
-                    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                    const validation = validatePassword(password);
+                    const { requirements, strength } = validation;
 
                     const strengthBar = $('#password-strength-bar');
                     const strengthText = $('#password-strength-text');
 
+                    // Calculate width based on 5 requirements
+                    let width = (strength / 5) * 100;
+                    strengthBar.css('width', width + '%');
+
                     switch (strength) {
                         case 0:
                         case 1:
-                            strengthBar.removeClass('bg-success bg-warning').addClass('bg-danger');
-                            strengthBar.css('width', '20%');
-                            strengthText.text('Very Weak').removeClass('text-success text-warning').addClass(
-                                'text-danger');
+                            strengthBar.removeClass('bg-success bg-warning bg-secondary').addClass('bg-danger');
+                            strengthText.text('Very Weak').removeClass('text-success text-warning').addClass('text-danger');
                             break;
                         case 2:
-                            strengthBar.removeClass('bg-success bg-danger').addClass('bg-warning');
-                            strengthBar.css('width', '40%');
-                            strengthText.text('Weak').removeClass('text-success text-danger').addClass(
-                                'text-warning');
+                            strengthBar.removeClass('bg-success bg-danger bg-secondary').addClass('bg-warning');
+                            strengthText.text('Weak').removeClass('text-success text-danger').addClass('text-warning');
                             break;
                         case 3:
-                            strengthBar.removeClass('bg-success bg-danger').addClass('bg-warning');
-                            strengthBar.css('width', '60%');
-                            strengthText.text('Fair').removeClass('text-success text-danger').addClass(
-                                'text-warning');
+                            strengthBar.removeClass('bg-success bg-danger bg-secondary').addClass('bg-warning');
+                            strengthText.text('Fair').removeClass('text-success text-danger').addClass('text-warning');
                             break;
                         case 4:
-                            strengthBar.removeClass('bg-warning bg-danger').addClass('bg-success');
-                            strengthBar.css('width', '80%');
-                            strengthText.text('Good').removeClass('text-warning text-danger').addClass(
-                                'text-success');
+                            strengthBar.removeClass('bg-warning bg-danger bg-secondary').addClass('bg-success');
+                            strengthText.text('Good').removeClass('text-warning text-danger').addClass('text-success');
                             break;
                         case 5:
-                            strengthBar.removeClass('bg-warning bg-danger').addClass('bg-success');
-                            strengthBar.css('width', '100%');
-                            strengthText.text('Strong').removeClass('text-warning text-danger').addClass(
-                                'text-success');
+                            strengthBar.removeClass('bg-warning bg-danger bg-secondary').addClass('bg-success');
+                            strengthText.text('Strong').removeClass('text-warning text-danger').addClass('text-success');
                             break;
                     }
 
-                    return strength >= 3;
+                    return validation.valid;
                 }
 
                 // Check duplicate function with improved error handling
@@ -423,8 +469,14 @@ session_start();
 
                     if (password && !passwordValid) {
                         $this.addClass('is-invalid').removeClass('is-valid');
+                        const validation = validatePassword(password);
+                        let missing = [];
+                        if (!validation.requirements.length) missing.push('at least 8 characters');
+                        if (!validation.requirements.uppercase) missing.push('one uppercase letter');
+                        if (!validation.requirements.lowercase) missing.push('one lowercase letter');
+                        if (!validation.requirements.number) missing.push('one number');
                         $('#password-feedback').text(
-                            'Password must be at least 8 characters with uppercase, lowercase, and numbers.'
+                            'Password must contain: ' + missing.join(', ') + '.'
                         ).show();
                     } else if (password && passwordValid) {
                         $this.removeClass('is-invalid').addClass('is-valid');
@@ -446,20 +498,30 @@ session_start();
                     const confirmPassword = $(this).val();
                     const $this = $(this);
 
-                    if (confirmPassword) {
-                        if (password !== confirmPassword) {
-                            confirmPasswordValid = false;
-                            $this.addClass('is-invalid').removeClass('is-valid');
-                            $('#confirm-password-feedback').text('Passwords do not match.').show();
-                        } else {
-                            confirmPasswordValid = true;
-                            $this.removeClass('is-invalid').addClass('is-valid');
-                            $('#confirm-password-feedback').hide();
-                        }
-                    } else {
+                    if (!confirmPassword) {
                         confirmPasswordValid = false;
                         $this.removeClass('is-invalid is-valid');
                         $('#confirm-password-feedback').hide();
+                        return;
+                    }
+
+                    // Only validate if password field has a value
+                    if (!password) {
+                        confirmPasswordValid = false;
+                        $this.removeClass('is-invalid is-valid');
+                        $('#confirm-password-feedback').hide();
+                        return;
+                    }
+
+                    // Compare passwords
+                    if (password === confirmPassword) {
+                        confirmPasswordValid = true;
+                        $this.removeClass('is-invalid').addClass('is-valid');
+                        $('#confirm-password-feedback').hide();
+                    } else {
+                        confirmPasswordValid = false;
+                        $this.addClass('is-invalid').removeClass('is-valid');
+                        $('#confirm-password-feedback').text('Passwords do not match.').show();
                     }
                 });
 
@@ -483,6 +545,45 @@ session_start();
                 $('#signupForm').on('submit', function(e) {
                     e.preventDefault();
 
+                    // Re-validate password before submission
+                    const password = $('#password').val();
+                    const passwordValidation = validatePassword(password);
+                    passwordValid = passwordValidation.valid;
+
+                    if (!passwordValid) {
+                        $('#password').addClass('is-invalid').removeClass('is-valid');
+                        let missing = [];
+                        if (!passwordValidation.requirements.length) missing.push('at least 8 characters');
+                        if (!passwordValidation.requirements.uppercase) missing.push('one uppercase letter');
+                        if (!passwordValidation.requirements.lowercase) missing.push('one lowercase letter');
+                        if (!passwordValidation.requirements.number) missing.push('one number');
+                        $('#password-feedback').text(
+                            'Password must contain: ' + missing.join(', ') + '.'
+                        ).show();
+                    }
+
+                    // Re-validate confirm password
+                    const confirmPassword = $('#confirmPassword').val();
+                    if (password && confirmPassword) {
+                        if (password !== confirmPassword) {
+                            confirmPasswordValid = false;
+                            $('#confirmPassword').addClass('is-invalid').removeClass('is-valid');
+                            $('#confirm-password-feedback').text('Passwords do not match.').show();
+                        } else {
+                            confirmPasswordValid = true;
+                            $('#confirmPassword').removeClass('is-invalid').addClass('is-valid');
+                            $('#confirm-password-feedback').hide();
+                        }
+                    } else if (confirmPassword) {
+                        confirmPasswordValid = false;
+                        $('#confirmPassword').addClass('is-invalid').removeClass('is-valid');
+                        $('#confirm-password-feedback').text('Passwords do not match.').show();
+                    } else {
+                        confirmPasswordValid = false;
+                        $('#confirmPassword').removeClass('is-invalid is-valid');
+                        $('#confirm-password-feedback').hide();
+                    }
+
                     // Check all validations
                     const hasErrors = emailDuplicate || phoneDuplicate || !passwordValid || !
                         confirmPasswordValid;
@@ -492,13 +593,20 @@ session_start();
 
                         if (emailDuplicate) errorMessages.push('Email is already registered');
                         if (phoneDuplicate) errorMessages.push('Mobile number is already registered');
-                        if (!passwordValid) errorMessages.push('Password does not meet requirements');
+                        if (!passwordValid) {
+                            let missing = [];
+                            if (!passwordValidation.requirements.length) missing.push('at least 8 characters');
+                            if (!passwordValidation.requirements.uppercase) missing.push('one uppercase letter');
+                            if (!passwordValidation.requirements.lowercase) missing.push('one lowercase letter');
+                            if (!passwordValidation.requirements.number) missing.push('one number');
+                            errorMessages.push('Password must contain: ' + missing.join(', '));
+                        }
                         if (!confirmPasswordValid) errorMessages.push('Passwords do not match');
 
                         Swal.fire({
                             icon: 'error',
                             title: 'Validation Error',
-                            text: errorMessages.join(', '),
+                            text: errorMessages.join('. '),
                             confirmButtonText: 'OK'
                         });
                         return false;
@@ -617,6 +725,10 @@ session_start();
     <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+    <!-- Bootstrap Bundle for Tooltips -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Tooltip System -->
+    <script src="assets/js/tooltips.js"></script>
 </body>
 
 </html>

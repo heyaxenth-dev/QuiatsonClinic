@@ -76,7 +76,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
     $bloodtype = $conn->real_escape_string($_POST['bloodtype']);
     $appointment_date = $conn->real_escape_string($_POST['date']);
     $time_slot = $conn->real_escape_string($_POST['time_slot']);
-    $symptom = $conn->real_escape_string($_POST['symptom']);
+
+    // Handle symptoms as an array (multi-select checkboxes)
+    $symptom_values = isset($_POST['symptom']) ? $_POST['symptom'] : [];
+    if (!is_array($symptom_values)) {
+        $symptom_values = [$symptom_values];
+    }
+    $clean_symptoms = [];
+    foreach ($symptom_values as $sym) {
+        $sym = trim($sym);
+        if ($sym === '') {
+            continue;
+        }
+        $clean_symptoms[] = $conn->real_escape_string($sym);
+    }
+    // Store as a comma-separated string (e.g. "Fever, Cough")
+    $symptom = implode(', ', $clean_symptoms);
 
     $sendDate = date("F j, Y", strtotime($_POST['date'])); // Example: January 28, 2025
     
@@ -168,16 +183,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['makeAppointment'])) {
 
     // Define urgent symptoms
     $urgent_symptoms = [
-        "Chest Pain",
-        "Abdominal Pain",
+        "Chest Pain (Moderate to severe)",
+        "Abdominal Pain (Moderate to severe)",
         "Shortness of Breath",
         "Toxic Looking"
     ];
 
     $default_status = "Approved";
 
-    // Determine severity
-    $severity = in_array($symptom, $urgent_symptoms) ? 'Urgent' : 'Regular';
+    // Determine severity: mark as Urgent if any selected symptom is in urgent list
+    $severity = 'Regular';
+    foreach ($clean_symptoms as $sym) {
+        if (in_array($sym, $urgent_symptoms, true)) {
+            $severity = 'Urgent';
+            break;
+        }
+    }
 
     // Insert patient record without patient_id first
     $stmt = $conn->prepare("INSERT INTO appointments (created_by, patient_type,

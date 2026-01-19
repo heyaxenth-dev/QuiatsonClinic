@@ -18,7 +18,8 @@ function get_page_link($page_name) {
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'homepage') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('homepage')?>">
+                href="<?= get_page_link('homepage')?>"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="View your appointment calendar and dashboard. See all your scheduled, pending, and past appointments">
                 <i class="bi bi-house"></i>
                 <span>Home</span>
             </a>
@@ -27,7 +28,8 @@ function get_page_link($page_name) {
 
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'appointment') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('appointment')?>">
+                href="<?= get_page_link('appointment')?>"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="Book a new appointment. Select your preferred date and time, choose appointment type (regular or urgent), and provide reason for visit">
                 <i class="bi bi-calendar4-week"></i>
                 <span>Appointment Form</span>
             </a>
@@ -36,7 +38,8 @@ function get_page_link($page_name) {
 
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'lab_results') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('lab_results')?>">
+                href="<?= get_page_link('lab_results')?>"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="View your laboratory test results uploaded by clinic staff. Download or print results as needed">
                 <i class="bi bi-file-earmark-text"></i>
                 <span>Laboratory Result</span>
             </a>
@@ -47,7 +50,8 @@ function get_page_link($page_name) {
 
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'users-profile') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('users-profile')?>">
+                href="<?= get_page_link('users-profile')?>"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="View and update your personal information, contact details, and change your account password">
                 <i class="bi bi-person"></i>
                 <span>Profile</span>
             </a>

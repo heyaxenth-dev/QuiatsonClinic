@@ -24,6 +24,8 @@
 
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
+<!-- Tooltip System -->
+<script src="../../assets/js/tooltips.js"></script>
 </body>
 
 </html>
