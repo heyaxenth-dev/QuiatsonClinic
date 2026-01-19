@@ -80,6 +80,13 @@
                                 <input type="text" class="form-control form-control-sm" id="viewBloodtype" readonly />
                             </div>
                         </div>
+                        <div class="row g-3 mb-2 mt-2" id="viewRelationshipRow" style="display: none;">
+                            <div class="col-md-6">
+                                <label class="fw-bold">Relationship to Patient:</label>
+                                <input type="text" class="form-control form-control-sm" id="viewRelationship"
+                                    readonly />
+                            </div>
+                        </div>
                         <div class="row g-3 mb-2">
                             <div class="col-md-6">
                                 <div class="fw-bold">DATE AND TIME</div>

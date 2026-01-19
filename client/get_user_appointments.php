@@ -86,6 +86,32 @@ if ($result) {
     }
 }
 
+// Add unavailable dates from staff schedules
+$unavailableStmt = $conn->prepare("SELECT DISTINCT schedule_date, GROUP_CONCAT(DISTINCT reason SEPARATOR ', ') as reasons FROM staff_schedules WHERE is_unavailable = 1 AND schedule_date >= CURDATE() GROUP BY schedule_date ORDER BY schedule_date ASC");
+$unavailableStmt->execute();
+$unavailableResult = $unavailableStmt->get_result();
+
+while ($row = $unavailableResult->fetch_assoc()) {
+    $date = $row['schedule_date'];
+    $reason = !empty($row['reasons']) ? ' - ' . $row['reasons'] : '';
+    
+    $events[] = [
+        'id' => 'unavailable_' . $date,
+        'title' => 'Clinic Unavailable' . $reason,
+        'start' => $date,
+        'allDay' => true,
+        'backgroundColor' => '#6c757d',
+        'borderColor' => '#5a6268',
+        'textColor' => '#ffffff',
+        'extendedProps' => [
+            'type' => 'unavailable',
+            'status' => 'Unavailable',
+            'reason' => $row['reasons'] ?? ''
+        ]
+    ];
+}
+$unavailableStmt->close();
+
 echo json_encode($events);
 
 if (isset($stmt)) { $stmt->close(); }

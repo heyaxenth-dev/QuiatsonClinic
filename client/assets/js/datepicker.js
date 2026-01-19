@@ -7,21 +7,44 @@ document.addEventListener('DOMContentLoaded', function () {
 	const today = new Date().toISOString().split('T')[0];
 	dateInput.setAttribute('min', today);
 
-	// 🔹 Fetch fully booked dates once when page loads
+	// 🔹 Fetch fully booked dates and unavailable dates once when page loads
+	let disabledDates = [];
 	fetch('get_fully_booked_dates.php')
 		.then((res) => res.json())
-		.then((disabledDates) => {
-			dateInput.addEventListener('input', function () {
-				if (disabledDates.includes(this.value)) {
-					alert('All appointments are fully booked for this date.');
-					this.value = ''; // reset selection
-				}
-			});
+		.then((dates) => {
+			disabledDates = dates || [];
+		})
+		.catch((error) => {
+			console.error('Error fetching unavailable dates:', error);
 		});
 
 	// Handle date change
 	dateInput.addEventListener('change', function () {
 		const selectedDate = this.value;
+		
+		// Check if date is unavailable
+		if (disabledDates.includes(selectedDate)) {
+			// Use SweetAlert if available, otherwise fallback to alert
+			if (typeof Swal !== 'undefined') {
+				Swal.fire({
+					icon: 'warning',
+					title: 'Date Unavailable',
+					text: 'This date is unavailable for appointments. Please select another date.',
+					confirmButtonText: 'OK',
+					confirmButtonColor: '#6c757d'
+				}).then(() => {
+					this.value = ''; // reset selection
+					timeSlotSelect.innerHTML = '<option value="">Select a date first</option>';
+					slotInfo.innerHTML = '';
+				});
+			} else {
+				alert('This date is unavailable for appointments. Please select another date.');
+				this.value = ''; // reset selection
+				timeSlotSelect.innerHTML = '<option value="">Select a date first</option>';
+				slotInfo.innerHTML = '';
+			}
+			return;
+		}
 
 		if (selectedDate) {
 			// Show loading state
@@ -47,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						timeSlotSelect.innerHTML =
 							'<option value="">No available slots for this date</option>';
 						slotInfo.innerHTML =
-							'<div class="text-warning"><i class="bi bi-exclamation-triangle"></i> All slots are fully booked for this date</div>';
+							'<div class="text-warning"><i class="bi bi-exclamation-triangle"></i> This date is unavailable or all slots are fully booked</div>';
 					} else {
 						let totalAvailable = 0;
 
@@ -100,3 +123,4 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	});
 });
+

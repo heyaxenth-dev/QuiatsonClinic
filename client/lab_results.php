@@ -21,7 +21,8 @@ if (isset($lastname)) { $lastname_safe = mysqli_real_escape_string($conn, $lastn
 if (isset($mobile_no)) { $mobile_safe = mysqli_real_escape_string($conn, $mobile_no); }
 
 // Filter results to those that match client's name and/or phone from their profile
-$q = "SELECT lr.id, lr.file_path, lr.original_name, lr.uploaded_at, a.appointment_date, a.time_slot, a.patient_id, a.lastname, a.firstname
+$q = "SELECT lr.id, lr.file_path, lr.original_name, lr.uploaded_at, lr.appointment_id, 
+             a.appointment_date, a.time_slot, a.patient_id, a.lastname, a.firstname
       FROM lab_results lr
       INNER JOIN appointments a ON a.id = lr.appointment_id
       WHERE (
@@ -62,11 +63,19 @@ $res = mysqli_query($conn, $q);
                                 <td><?= htmlspecialchars($row['patient_id']); ?></td>
                                 <td><?= htmlspecialchars($row['uploaded_at']); ?></td>
                                 <td>
-                                    <a class="btn btn-sm btn-primary"
-                                        href="../<?= htmlspecialchars($row['file_path']); ?>"
-                                        target="_blank">View/Download</a>
+                                    <div class="d-flex flex-row gap-2 flex-wrap">
+                                        <a class="btn btn-sm btn-primary"
+                                            href="../<?= htmlspecialchars($row['file_path']); ?>" target="_blank">
+                                            <i class="bi bi-eye"></i> View/Download
+                                        </a>
+                                        <a class="btn btn-sm btn-success"
+                                            href="appointment.php?reappointment=1&appointment_id=<?= htmlspecialchars($row['appointment_id']); ?>&lab_result_id=<?= htmlspecialchars($row['id']); ?>"
+                                            title="Request appointment for reading this lab result">
+                                            <i class="bi bi-calendar-plus"></i> Request Re-appointment
+                                        </a>
+                                    </div>
                                     <?php if (!empty($row['original_name'])) { ?>
-                                    <div><small class="text-muted">Original:
+                                    <div class="mt-2"><small class="text-muted">Original:
                                             <?= htmlspecialchars($row['original_name']); ?></small></div>
                                     <?php } ?>
                                 </td>

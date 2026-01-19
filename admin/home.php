@@ -66,7 +66,7 @@ include 'alert.php';
                             $total_appointments = $row['total_appointments'];
                         ?>
 
-                            <a href="appointments_today" class="card-body">
+                            <div class="card-body">
                                 <h5 class="card-title">Appointments <span>| Today</span></h5>
 
                                 <div class="d-flex align-items-center">
@@ -81,7 +81,7 @@ include 'alert.php';
                                         <span class="text-muted small pt-2 ps-1">increase</span> -->
                                     </div>
                                 </div>
-                            </a>
+</div>
                         </div>
                     </div>
                     <!-- End Appointments Card -->

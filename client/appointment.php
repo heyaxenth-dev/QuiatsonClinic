@@ -5,6 +5,25 @@ include '../database/conn.php';
 include './utils/header.php';
 include './utils/sidebar.php';
 include 'alert.php';
+
+// Handle re-appointment request from lab results
+$reappointment_data = null;
+$is_reappointment = isset($_GET['reappointment']) && $_GET['reappointment'] == '1';
+$lab_result_id = isset($_GET['lab_result_id']) ? intval($_GET['lab_result_id']) : 0;
+$original_appointment_id = isset($_GET['appointment_id']) ? intval($_GET['appointment_id']) : 0;
+
+if ($is_reappointment && $original_appointment_id > 0) {
+    // Fetch the original appointment data
+    $stmt = $conn->prepare("SELECT * FROM appointments WHERE id = ?");
+    $stmt->bind_param("i", $original_appointment_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $reappointment_data = $result->fetch_assoc();
+    }
+    $stmt->close();
+}
 ?>
 
 <main id="main" class="main">
@@ -27,6 +46,18 @@ include 'alert.php';
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Appointment Form</h5>
+
+                        <!-- Re-appointment Notice -->
+                        <?php if ($is_reappointment && $reappointment_data): ?>
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Re-appointment for Lab Result Reading</strong>
+                            <p class="mb-0 mt-2">You are requesting a re-appointment to discuss your lab results from your appointment on 
+                                <strong><?= htmlspecialchars($reappointment_data['appointment_date']); ?></strong>. 
+                                Your previous information has been pre-filled below. Please review and select a new date and time.</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <?php endif; ?>
 
                         <!-- History Section -->
                         <div class="alert alert-info" id="historyAlert" style="display: none;">
@@ -62,7 +93,7 @@ include 'alert.php';
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="patient_type" id="regular"
-                                            value="regular" required>
+                                            value="regular" <?= $reappointment_data && $reappointment_data['patient_type'] == 'regular' ? 'checked' : ''; ?> required>
                                         <!-- Loader Overlay -->
                                         <div id="loaderOverlay"
                                             style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:9999;align-items:center;justify-content:center;">
@@ -93,7 +124,7 @@ include 'alert.php';
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="patient_type" id="senior_pwd"
-                                            value="senior_pwd" required>
+                                            value="senior_pwd" <?= $reappointment_data && $reappointment_data['patient_type'] == 'senior_pwd' ? 'checked' : ''; ?> required>
                                         <label class="form-check-label" for="senior">
                                             Senior Citizen / PWD
                                         </label>
@@ -121,11 +152,74 @@ include 'alert.php';
 
                                 seniorRadio.addEventListener("change", toggleUpload);
                                 regularRadio.addEventListener("change", toggleUpload);
+                                
+                                // Initialize on page load
                                 toggleUpload();
+                                
+                                <?php if ($reappointment_data): ?>
+                                // If re-appointment, ensure the correct patient type toggle is set
+                                if (<?= $reappointment_data['patient_type'] == 'senior_pwd' ? 'true' : 'false'; ?>) {
+                                    seniorRadio.checked = true;
+                                    toggleUpload();
+                                }
+                                <?php endif; ?>
                             });
                             </script>
 
                             <h5 class="mb-3">Patient's Information</h5>
+
+                            <!-- Relationship Field (for appointments made on behalf of someone else) -->
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="isForSomeoneElse" 
+                                            <?= $reappointment_data && !empty($reappointment_data['relationship']) ? 'checked' : ''; ?>>
+                                        <label class="form-check-label" for="isForSomeoneElse">
+                                            <i class="bi bi-person-check me-1"></i>This appointment is for someone else
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4 form-group" id="relationshipField" style="display: none;">
+                                        <label for="relationship">Relationship to Patient</label>
+                                        <select name="relationship" id="relationship" class="form-control">
+                                            <option value="">Select Relationship</option>
+                                            <option value="Self" <?= $reappointment_data && $reappointment_data['relationship'] == 'Self' ? 'selected' : ''; ?>>Self</option>
+                                            <option value="Spouse" <?= $reappointment_data && $reappointment_data['relationship'] == 'Spouse' ? 'selected' : ''; ?>>Spouse</option>
+                                            <option value="Parent" <?= $reappointment_data && $reappointment_data['relationship'] == 'Parent' ? 'selected' : ''; ?>>Parent</option>
+                                            <option value="Child" <?= $reappointment_data && $reappointment_data['relationship'] == 'Child' ? 'selected' : ''; ?>>Child</option>
+                                            <option value="Sibling" <?= $reappointment_data && $reappointment_data['relationship'] == 'Sibling' ? 'selected' : ''; ?>>Sibling</option>
+                                            <option value="Relative" <?= $reappointment_data && $reappointment_data['relationship'] == 'Relative' ? 'selected' : ''; ?>>Relative</option>
+                                            <option value="Friend" <?= $reappointment_data && $reappointment_data['relationship'] == 'Friend' ? 'selected' : ''; ?>>Friend</option>
+                                            <option value="Guardian" <?= $reappointment_data && $reappointment_data['relationship'] == 'Guardian' ? 'selected' : ''; ?>>Guardian</option>
+                                            <option value="Other" <?= $reappointment_data && $reappointment_data['relationship'] == 'Other' ? 'selected' : ''; ?>>Other</option>
+                                        </select>
+                                        <small class="text-muted">Please specify your relationship to the patient</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+                                const isForSomeoneElse = document.getElementById('isForSomeoneElse');
+                                const relationshipField = document.getElementById('relationshipField');
+                                const relationshipSelect = document.getElementById('relationship');
+                                
+                                function toggleRelationshipField() {
+                                    if (isForSomeoneElse.checked) {
+                                        relationshipField.style.display = 'block';
+                                        relationshipSelect.setAttribute('required', 'required');
+                                    } else {
+                                        relationshipField.style.display = 'none';
+                                        relationshipSelect.removeAttribute('required');
+                                        relationshipSelect.value = '';
+                                    }
+                                }
+                                
+                                isForSomeoneElse.addEventListener('change', toggleRelationshipField);
+                                
+                                // Initialize on page load
+                                toggleRelationshipField();
+                            });
+                            </script>
 
                             <div class="row">
                                 <!-- Last Name -->
@@ -135,7 +229,8 @@ include 'alert.php';
                                         <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
                                            title="Enter the patient's last name (surname)"></i>
                                     </label>
-                                    <input type="text" name="lastname" id="lastname" class="form-control" required />
+                                    <input type="text" name="lastname" id="lastname" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['lastname']) : ''; ?>" required />
                                 </div>
 
                                 <!-- First Name -->
@@ -145,7 +240,8 @@ include 'alert.php';
                                         <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
                                            title="Enter the patient's first name"></i>
                                     </label>
-                                    <input type="text" name="firstname" id="firstname" class="form-control" required />
+                                    <input type="text" name="firstname" id="firstname" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['firstname']) : ''; ?>" required />
                                 </div>
 
                                 <!-- Middle Initial -->
@@ -156,6 +252,7 @@ include 'alert.php';
                                            title="Enter only the first letter of the middle name"></i>
                                     </label>
                                     <input type="text" name="middle_initial" id="middle_initial" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['middle_initial']) : ''; ?>"
                                         maxlength="1" required />
                                 </div>
                             </div>
@@ -164,14 +261,16 @@ include 'alert.php';
                                 <!-- Address -->
                                 <div class="col-md-6 form-group">
                                     <label for="address">Address</label>
-                                    <input type="text" name="address" id="address" class="form-control" required
+                                    <input type="text" name="address" id="address" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['address']) : ''; ?>" required
                                         autocomplete="off" />
                                 </div>
 
                                 <!-- Age -->
                                 <div class="col-md-2 form-group">
                                     <label for="age">Age</label>
-                                    <input type="number" name="age" id="age" class="form-control" min="0" required />
+                                    <input type="number" name="age" id="age" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['age']) : ''; ?>" min="0" required />
                                 </div>
 
                                 <!-- Sex -->
@@ -179,15 +278,16 @@ include 'alert.php';
                                     <label for="sex">Sex</label>
                                     <select name="sex" id="sex" class="form-control" required>
                                         <option value="">Select Sex</option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
+                                        <option value="Male" <?= $reappointment_data && $reappointment_data['sex'] == 'Male' ? 'selected' : ''; ?>>Male</option>
+                                        <option value="Female" <?= $reappointment_data && $reappointment_data['sex'] == 'Female' ? 'selected' : ''; ?>>Female</option>
                                     </select>
                                 </div>
 
                                 <!-- Birthdate -->
                                 <div class="col-md-2 form-group">
                                     <label for="birthdate">Birthdate</label>
-                                    <input type="date" name="birthdate" id="birthdate" class="form-control" required />
+                                    <input type="date" name="birthdate" id="birthdate" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['birthdate']) : ''; ?>" required />
                                 </div>
                             </div>
 
@@ -197,30 +297,33 @@ include 'alert.php';
                                     <label for="civil_status">Civil Status</label>
                                     <select name="civil_status" id="civil_status" class="form-control" required>
                                         <option value="">Select Civil Status</option>
-                                        <option value="Single">Single</option>
-                                        <option value="Married">Married</option>
-                                        <option value="Widowed">Widowed</option>
-                                        <option value="Separated">Separated</option>
+                                        <option value="Single" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Single' ? 'selected' : ''; ?>>Single</option>
+                                        <option value="Married" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Married' ? 'selected' : ''; ?>>Married</option>
+                                        <option value="Widowed" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Widowed' ? 'selected' : ''; ?>>Widowed</option>
+                                        <option value="Separated" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Separated' ? 'selected' : ''; ?>>Separated</option>
                                     </select>
                                 </div>
 
                                 <!-- Phone Number -->
                                 <div class="col-md-3 form-group">
                                     <label for="phone">Phone Number</label>
-                                    <input type="tel" name="phone" id="phone" class="form-control" required
+                                    <input type="tel" name="phone" id="phone" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['phone']) : ''; ?>" required
                                         autocomplete="off" />
                                 </div>
 
                                 <!-- Weight -->
                                 <div class="col-md-2 form-group">
                                     <label for="weight">Weight (kg)</label>
-                                    <input type="text" name="weight" id="weight" class="form-control" required />
+                                    <input type="text" name="weight" id="weight" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['weight']) : ''; ?>" required />
                                 </div>
 
                                 <!-- Height -->
                                 <div class="col-md-2 form-group">
                                     <label for="height">Height (cm )</label>
-                                    <input type="text" name="height" id="height" class="form-control" required />
+                                    <input type="text" name="height" id="height" class="form-control" 
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['height']) : ''; ?>" required />
                                 </div>
 
                                 <!-- Blood Type -->
@@ -228,14 +331,13 @@ include 'alert.php';
                                     <label for="bloodtype">Blood Type</label>
                                     <select name="bloodtype" id="bloodtype" class="form-control" required>
                                         <option value="">Select Blood Type</option>
-                                        <option value="A+">A+</option>
-                                        <option value="A-">A-</option>
-                                        <option value="B+">B+</option>
-                                        <option value="B-">B-</option>
-                                        <option value="AB+">AB+</option>
-                                        <option value="AB-">AB-</option>
-                                        <option value="O+">O+</option>
-                                        <option value="O-">O-</option>
+                                        <?php 
+                                        $blood_types = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+                                        foreach ($blood_types as $bt) {
+                                            $selected = ($reappointment_data && $reappointment_data['bloodtype'] == $bt) ? 'selected' : '';
+                                            echo "<option value=\"$bt\" $selected>$bt</option>";
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
@@ -343,6 +445,33 @@ include 'alert.php';
                                                 to
                                                 severe)</label>
                                         </div>
+                                    </div>
+                                </div>
+                                <?php if ($is_reappointment): ?>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="symptom"
+                                                id="lab_result_reading" value="Lab Result Reading" checked required>
+                                            <label class="form-check-label" for="lab_result_reading">
+                                                <strong class="text-primary">Lab Result Reading</strong>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+                                <div class="row mt-2">
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="symptom"
+                                                id="other_symptom" value="Other" required>
+                                            <label class="form-check-label" for="other_symptom">Other</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9" id="other_symptom_input_container" style="display: none;">
+                                        <label for="other_symptom_text" class="form-label">Please specify your symptom:</label>
+                                        <input type="text" class="form-control" id="other_symptom_text" name="other_symptom_text" 
+                                            placeholder="Enter your symptom here">
                                     </div>
                                 </div>
                             </div>
@@ -466,6 +595,10 @@ include 'alert.php';
                                 <td><strong>Symptom:</strong></td>
                                 <td id="previewSymptom">-</td>
                             </tr>
+                            <tr>
+                                <td><strong>Relationship:</strong></td>
+                                <td id="previewRelationship">-</td>
+                            </tr>
                         </table>
                     </div>
                 </div>
@@ -485,6 +618,8 @@ include 'alert.php';
         </div>
     </div>
 </div>
+<!-- Include SweetAlert2 for better alerts -->
+<script src="assets/js/sweetalert2.all.min.js"></script>
 <script src="assets/js/datepicker.js"></script>
 
 <script>
@@ -521,6 +656,29 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    // Handle "Other" symptom option - Define variables and function first
+    const otherSymptomRadio = document.getElementById('other_symptom');
+    const otherSymptomInput = document.getElementById('other_symptom_text');
+    const otherSymptomContainer = document.getElementById('other_symptom_input_container');
+    
+    // Make toggle function available globally for history population
+    function toggleOtherSymptomInput() {
+        if (otherSymptomRadio && otherSymptomContainer) {
+            if (otherSymptomRadio.checked) {
+                otherSymptomContainer.style.display = 'block';
+                if (otherSymptomInput) {
+                    otherSymptomInput.setAttribute('required', 'required');
+                }
+            } else {
+                otherSymptomContainer.style.display = 'none';
+                if (otherSymptomInput) {
+                    otherSymptomInput.removeAttribute('required');
+                    otherSymptomInput.value = '';
+                }
+            }
+        }
+    }
+
     function populateFormWithHistory() {
         if (!historyData) return;
 
@@ -537,6 +695,17 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('weight').value = historyData.weight || '';
         document.getElementById('height').value = historyData.height || '';
         document.getElementById('bloodtype').value = historyData.bloodtype || '';
+
+        // Populate relationship field if it exists
+        if (historyData.relationship) {
+            const isForSomeoneElse = document.getElementById('isForSomeoneElse');
+            const relationshipSelect = document.getElementById('relationship');
+            if (isForSomeoneElse && relationshipSelect) {
+                isForSomeoneElse.checked = true;
+                isForSomeoneElse.dispatchEvent(new Event('change'));
+                relationshipSelect.value = historyData.relationship || '';
+            }
+        }
 
         // Set patient type
         if (historyData.patient_type) {
@@ -603,6 +772,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('previewBloodtype').textContent = historyData.bloodtype || '-';
         document.getElementById('previewPatientType').textContent = historyData.patient_type || '-';
         document.getElementById('previewSymptom').textContent = historyData.symptom || '-';
+        document.getElementById('previewRelationship').textContent = historyData.relationship || '-';
 
         // Format last updated date
         const lastUpdated = new Date(historyData.created_at).toLocaleString();
@@ -636,12 +806,68 @@ document.addEventListener("DOMContentLoaded", function() {
         clearButton.className = 'btn btn-outline-secondary me-2';
         clearButton.innerHTML = '<i class="bi bi-arrow-clockwise"></i> Clear Form';
         clearButton.addEventListener('click', function() {
-            if (confirm('Are you sure you want to clear all form data?')) {
-                form.reset();
-                // Reset patient type toggle
-                document.getElementById('seniorIdUpload').classList.add('d-none');
-                document.getElementById('upload_id').removeAttribute('required');
-                showNotification('Form cleared successfully!', 'info');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'question',
+                    title: 'Clear Form?',
+                    text: 'Are you sure you want to clear all form data?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Clear',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#dc3545'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.reset();
+                        // Reset patient type toggle
+                        document.getElementById('seniorIdUpload').classList.add('d-none');
+                        document.getElementById('upload_id').removeAttribute('required');
+                        // Reset relationship field
+                        const isForSomeoneElse = document.getElementById('isForSomeoneElse');
+                        const relationshipField = document.getElementById('relationshipField');
+                        const relationshipSelect = document.getElementById('relationship');
+                        if (isForSomeoneElse) isForSomeoneElse.checked = false;
+                        if (relationshipField) relationshipField.style.display = 'none';
+                        if (relationshipSelect) {
+                            relationshipSelect.removeAttribute('required');
+                            relationshipSelect.value = '';
+                        }
+                        // Reset other symptom input
+                        if (otherSymptomContainer) {
+                            otherSymptomContainer.style.display = 'none';
+                            if (otherSymptomInput) {
+                                otherSymptomInput.removeAttribute('required');
+                                otherSymptomInput.value = '';
+                            }
+                        }
+                        showNotification('Form cleared successfully!', 'info');
+                    }
+                });
+            } else {
+                if (confirm('Are you sure you want to clear all form data?')) {
+                    form.reset();
+                    // Reset patient type toggle
+                    document.getElementById('seniorIdUpload').classList.add('d-none');
+                    document.getElementById('upload_id').removeAttribute('required');
+                    // Reset relationship field
+                    const isForSomeoneElse = document.getElementById('isForSomeoneElse');
+                    const relationshipField = document.getElementById('relationshipField');
+                    const relationshipSelect = document.getElementById('relationship');
+                    if (isForSomeoneElse) isForSomeoneElse.checked = false;
+                    if (relationshipField) relationshipField.style.display = 'none';
+                    if (relationshipSelect) {
+                        relationshipSelect.removeAttribute('required');
+                        relationshipSelect.value = '';
+                    }
+                    // Reset other symptom input
+                    if (otherSymptomContainer) {
+                        otherSymptomContainer.style.display = 'none';
+                        if (otherSymptomInput) {
+                            otherSymptomInput.removeAttribute('required');
+                            otherSymptomInput.value = '';
+                        }
+                    }
+                    showNotification('Form cleared successfully!', 'info');
+                }
             }
         });
 
@@ -650,6 +876,58 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Initialize clear form button
     addClearFormButton();
+    
+    // Set up "Other" symptom option handlers (variables already defined above)
+    if (otherSymptomRadio && otherSymptomContainer) {
+        otherSymptomRadio.addEventListener('change', toggleOtherSymptomInput);
+        
+        // Add change listeners to all symptom radios
+        document.querySelectorAll('input[name="symptom"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.id !== 'other_symptom') {
+                    otherSymptomContainer.style.display = 'none';
+                    otherSymptomInput.removeAttribute('required');
+                    otherSymptomInput.value = '';
+                } else {
+                    toggleOtherSymptomInput();
+                }
+            });
+        });
+        
+        // Handle form submission - replace "Other" with custom text if provided
+        const appointmentForm = document.getElementById('appointmentForm');
+        if (appointmentForm) {
+            appointmentForm.addEventListener('submit', function(e) {
+                if (otherSymptomRadio.checked) {
+                    if (!otherSymptomInput || !otherSymptomInput.value.trim()) {
+                        e.preventDefault();
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Symptom Required',
+                                text: 'Please specify your symptom in the "Other" field.',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#ffc107'
+                            });
+                        } else {
+                            alert('Please specify your symptom in the "Other" field.');
+                        }
+                        return false;
+                    }
+                    
+                    // Create a hidden input with the custom symptom value
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'symptom';
+                    hiddenInput.value = otherSymptomInput.value.trim();
+                    this.appendChild(hiddenInput);
+                    
+                    // Remove the "Other" radio value
+                    otherSymptomRadio.disabled = true;
+                }
+            });
+        }
+    }
 });
 </script>
 

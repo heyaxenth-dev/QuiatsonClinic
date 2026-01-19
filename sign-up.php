@@ -46,11 +46,11 @@ session_start();
             <div class="container d-flex justify-content-center justify-content-md-between">
                 <div class="contact-info d-flex align-items-center">
                     <i class="bi bi-envelope d-flex align-items-center"><a
-                            href="mailto:contact@example.com">contact@example.com</a></i>
-                    <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
+                            href="mailto:quiatsonclinic@gmail.com">quiatsonclinic@gmail.com</a></i>
+                    <i class="bi bi-phone d-flex align-items-center ms-4"><span>+639150623505</span></i>
                 </div>
                 <div class="social-links d-none d-md-flex align-items-center">
-                    <a href="#" class="t    witter"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
                     <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
                     <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
                     <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
@@ -72,9 +72,9 @@ session_start();
                         <li>
                             <a href="index">Home<br /></a>
                         </li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#doctors">Doctors</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                        <!-- <li><a href="#about">About</a></li> -->
+                        <li><a href="index#doctors">Doctors</a></li>
+                        <li><a href="index#contact">Contact</a></li>
                         <li><a href="login">Admin</a></li>
                     </ul>
                     <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
@@ -96,10 +96,12 @@ session_start();
                         <div class="col-lg-8">
                             <h1>Patient's Sign Up Form</h1>
                             <p class="mb-0">
-                                Odio et unde deleniti. Deserunt numquam exercitationem.
-                                Officiis quo odio sint voluptas consequatur ut a odio
-                                voluptatem. Sit dolorum debitis veritatis natus dolores. Quasi
-                                ratione sint. Sit quaerat ipsum dolorem.
+                                Create your account to access our clinic services with ease.
+                                By signing up, you can manage your personal information, book appointments, and stay
+                                updated with your medical records—all in one secure place.
+
+                                Our goal is to provide a smooth and convenient experience so you can focus on what
+                                matters most: your health and well-being.
                             </p>
                         </div>
                     </div>
@@ -198,7 +200,7 @@ session_start();
                                             required />
                                         <a href="#" class="input-group-text toggle-password" data-target="password"
                                            data-bs-toggle="tooltip" title="Click to show/hide password">
-                                            <i class="bi bi-eye"></i>
+                                            <i class="bi bi-eye-slash"></i>
                                         </a>
                                     </div>
                                     <div class="invalid-feedback" id="password-feedback" style="display:none;"></div>
@@ -224,7 +226,7 @@ session_start();
                                         <a href="#" class="input-group-text toggle-password"
                                             data-target="confirmPassword"
                                             data-bs-toggle="tooltip" title="Click to show/hide password">
-                                            <i class="bi bi-eye"></i>
+                                            <i class="bi bi-eye-slash"></i>
                                         </a>
                                     </div>
                                     <div class="invalid-feedback" id="confirm-password-feedback" style="display:none;"></div>
@@ -534,17 +536,15 @@ session_start();
 
                     if (input.attr('type') === 'password') {
                         input.attr('type', 'text');
-                        icon.removeClass('bi-eye').addClass('bi-eye-slash');
+                        icon.removeClass('bi-eye-slash').addClass('bi-eye');
                     } else {
                         input.attr('type', 'password');
-                        icon.removeClass('bi-eye-slash').addClass('bi-eye');
+                        icon.removeClass('bi-eye').addClass('bi-eye-slash');
                     }
                 });
 
                 // Form submission validation
                 $('#signupForm').on('submit', function(e) {
-                    e.preventDefault();
-
                     // Re-validate password before submission
                     const password = $('#password').val();
                     const passwordValidation = validatePassword(password);
@@ -589,6 +589,8 @@ session_start();
                         confirmPasswordValid;
 
                     if (hasErrors) {
+                        e.preventDefault(); // ❗ Block only if there's an error
+
                         let errorMessages = [];
 
                         if (emailDuplicate) errorMessages.push('Email is already registered');
@@ -609,11 +611,11 @@ session_start();
                             text: errorMessages.join('. '),
                             confirmButtonText: 'OK'
                         });
+
                         return false;
                     }
 
-                    // If all validations pass, submit the form
-                    this.submit();
+                    // NO ERRORS → allow natural submit (NO e.preventDefault)
                 });
 
                 // Real-time form validation feedback
@@ -644,12 +646,12 @@ session_start();
                         <span class="sitename">Quiatson Clinic</span>
                     </a>
                     <div class="footer-contact pt-3">
-                        <p>A108 Adam Street</p>
-                        <p>New York, NY 535022</p>
+                        <p>Centro Pojo, Bugasong </p>
+                        <p>Antique, Philippines</p>
                         <p class="mt-3">
-                            <strong>Phone:</strong> <span>+1 5589 55488 55</span>
+                            <strong>Phone:</strong> <span>+639150623505</span>
                         </p>
-                        <p><strong>Email:</strong> <span>info@example.com</span></p>
+                        <p><strong>Email:</strong> <span>quiatsonclinic@gmail.com</span></p>
                     </div>
                     <div class="social-links d-flex mt-4">
                         <a href=""><i class="bi bi-twitter-x"></i></a>

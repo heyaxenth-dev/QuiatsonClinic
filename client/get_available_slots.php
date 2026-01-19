@@ -4,6 +4,22 @@ include '../database/conn.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['date'])) {
     $selected_date = $conn->real_escape_string($_POST['date']);
     
+    // Check if date is marked as unavailable by staff
+    $unavailableStmt = $conn->prepare("SELECT COUNT(*) as count FROM staff_schedules WHERE schedule_date = ? AND is_unavailable = 1");
+    $unavailableStmt->bind_param("s", $selected_date);
+    $unavailableStmt->execute();
+    $unavailableResult = $unavailableStmt->get_result();
+    $unavailableRow = $unavailableResult->fetch_assoc();
+    $unavailableStmt->close();
+    
+    // If date is unavailable, return empty array
+    if ($unavailableRow['count'] > 0) {
+        header('Content-Type: application/json');
+        echo json_encode([]);
+        $conn->close();
+        exit;
+    }
+    
     // Define clinic hours and time slots
     $time_slots = [
         '8:30 AM - 9:30 AM',

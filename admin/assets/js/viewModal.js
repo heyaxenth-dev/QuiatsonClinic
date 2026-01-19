@@ -43,6 +43,18 @@ document.addEventListener('DOMContentLoaded', () => {
 					document.getElementById('viewHeight').value = data.height || '';
 					document.getElementById('viewBloodtype').value = data.bloodtype || '';
 
+					// Handle relationship field
+					const viewRelationshipEl = document.getElementById('viewRelationship');
+					const viewRelationshipRow = document.getElementById('viewRelationshipRow');
+					if (viewRelationshipEl && viewRelationshipRow) {
+						if (data.relationship && data.relationship.trim() !== '') {
+							viewRelationshipEl.value = data.relationship || '';
+							viewRelationshipRow.style.display = 'block';
+						} else {
+							viewRelationshipRow.style.display = 'none';
+						}
+					}
+
 					// Format appointment date and compute day of week
 					if (data.date) {
 						const appointmentDate = new Date(data.date);
