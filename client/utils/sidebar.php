@@ -27,6 +27,16 @@ function get_page_link($page_name) {
         <!-- End Home Nav -->
 
         <li class="nav-item">
+            <a class="nav-link <?= ($current_page == 'appointments_today') ? '' : 'collapsed' ?> "
+                href="<?= get_page_link('appointments_today')?>"
+                data-bs-toggle="tooltip" data-bs-placement="right" title="View and manage your appointments scheduled for today. You can reschedule or cancel active appointments.">
+                <i class="bi bi-calendar-day"></i>
+                <span>Today's Appointments</span>
+            </a>
+        </li>
+        <!-- End Today's Appointments Nav -->
+
+        <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'appointment') ? '' : 'collapsed' ?> "
                 href="<?= get_page_link('appointment')?>"
                 data-bs-toggle="tooltip" data-bs-placement="right" title="Book a new appointment. Select your preferred date and time, choose appointment type (regular or urgent), and provide reason for visit">

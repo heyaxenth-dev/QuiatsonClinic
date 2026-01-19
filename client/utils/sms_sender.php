@@ -16,12 +16,16 @@ function sendSMS($api_key, $sender_name, $phone, $firstname, $sendDate, $time_sl
     // Format phone number for Philippines
     $formatted_phone = formatPhoneNumber($phone);
     
-    $message = "Hello $firstname,\n\nWe are pleased to inform you that your appointment request has been set!\n\n"
-             . "Appointment Date: $sendDate\n"
-             . "Time: $time_slot\n"
-             . "Location: Quiatson Clinic\n\n"
-             . "Please arrive 15 minutes early and bring any necessary documents. If you need to reschedule or have any questions, please contact us through your website account.\n\n"
-             . "Thank you, and we look forward to seeing you!";
+    $message = "Hi $firstname,\n\n"
+             . "Your appointment at Quiatson Clinic is CONFIRMED.\n\n"
+             . "📅 Date: $sendDate\n"
+             . "⏰ Time: $time_slot\n"
+             . "📍 Location: Quiatson Clinic\n\n"
+             . "Please:\n"
+             . "- Arrive at least 15 minutes before your schedule.\n"
+             . "- Bring a valid ID and any medical records or lab results (if available).\n\n"
+             . "If you need to reschedule or cancel, you can log in to your Quiatson Clinic account and manage your appointments anytime.\n\n"
+             . "Thank you and see you soon!";
 
     $parameters = array(
         'apikey' => $api_key,  // Replace with your Semaphore API key
@@ -143,12 +147,14 @@ function sendRescheduledSMS($api_key, $sender_name, $phone, $firstname, $newDate
     $ch = curl_init();
     $formatted_phone = formatPhoneNumber($phone);
 
-    $message = "Hello $firstname,\n\nYour appointment has been successfully RESCHEDULED.\n\n"
-             . "New Appointment Date: $newDate\n"
-             . "New Time: $newTime\n"
-             . "Location: Quiatson Clinic\n\n"
-             . "Please arrive 15 minutes early. If you have further changes or questions, kindly contact us through your website account.\n\n"
-             . "Thank you for your understanding.";
+    $message = "Hi $firstname,\n\n"
+             . "Your appointment at Quiatson Clinic has been RESCHEDULED.\n\n"
+             . "📅 New Date: $newDate\n"
+             . "⏰ New Time: $newTime\n"
+             . "📍 Location: Quiatson Clinic\n\n"
+             . "Please arrive at least 15 minutes early and bring any important documents or lab results.\n\n"
+             . "If you need to change this again, you can manage your appointments from your Quiatson Clinic account.\n\n"
+             . "Thank you for your patience and understanding.";
 
     $parameters = array(
         'apikey' => $api_key,
@@ -199,9 +205,11 @@ function sendCanceledSMS($api_key, $sender_name, $phone, $firstname) {
     $ch = curl_init();
     $formatted_phone = formatPhoneNumber($phone);
 
-    $message = "Hello $firstname,\n\nWe regret to inform you that your appointment at Quiatson Clinic has been CANCELED.\n\n"
-             . "If you would like to book another appointment, please log in to your website account or contact us directly.\n\n"
-             . "We apologize for any inconvenience and thank you for your understanding.";
+    $message = "Hi $firstname,\n\n"
+             . "Your appointment at Quiatson Clinic has been CANCELLED.\n\n"
+             . "If this was not intentional or you still wish to visit, you may book a new appointment anytime through your Quiatson Clinic account.\n\n"
+             . "If you have questions or concerns, please contact us and we’ll be happy to assist you.\n\n"
+             . "Thank you for your understanding.";
 
     $parameters = array(
         'apikey' => $api_key,
@@ -255,7 +263,11 @@ function sendOTP_SMS($api_key, $sender_name, $phone, $firstname, $otp_code, $val
     $ch = curl_init();
     $formatted_phone = formatPhoneNumber($phone);
 
-    $message = "Hello $firstname,\n\nYour password reset OTP is: $otp_code\nThis code will expire in $valid_minutes minutes.\n\n- Quiatson Clinic";
+    $message = "Hi $firstname,\n\n"
+             . "Your Quiatson Clinic password reset code is: $otp_code\n"
+             . "This code will expire in $valid_minutes minutes.\n\n"
+             . "If you did not request this, you can ignore this message and keep your account secure.\n\n"
+             . "- Quiatson Clinic";
 
     $parameters = array(
         'apikey' => $api_key,

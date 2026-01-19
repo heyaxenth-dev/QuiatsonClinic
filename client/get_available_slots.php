@@ -4,14 +4,21 @@ include '../database/conn.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['date'])) {
     $selected_date = $conn->real_escape_string($_POST['date']);
     
-    // Check if date is marked as unavailable by staff
-    $unavailableStmt = $conn->prepare("SELECT COUNT(*) as count FROM staff_schedules WHERE schedule_date = ? AND is_unavailable = 1");
-    $unavailableStmt->bind_param("s", $selected_date);
-    $unavailableStmt->execute();
-    $unavailableResult = $unavailableStmt->get_result();
-    $unavailableRow = $unavailableResult->fetch_assoc();
-    $unavailableStmt->close();
-    
+    // Check if date is marked as unavailable by staff (if staff_schedules table exists)
+    $unavailableRow = ['count' => 0];
+    if ($unavailableStmt = $conn->prepare("SELECT COUNT(*) as count FROM staff_schedules WHERE schedule_date = ? AND is_unavailable = 1")) {
+        $unavailableStmt->bind_param("s", $selected_date);
+        $unavailableStmt->execute();
+        $unavailableResult = $unavailableStmt->get_result();
+        if ($unavailableResult) {
+            $row = $unavailableResult->fetch_assoc();
+            if ($row && isset($row['count'])) {
+                $unavailableRow['count'] = (int)$row['count'];
+            }
+        }
+        $unavailableStmt->close();
+    }
+
     // If date is unavailable, return empty array
     if ($unavailableRow['count'] > 0) {
         header('Content-Type: application/json');
