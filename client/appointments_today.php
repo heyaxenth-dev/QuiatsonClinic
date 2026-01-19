@@ -5,26 +5,6 @@ include '../database/conn.php';
 include './utils/header.php';
 include './utils/sidebar.php';
 include 'alert.php';
-
-$today = date('Y-m-d');
-
-$appointments = [];
-
-if ($user_id) {
-    $stmt = $conn->prepare("SELECT id, appointment_date, time_slot, status, symptom, patient_type, severity 
-                            FROM appointments 
-                            WHERE id = ? AND appointment_date = ? 
-                            ORDER BY time_slot ASC");
-    $stmt->bind_param("is", $user_id, $today);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $appointments[] = $row;
-    }
-    $stmt->close();
-}
-
-$total_appointments_today = count($appointments);
 ?>
 
 <script src="assets/js/sweetalert2.all.min.js"></script>
@@ -45,89 +25,86 @@ $total_appointments_today = count($appointments);
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title d-flex align-items-center justify-content-between flex-wrap gap-2">
-                            <span>Appointments for <?php echo htmlspecialchars(date('F j, Y', strtotime($today))); ?></span>
-                            <span class="badge bg-primary rounded-pill">
-                                <?php echo (int)$total_appointments_today; ?> today
-                            </span>
+                        <h5 class="card-title">
+                            Appointments for
+                            <?php echo htmlspecialchars(date('F j, Y', strtotime($today))); ?>
                         </h5>
 
                         <?php if (empty($appointments)) : ?>
-                            <div class="alert alert-info">
-                                <i class="bi bi-info-circle me-2"></i>
-                                You have no appointments scheduled for today.
-                                <a href="appointment.php" class="alert-link">Book a new appointment</a>.
-                            </div>
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            You have no appointments scheduled for today.
+                            <a href="appointment.php" class="alert-link">Book a new appointment</a>.
+                        </div>
                         <?php else : ?>
-                            <div class="table-responsive">
-                                <table class="table table-striped align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Time Slot</th>
-                                            <th>Symptom / Purpose</th>
-                                            <th>Patient Type</th>
-                                            <th>Severity</th>
-                                            <th>Status</th>
-                                            <th class="text-center">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $i = 1; ?>
-                                        <?php foreach ($appointments as $appt) : ?>
-                                            <tr data-appointment-id="<?php echo (int)$appt['id']; ?>">
-                                                <td><?php echo $i++; ?></td>
-                                                <td><?php echo htmlspecialchars($appt['time_slot']); ?></td>
-                                                <td><?php echo htmlspecialchars($appt['symptom'] ?: '—'); ?></td>
-                                                <td><?php echo htmlspecialchars(ucfirst($appt['patient_type'])); ?></td>
-                                                <td>
-                                                    <?php if (strtolower($appt['severity']) === 'urgent') : ?>
-                                                        <span class="badge bg-danger">Urgent</span>
-                                                    <?php else : ?>
-                                                        <span class="badge bg-primary">Regular</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td>
-                                                    <?php
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Time Slot</th>
+                                        <th>Symptom / Purpose</th>
+                                        <th>Patient Type</th>
+                                        <th>Severity</th>
+                                        <th>Status</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $i = 1; ?>
+                                    <?php foreach ($appointments as $appt) : ?>
+                                    <tr data-appointment-id="<?php echo (int)$appt['id']; ?>">
+                                        <td><?php echo $i++; ?></td>
+                                        <td><?php echo htmlspecialchars($appt['time_slot']); ?></td>
+                                        <td><?php echo htmlspecialchars($appt['symptom'] ?: '—'); ?></td>
+                                        <td><?php echo htmlspecialchars(ucfirst($appt['patient_type'])); ?></td>
+                                        <td>
+                                            <?php if (strtolower($appt['severity']) === 'urgent') : ?>
+                                            <span class="badge bg-danger">Urgent</span>
+                                            <?php else : ?>
+                                            <span class="badge bg-primary">Regular</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php
                                                     $status = $appt['status'];
                                                     $badgeClass = 'bg-secondary';
                                                     if ($status === 'Pending') $badgeClass = 'bg-warning text-dark';
                                                     elseif ($status === 'Approved' || $status === 'Success') $badgeClass = 'bg-success';
                                                     elseif ($status === 'Cancelled' || $status === 'Error') $badgeClass = 'bg-danger';
                                                     ?>
-                                                    <span class="badge <?php echo $badgeClass; ?>">
-                                                        <?php echo htmlspecialchars($status); ?>
-                                                    </span>
-                                                </td>
-                                                <td class="text-center">
-                                                    <?php if (!in_array($appt['status'], ['Cancelled', 'Concluded'], true)) : ?>
-                                                        <div class="btn-group" role="group">
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-outline-primary btn-reschedule"
-                                                                data-id="<?php echo (int)$appt['id']; ?>"
-                                                                data-date="<?php echo htmlspecialchars($appt['appointment_date']); ?>"
-                                                                data-time-slot="<?php echo htmlspecialchars($appt['time_slot']); ?>">
-                                                                <i class="bi bi-clock-history"></i> Reschedule
-                                                            </button>
-                                                            <button type="button"
-                                                                class="btn btn-sm btn-outline-danger btn-cancel"
-                                                                data-id="<?php echo (int)$appt['id']; ?>">
-                                                                <i class="bi bi-x-circle"></i> Cancel
-                                                            </button>
-                                                        </div>
-                                                    <?php else : ?>
-                                                        <small class="text-muted">No actions available</small>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p class="text-muted small mt-2">
-                                <i class="bi bi-info-circle me-1"></i>
-                                You can only reschedule or cancel appointments that are not yet concluded or cancelled.
-                            </p>
+                                            <span class="badge <?php echo $badgeClass; ?>">
+                                                <?php echo htmlspecialchars($status); ?>
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <?php if (!in_array($appt['status'], ['Cancelled', 'Concluded'], true)) : ?>
+                                            <div class="btn-group" role="group">
+                                                <button type="button"
+                                                    class="btn btn-sm btn-outline-primary btn-reschedule"
+                                                    data-id="<?php echo (int)$appt['id']; ?>"
+                                                    data-date="<?php echo htmlspecialchars($appt['appointment_date']); ?>"
+                                                    data-time-slot="<?php echo htmlspecialchars($appt['time_slot']); ?>">
+                                                    <i class="bi bi-clock-history"></i> Reschedule
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger btn-cancel"
+                                                    data-id="<?php echo (int)$appt['id']; ?>">
+                                                    <i class="bi bi-x-circle"></i> Cancel
+                                                </button>
+                                            </div>
+                                            <?php else : ?>
+                                            <small class="text-muted">No actions available</small>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-muted small mt-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            You can only reschedule or cancel appointments that are not yet concluded or cancelled.
+                        </p>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -136,7 +113,8 @@ $total_appointments_today = count($appointments);
     </section>
 
     <!-- Reschedule Modal -->
-    <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="rescheduleModal" tabindex="-1" aria-labelledby="rescheduleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form id="rescheduleForm">
@@ -195,36 +173,46 @@ document.addEventListener('DOMContentLoaded', function() {
         reschedSlotInfo.textContent = '';
 
         fetch('get_available_slots.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({ date: selectedDate })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (!Array.isArray(data) || data.length === 0) {
-                reschedTimeSelect.innerHTML = '<option value="">No available slots for this date</option>';
-                reschedSlotInfo.innerHTML = '<span class="text-warning"><i class="bi bi-exclamation-triangle"></i> This date is unavailable or fully booked.</span>';
-                return;
-            }
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams({
+                    date: selectedDate
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!Array.isArray(data) || data.length === 0) {
+                    reschedTimeSelect.innerHTML =
+                        '<option value="">No available slots for this date</option>';
+                    reschedSlotInfo.innerHTML =
+                        '<span class="text-warning"><i class="bi bi-exclamation-triangle"></i> This date is unavailable or fully booked.</span>';
+                    return;
+                }
 
-            let optionsHtml = '<option value="">Select a time slot</option>';
-            let totalAvailable = 0;
+                let optionsHtml = '<option value="">Select a time slot</option>';
+                let totalAvailable = 0;
 
-            data.forEach(slot => {
-                const remaining = slot.available_count ?? 0;
-                totalAvailable += remaining;
-                const label = `${slot.time_slot} (Remaining: ${remaining})`;
-                const selected = (currentTimeSlot && currentTimeSlot === slot.time_slot) ? 'selected' : '';
-                optionsHtml += `<option value="${slot.time_slot}" ${selected}>${label}</option>`;
+                data.forEach(slot => {
+                    const remaining = slot.available_count ?? 0;
+                    totalAvailable += remaining;
+                    const label = `${slot.time_slot} (Remaining: ${remaining})`;
+                    const selected = (currentTimeSlot && currentTimeSlot === slot.time_slot) ?
+                        'selected' : '';
+                    optionsHtml +=
+                        `<option value="${slot.time_slot}" ${selected}>${label}</option>`;
+                });
+
+                reschedTimeSelect.innerHTML = optionsHtml;
+                reschedSlotInfo.innerHTML =
+                    `<span class="text-success"><i class="bi bi-check-circle"></i> Total available slots for this date: ${totalAvailable}</span>`;
+            })
+            .catch(() => {
+                reschedTimeSelect.innerHTML = '<option value="">Error loading slots</option>';
+                reschedSlotInfo.innerHTML =
+                    '<span class="text-danger">Unable to load available slots. Please try again.</span>';
             });
-
-            reschedTimeSelect.innerHTML = optionsHtml;
-            reschedSlotInfo.innerHTML = `<span class="text-success"><i class="bi bi-check-circle"></i> Total available slots for this date: ${totalAvailable}</span>`;
-        })
-        .catch(() => {
-            reschedTimeSelect.innerHTML = '<option value="">Error loading slots</option>';
-            reschedSlotInfo.innerHTML = '<span class="text-danger">Unable to load available slots. Please try again.</span>';
-        });
     }
 
     // Handle reschedule button click
@@ -278,42 +266,56 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             fetch('reschedule_appointment.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    appointment_id: id,
-                    date: newDate,
-                    time_slot: newTimeSlot
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        appointment_id: id,
+                        date: newDate,
+                        time_slot: newTimeSlot
+                    })
                 })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Appointment Rescheduled',
-                        text: data.message || 'Your appointment has been updated successfully.',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.reload();
-                    });
-                } else {
+                .then(async res => {
+                    const text = await res.text();
+                    try {
+                        return JSON.parse(text);
+                    } catch (e) {
+                        console.error('JSON Parse Error:', text);
+                        throw new Error('Invalid response from server: ' + text.substring(0,
+                            100));
+                    }
+                })
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Appointment Rescheduled',
+                            text: data.message ||
+                                'Your appointment has been updated successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Unable to Reschedule',
+                            text: data.message || 'Something went wrong. Please try again.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Reschedule Error:', error);
                     Swal.fire({
                         icon: 'error',
-                        title: 'Unable to Reschedule',
-                        text: data.message || 'Something went wrong. Please try again.',
+                        title: 'Server Error',
+                        text: error.message ||
+                            'Could not process your request. Please try again later.',
                         confirmButtonText: 'OK'
                     });
-                }
-            })
-            .catch(() => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Server Error',
-                    text: 'Could not process your request. Please try again later.',
-                    confirmButtonText: 'OK'
                 });
-            });
         });
     }
 
@@ -335,38 +337,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!result.isConfirmed) return;
 
                 fetch('cancel_appointment.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ appointment_id: id })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Appointment Cancelled',
-                            text: data.message || 'Your appointment has been cancelled.',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.reload();
-                        });
-                    } else {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            appointment_id: id
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Appointment Cancelled',
+                                text: data.message ||
+                                    'Your appointment has been cancelled.',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Unable to Cancel',
+                                text: data.message ||
+                                    'Something went wrong. Please try again.',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    })
+                    .catch(() => {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Unable to Cancel',
-                            text: data.message || 'Something went wrong. Please try again.',
+                            title: 'Server Error',
+                            text: 'Could not process your request. Please try again later.',
                             confirmButtonText: 'OK'
                         });
-                    }
-                })
-                .catch(() => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Server Error',
-                        text: 'Could not process your request. Please try again later.',
-                        confirmButtonText: 'OK'
                     });
-                });
             });
         });
     });
@@ -376,4 +384,3 @@ document.addEventListener('DOMContentLoaded', function() {
 <?php
 include './utils/footer.php';
 ?>
-

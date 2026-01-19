@@ -1,5 +1,4 @@
 <?php
-session_start();
 header('Content-Type: application/json');
 
 include '../database/conn.php';
@@ -64,4 +63,3 @@ if ($update->execute()) {
 
 $update->close();
 $conn->close();
-
