@@ -59,8 +59,8 @@ include 'alert.php';
                         <div class="card info-card sales-card">
 
                             <?php 
-                            // Get the number of appointments today
-                            $sql = "SELECT COUNT(*) as total_appointments FROM appointments WHERE DATE(created_at) = CURDATE()";
+                            // Get the number of appointments today (exclude cancelled)
+                            $sql = "SELECT COUNT(*) as total_appointments FROM appointments WHERE DATE(created_at) = CURDATE() AND status != 'Cancelled'";
                             $result = mysqli_query($conn, $sql);
                             $row = mysqli_fetch_assoc($result);
                             $total_appointments = $row['total_appointments'];
@@ -125,8 +125,8 @@ include 'alert.php';
                         <div class="card info-card customers-card">
 
                             <?php 
-                            // Get the total number of appointments (all bookings)
-                            $sql = "SELECT COUNT(*) as total_appointments FROM appointments";
+                            // Get the total number of appointments (exclude cancelled)
+                            $sql = "SELECT COUNT(*) as total_appointments FROM appointments WHERE status != 'Cancelled'";
                             $result = mysqli_query($conn, $sql);
                             $row = mysqli_fetch_assoc($result);
                             $total_appointments = $row['total_appointments'];
@@ -180,7 +180,7 @@ include 'alert.php';
                                 ];
 
                                 $booked_counts = [];
-                                if ($stmt = mysqli_prepare($conn, "SELECT time_slot, COUNT(*) as booked_count FROM appointments WHERE appointment_date = ? GROUP BY time_slot")) {
+                                if ($stmt = mysqli_prepare($conn, "SELECT time_slot, COUNT(*) as booked_count FROM appointments WHERE appointment_date = ? AND status != 'Cancelled' GROUP BY time_slot")) {
                                     mysqli_stmt_bind_param($stmt, "s", $selected_date);
                                     mysqli_stmt_execute($stmt);
                                     $result = mysqli_stmt_get_result($stmt);
@@ -315,6 +315,7 @@ include 'alert.php';
                             'Pending'   => 'text-warning',
                             'Approved'  => 'text-success',
                             'Concluded' => 'text-primary',
+                            'Cancelled' => 'text-danger',
                             'Canceled'  => 'text-danger'
                         ];
                         $badgeColor = $statusColors[$row['status']] ?? 'text-muted';

@@ -71,8 +71,8 @@ $filterMonthYear = isset($_GET['reportMonth']) ? $_GET['reportMonth'] : '';
 
                                 <tbody>
                                     <?php 
-                                    // Build SQL query
-                                    $sql = "SELECT * FROM appointments WHERE status != 'Approved' AND status != 'Pending'";
+                                    // Build SQL query (exclude Pending, Approved, and Cancelled)
+                                    $sql = "SELECT * FROM appointments WHERE status NOT IN ('Approved', 'Pending', 'Cancelled')";
                                     
                                     if (!empty($filterMonthYear)) {
                                         $year = date('Y', strtotime($filterMonthYear));

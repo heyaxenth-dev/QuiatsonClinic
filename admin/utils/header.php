@@ -54,13 +54,13 @@
         }
     }
 
-    // Count Urgent/Priority
-    $urgentCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE patient_type = 'senior_pwd' AND (severity = 'Regular' OR severity = 'Urgent') AND status != 'Concluded'";
+    // Count Urgent/Priority (exclude Concluded and Cancelled to match list)
+    $urgentCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE patient_type = 'senior_pwd' AND (severity = 'Regular' OR severity = 'Urgent') AND status NOT IN ('Concluded', 'Cancelled')";
     $urgentResult = mysqli_query($conn, $urgentCountQuery);
     $urgentCount = mysqli_fetch_assoc($urgentResult)['count'];
 
-    // Count Regular
-    $regularCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE patient_type = 'regular' AND severity = 'Regular' AND status != 'Concluded'";
+    // Count Regular (exclude Concluded and Cancelled; same criteria as appointments_regular.php)
+    $regularCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE status NOT IN ('Concluded', 'Cancelled') AND patient_type != 'senior_pwd' AND severity = 'Regular'";
     $regularResult = mysqli_query($conn, $regularCountQuery);
     $regularCount = mysqli_fetch_assoc($regularResult)['count'];
     ?>

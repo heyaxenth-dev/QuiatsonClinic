@@ -10,8 +10,8 @@ use Dompdf\Options;
 // Get filter
 $filterMonthYear = isset($_GET['reportMonth']) ? $_GET['reportMonth'] : '';
 
-// Build SQL
-$sql = "SELECT * FROM appointments WHERE status != 'Approved' AND status != 'Pending'";
+// Build SQL (exclude Pending, Approved, and Cancelled)
+$sql = "SELECT * FROM appointments WHERE status NOT IN ('Approved', 'Pending', 'Cancelled')";
 if (!empty($filterMonthYear)) {
     $year = date('Y', strtotime($filterMonthYear));
     $month = date('m', strtotime($filterMonthYear));

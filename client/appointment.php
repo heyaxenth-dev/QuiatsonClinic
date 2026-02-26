@@ -52,9 +52,12 @@ if ($is_reappointment && $original_appointment_id > 0) {
                         <div class="alert alert-info alert-dismissible fade show" role="alert">
                             <i class="bi bi-info-circle me-2"></i>
                             <strong>Re-appointment for Lab Result Reading</strong>
-                            <p class="mb-0 mt-2">You are requesting a re-appointment to discuss your lab results from your appointment on 
-                                <strong><?= htmlspecialchars($reappointment_data['appointment_date']); ?></strong>. 
-                                Your previous information has been pre-filled below. Please review and select a new date and time.</p>
+                            <p class="mb-0 mt-2">You are requesting a re-appointment to discuss your lab results from
+                                your appointment on
+                                <strong><?= htmlspecialchars($reappointment_data['appointment_date']); ?></strong>.
+                                Your previous information has been pre-filled below. Please review and select a new date
+                                and time.
+                            </p>
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         <?php endif; ?>
@@ -87,13 +90,15 @@ if ($is_reappointment && $original_appointment_id > 0) {
                             <div class="mb-3">
                                 <label class="form-label">
                                     Patient Type
-                                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                       title="Select Regular for standard patients, or Senior Citizen/PWD for priority appointments. Senior/PWD patients may need to upload valid ID."></i>
+                                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                        title="Select Regular for standard patients, or Senior Citizen/PWD for priority appointments. Senior/PWD patients may need to upload valid ID."></i>
                                 </label>
                                 <div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="patient_type" id="regular"
-                                            value="regular" <?= $reappointment_data && $reappointment_data['patient_type'] == 'regular' ? 'checked' : ''; ?> required>
+                                            value="regular"
+                                            <?= $reappointment_data && $reappointment_data['patient_type'] == 'regular' ? 'checked' : ''; ?>
+                                            required>
                                         <!-- Loader Overlay -->
                                         <div id="loaderOverlay"
                                             style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.7);z-index:9999;align-items:center;justify-content:center;">
@@ -124,7 +129,9 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="patient_type" id="senior_pwd"
-                                            value="senior_pwd" <?= $reappointment_data && $reappointment_data['patient_type'] == 'senior_pwd' ? 'checked' : ''; ?> required>
+                                            value="senior_pwd"
+                                            <?= $reappointment_data && $reappointment_data['patient_type'] == 'senior_pwd' ? 'checked' : ''; ?>
+                                            required>
                                         <label class="form-check-label" for="senior">
                                             Senior Citizen / PWD
                                         </label>
@@ -152,13 +159,15 @@ if ($is_reappointment && $original_appointment_id > 0) {
 
                                 seniorRadio.addEventListener("change", toggleUpload);
                                 regularRadio.addEventListener("change", toggleUpload);
-                                
+
                                 // Initialize on page load
                                 toggleUpload();
-                                
+
                                 <?php if ($reappointment_data): ?>
                                 // If re-appointment, ensure the correct patient type toggle is set
-                                if (<?= $reappointment_data['patient_type'] == 'senior_pwd' ? 'true' : 'false'; ?>) {
+                                if (
+                                    <?= $reappointment_data['patient_type'] == 'senior_pwd' ? 'true' : 'false'; ?>
+                                ) {
                                     seniorRadio.checked = true;
                                     toggleUpload();
                                 }
@@ -172,7 +181,7 @@ if ($is_reappointment && $original_appointment_id > 0) {
                             <div class="row mb-3">
                                 <div class="col-md-12">
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="isForSomeoneElse" 
+                                        <input class="form-check-input" type="checkbox" id="isForSomeoneElse"
                                             <?= $reappointment_data && !empty($reappointment_data['relationship']) ? 'checked' : ''; ?>>
                                         <label class="form-check-label" for="isForSomeoneElse">
                                             <i class="bi bi-person-check me-1"></i>This appointment is for someone else
@@ -182,17 +191,36 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                         <label for="relationship">Relationship to Patient</label>
                                         <select name="relationship" id="relationship" class="form-control">
                                             <option value="">Select Relationship</option>
-                                            <option value="Self" <?= $reappointment_data && $reappointment_data['relationship'] == 'Self' ? 'selected' : ''; ?>>Self</option>
-                                            <option value="Spouse" <?= $reappointment_data && $reappointment_data['relationship'] == 'Spouse' ? 'selected' : ''; ?>>Spouse</option>
-                                            <option value="Parent" <?= $reappointment_data && $reappointment_data['relationship'] == 'Parent' ? 'selected' : ''; ?>>Parent</option>
-                                            <option value="Child" <?= $reappointment_data && $reappointment_data['relationship'] == 'Child' ? 'selected' : ''; ?>>Child</option>
-                                            <option value="Sibling" <?= $reappointment_data && $reappointment_data['relationship'] == 'Sibling' ? 'selected' : ''; ?>>Sibling</option>
-                                            <option value="Relative" <?= $reappointment_data && $reappointment_data['relationship'] == 'Relative' ? 'selected' : ''; ?>>Relative</option>
-                                            <option value="Friend" <?= $reappointment_data && $reappointment_data['relationship'] == 'Friend' ? 'selected' : ''; ?>>Friend</option>
-                                            <option value="Guardian" <?= $reappointment_data && $reappointment_data['relationship'] == 'Guardian' ? 'selected' : ''; ?>>Guardian</option>
-                                            <option value="Other" <?= $reappointment_data && $reappointment_data['relationship'] == 'Other' ? 'selected' : ''; ?>>Other</option>
+                                            <option value="Self"
+                                                <?= $reappointment_data && $reappointment_data['relationship'] == 'Self' ? 'selected' : ''; ?>>
+                                                Self</option>
+                                            <option value="Spouse"
+                                                <?= $reappointment_data && $reappointment_data['relationship'] == 'Spouse' ? 'selected' : ''; ?>>
+                                                Spouse</option>
+                                            <option value="Parent"
+                                                <?= $reappointment_data && $reappointment_data['relationship'] == 'Parent' ? 'selected' : ''; ?>>
+                                                Parent</option>
+                                            <option value="Child"
+                                                <?= $reappointment_data && $reappointment_data['relationship'] == 'Child' ? 'selected' : ''; ?>>
+                                                Child</option>
+                                            <option value="Sibling"
+                                                <?= $reappointment_data && $reappointment_data['relationship'] == 'Sibling' ? 'selected' : ''; ?>>
+                                                Sibling</option>
+                                            <option value="Relative"
+                                                <?= $reappointment_data && $reappointment_data['relationship'] == 'Relative' ? 'selected' : ''; ?>>
+                                                Relative</option>
+                                            <option value="Friend"
+                                                <?= $reappointment_data && $reappointment_data['relationship'] == 'Friend' ? 'selected' : ''; ?>>
+                                                Friend</option>
+                                            <option value="Guardian"
+                                                <?= $reappointment_data && $reappointment_data['relationship'] == 'Guardian' ? 'selected' : ''; ?>>
+                                                Guardian</option>
+                                            <option value="Other"
+                                                <?= $reappointment_data && $reappointment_data['relationship'] == 'Other' ? 'selected' : ''; ?>>
+                                                Other</option>
                                         </select>
-                                        <small class="text-muted">Please specify your relationship to the patient</small>
+                                        <small class="text-muted">Please specify your relationship to the
+                                            patient</small>
                                     </div>
                                 </div>
                             </div>
@@ -202,7 +230,7 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                 const isForSomeoneElse = document.getElementById('isForSomeoneElse');
                                 const relationshipField = document.getElementById('relationshipField');
                                 const relationshipSelect = document.getElementById('relationship');
-                                
+
                                 function toggleRelationshipField() {
                                     if (isForSomeoneElse.checked) {
                                         relationshipField.style.display = 'block';
@@ -213,9 +241,9 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                         relationshipSelect.value = '';
                                     }
                                 }
-                                
+
                                 isForSomeoneElse.addEventListener('change', toggleRelationshipField);
-                                
+
                                 // Initialize on page load
                                 toggleRelationshipField();
                             });
@@ -226,30 +254,32 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                 <div class="col-md-4 form-group">
                                     <label for="lastname">
                                         Last Name
-                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                           title="Enter the patient's last name (surname)"></i>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                            title="Enter the patient's last name (surname)"></i>
                                     </label>
-                                    <input type="text" name="lastname" id="lastname" class="form-control" 
-                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['lastname']) : ''; ?>" required />
+                                    <input type="text" name="lastname" id="lastname" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['lastname']) : ''; ?>"
+                                        required />
                                 </div>
 
                                 <!-- First Name -->
                                 <div class="col-md-4 form-group">
                                     <label for="firstname">
                                         First Name
-                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                           title="Enter the patient's first name"></i>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                            title="Enter the patient's first name"></i>
                                     </label>
-                                    <input type="text" name="firstname" id="firstname" class="form-control" 
-                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['firstname']) : ''; ?>" required />
+                                    <input type="text" name="firstname" id="firstname" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['firstname']) : ''; ?>"
+                                        required />
                                 </div>
 
                                 <!-- Middle Initial -->
                                 <div class="col-md-4 form-group">
                                     <label for="middle_initial">
                                         Middle Initial
-                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                           title="Enter only the first letter of the middle name"></i>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                            title="Enter only the first letter of the middle name"></i>
                                     </label>
                                     <input type="text" name="middle_initial" id="middle_initial" class="form-control"
                                         value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['middle_initial']) : ''; ?>"
@@ -261,16 +291,17 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                 <!-- Address -->
                                 <div class="col-md-6 form-group">
                                     <label for="address">Address</label>
-                                    <input type="text" name="address" id="address" class="form-control" 
-                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['address']) : ''; ?>" required
-                                        autocomplete="off" />
+                                    <input type="text" name="address" id="address" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['address']) : ''; ?>"
+                                        required autocomplete="off" />
                                 </div>
 
                                 <!-- Age -->
                                 <div class="col-md-2 form-group">
                                     <label for="age">Age</label>
-                                    <input type="number" name="age" id="age" class="form-control" 
-                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['age']) : ''; ?>" min="0" required />
+                                    <input type="number" name="age" id="age" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['age']) : ''; ?>"
+                                        min="0" required />
                                 </div>
 
                                 <!-- Sex -->
@@ -278,16 +309,21 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                     <label for="sex">Sex</label>
                                     <select name="sex" id="sex" class="form-control" required>
                                         <option value="">Select Sex</option>
-                                        <option value="Male" <?= $reappointment_data && $reappointment_data['sex'] == 'Male' ? 'selected' : ''; ?>>Male</option>
-                                        <option value="Female" <?= $reappointment_data && $reappointment_data['sex'] == 'Female' ? 'selected' : ''; ?>>Female</option>
+                                        <option value="Male"
+                                            <?= $reappointment_data && $reappointment_data['sex'] == 'Male' ? 'selected' : ''; ?>>
+                                            Male</option>
+                                        <option value="Female"
+                                            <?= $reappointment_data && $reappointment_data['sex'] == 'Female' ? 'selected' : ''; ?>>
+                                            Female</option>
                                     </select>
                                 </div>
 
                                 <!-- Birthdate -->
                                 <div class="col-md-2 form-group">
                                     <label for="birthdate">Birthdate</label>
-                                    <input type="date" name="birthdate" id="birthdate" class="form-control" 
-                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['birthdate']) : ''; ?>" required />
+                                    <input type="date" name="birthdate" id="birthdate" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['birthdate']) : ''; ?>"
+                                        required />
                                 </div>
                             </div>
 
@@ -297,33 +333,43 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                     <label for="civil_status">Civil Status</label>
                                     <select name="civil_status" id="civil_status" class="form-control" required>
                                         <option value="">Select Civil Status</option>
-                                        <option value="Single" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Single' ? 'selected' : ''; ?>>Single</option>
-                                        <option value="Married" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Married' ? 'selected' : ''; ?>>Married</option>
-                                        <option value="Widowed" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Widowed' ? 'selected' : ''; ?>>Widowed</option>
-                                        <option value="Separated" <?= $reappointment_data && $reappointment_data['civil_status'] == 'Separated' ? 'selected' : ''; ?>>Separated</option>
+                                        <option value="Single"
+                                            <?= $reappointment_data && $reappointment_data['civil_status'] == 'Single' ? 'selected' : ''; ?>>
+                                            Single</option>
+                                        <option value="Married"
+                                            <?= $reappointment_data && $reappointment_data['civil_status'] == 'Married' ? 'selected' : ''; ?>>
+                                            Married</option>
+                                        <option value="Widowed"
+                                            <?= $reappointment_data && $reappointment_data['civil_status'] == 'Widowed' ? 'selected' : ''; ?>>
+                                            Widowed</option>
+                                        <option value="Separated"
+                                            <?= $reappointment_data && $reappointment_data['civil_status'] == 'Separated' ? 'selected' : ''; ?>>
+                                            Separated</option>
                                     </select>
                                 </div>
 
                                 <!-- Phone Number -->
                                 <div class="col-md-3 form-group">
                                     <label for="phone">Phone Number</label>
-                                    <input type="tel" name="phone" id="phone" class="form-control" 
-                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['phone']) : ''; ?>" required
-                                        autocomplete="off" />
+                                    <input type="tel" name="phone" id="phone" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['phone']) : ''; ?>"
+                                        required autocomplete="off" />
                                 </div>
 
                                 <!-- Weight -->
                                 <div class="col-md-2 form-group">
                                     <label for="weight">Weight (kg)</label>
-                                    <input type="text" name="weight" id="weight" class="form-control" 
-                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['weight']) : ''; ?>" required />
+                                    <input type="text" name="weight" id="weight" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['weight']) : ''; ?>"
+                                        required />
                                 </div>
 
                                 <!-- Height -->
                                 <div class="col-md-2 form-group">
                                     <label for="height">Height (cm )</label>
-                                    <input type="text" name="height" id="height" class="form-control" 
-                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['height']) : ''; ?>" required />
+                                    <input type="text" name="height" id="height" class="form-control"
+                                        value="<?= $reappointment_data ? htmlspecialchars($reappointment_data['height']) : ''; ?>"
+                                        required />
                                 </div>
 
                                 <!-- Blood Type -->
@@ -346,8 +392,8 @@ if ($is_reappointment && $original_appointment_id > 0) {
                             <div class="mt-4 mb-3 d-none" id="seniorIdUpload">
                                 <label for="upload_id" class="form-label">
                                     Upload Senior Citizen / PWD ID
-                                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                       title="Upload a clear photo or scanned copy of your valid Senior Citizen ID or PWD ID. Accepted formats: JPG, PNG, PDF. This is required for priority appointments."></i>
+                                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                        title="Upload a clear photo or scanned copy of your valid Senior Citizen ID or PWD ID. Accepted formats: JPG, PNG, PDF. This is required for priority appointments."></i>
                                 </label>
                                 <input class="form-control" type="file" id="upload_id" name="upload_id"
                                     accept="image/*,.pdf">
@@ -356,10 +402,11 @@ if ($is_reappointment && $original_appointment_id > 0) {
                             <div class="form-group mt-4 mb-3">
                                 <h6>
                                     Select Symptoms:
-                                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                       title="Select all symptoms or reasons for your visit. You can choose more than one."></i>
+                                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                        title="Select all symptoms or reasons for your visit. You can choose more than one."></i>
                                 </h6>
-                                <small class="text-muted d-block mb-2">You may select multiple symptoms that apply.</small>
+                                <small class="text-muted d-block mb-2">You may select multiple symptoms that
+                                    apply.</small>
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-check">
@@ -377,8 +424,8 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="fatigue"
-                                                value="Fatigue">
+                                            <input class="form-check-input" type="checkbox" name="symptom[]"
+                                                id="fatigue" value="Fatigue">
                                             <label class="form-check-label" for="fatigue">Fatigue</label>
                                         </div>
                                     </div>
@@ -393,15 +440,15 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="headache"
-                                                value="Headache">
+                                            <input class="form-check-input" type="checkbox" name="symptom[]"
+                                                id="headache" value="Headache">
                                             <label class="form-check-label" for="headache">Headache</label>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="sore_throat"
-                                                value="Sore Throat">
+                                            <input class="form-check-input" type="checkbox" name="symptom[]"
+                                                id="sore_throat" value="Sore Throat">
                                             <label class="form-check-label" for="sore_throat">Sore Throat</label>
                                         </div>
                                     </div>
@@ -415,8 +462,8 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="chestPain"
-                                                value="Chest Pain (Moderate to severe)">
+                                            <input class="form-check-input" type="checkbox" name="symptom[]"
+                                                id="chestPain" value="Chest Pain (Moderate to severe)">
                                             <label class="form-check-label" for="chestPain">Chest Pain (Moderate to
                                                 severe)</label>
                                         </div>
@@ -432,8 +479,8 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="symptom[]" id="no_symptoms"
-                                                value="No Symptoms">
+                                            <input class="form-check-input" type="checkbox" name="symptom[]"
+                                                id="no_symptoms" value="No Symptoms">
                                             <label class="form-check-label" for="no_symptoms">No Symptoms</label>
                                         </div>
                                     </div>
@@ -464,22 +511,23 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                     <div class="col-md-3">
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="symptom"
-                                                id="other_symptom" value="Other" required>
+                                                id="other_symptom" value="Other">
                                             <label class="form-check-label" for="other_symptom">Other</label>
                                         </div>
                                     </div>
                                     <div class="col-md-9" id="other_symptom_input_container" style="display: none;">
-                                        <label for="other_symptom_text" class="form-label">Please specify your symptom:</label>
-                                        <input type="text" class="form-control" id="other_symptom_text" name="other_symptom_text" 
-                                            placeholder="Enter your symptom here">
+                                        <label for="other_symptom_text" class="form-label">Please specify your
+                                            symptom:</label>
+                                        <input type="text" class="form-control" id="other_symptom_text"
+                                            name="other_symptom_text" placeholder="Enter your symptom here">
                                     </div>
                                 </div>
                             </div>
 
                             <h5 class="mb-3 mt-3">
                                 Select Schedule
-                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                   title="Choose your preferred appointment date and time. Available slots are shown based on clinic schedule. Book in advance to secure your preferred time."></i>
+                                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="Choose your preferred appointment date and time. Available slots are shown based on clinic schedule. Book in advance to secure your preferred time."></i>
                             </h5>
 
                             <div class="row">
@@ -487,8 +535,8 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                 <div class="col-md-4 form-group mt-3">
                                     <label for="date">
                                         Appointment Date
-                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                           title="Select your preferred appointment date. Available dates are shown. Some dates may be fully booked."></i>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                            title="Select your preferred appointment date. Available dates are shown. Some dates may be fully booked."></i>
                                     </label>
                                     <input type="date" name="date" id="date" class="form-control datepicker" required />
                                     <small class="text-muted">Select a date to see available time slots</small>
@@ -498,8 +546,8 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                 <div class="col-md-4 form-group mt-3">
                                     <label for="time_slot">
                                         Time Slot
-                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                           title="After selecting a date, available time slots will appear here. Choose your preferred time. Slots are limited per day."></i>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                            title="After selecting a date, available time slots will appear here. Choose your preferred time. Slots are limited per day."></i>
                                     </label>
                                     <select name="time_slot" id="time_slot" class="form-select" required>
                                         <option value="">Select a date first</option>
@@ -660,7 +708,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const otherSymptomRadio = document.getElementById('other_symptom');
     const otherSymptomInput = document.getElementById('other_symptom_text');
     const otherSymptomContainer = document.getElementById('other_symptom_input_container');
-    
+
     // Make toggle function available globally for history population
     function toggleOtherSymptomInput() {
         if (otherSymptomRadio && otherSymptomContainer) {
@@ -876,11 +924,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Initialize clear form button
     addClearFormButton();
-    
+
     // Set up "Other" symptom option handlers (variables already defined above)
     if (otherSymptomRadio && otherSymptomContainer) {
         otherSymptomRadio.addEventListener('change', toggleOtherSymptomInput);
-        
+
         // Add change listeners to all symptom radios
         document.querySelectorAll('input[name="symptom"]').forEach(radio => {
             radio.addEventListener('change', function() {
@@ -893,7 +941,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             });
         });
-        
+
         // Handle form submission - replace "Other" with custom text if provided
         const appointmentForm = document.getElementById('appointmentForm');
         if (appointmentForm) {
@@ -914,14 +962,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         }
                         return false;
                     }
-                    
+
                     // Create a hidden input with the custom symptom value
                     const hiddenInput = document.createElement('input');
                     hiddenInput.type = 'hidden';
                     hiddenInput.name = 'symptom';
                     hiddenInput.value = otherSymptomInput.value.trim();
                     this.appendChild(hiddenInput);
-                    
+
                     // Remove the "Other" radio value
                     otherSymptomRadio.disabled = true;
                 }

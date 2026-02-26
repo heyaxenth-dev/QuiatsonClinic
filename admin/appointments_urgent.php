@@ -51,7 +51,7 @@ include 'alert.php';
                                 <?php 
                                 $count = 0;
                                 // Fetch appointments from database
-                                $sql = "SELECT * FROM appointments WHERE status != 'Concluded' AND patient_type = 'senior_pwd' AND (severity = 'Urgent' OR severity = 'Regular') ORDER BY created_at ASC";
+                                $sql = "SELECT * FROM appointments WHERE status NOT IN ('Concluded', 'Cancelled') AND patient_type = 'senior_pwd' AND (severity = 'Urgent' OR severity = 'Regular') ORDER BY created_at ASC";
                                 $result = mysqli_query($conn, $sql);
                                 while ($row = mysqli_fetch_assoc($result)) {
 
