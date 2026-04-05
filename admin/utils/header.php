@@ -54,15 +54,20 @@
         }
     }
 
-    // Count Urgent/Priority (exclude Concluded and Cancelled to match list)
-    $urgentCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE patient_type = 'senior_pwd' AND (severity = 'Regular' OR severity = 'Urgent') AND status NOT IN ('Concluded', 'Cancelled')";
+    // Count Urgent/Priority for today only (same criteria as appointments_urgent.php)
+    $urgentCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE appointment_date = CURDATE() AND patient_type = 'senior_pwd' AND (severity = 'Regular' OR severity = 'Urgent') AND status NOT IN ('Concluded', 'Cancelled')";
     $urgentResult = mysqli_query($conn, $urgentCountQuery);
     $urgentCount = mysqli_fetch_assoc($urgentResult)['count'];
 
-    // Count Regular (exclude Concluded and Cancelled; same criteria as appointments_regular.php)
-    $regularCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE status NOT IN ('Concluded', 'Cancelled') AND patient_type != 'senior_pwd' AND severity = 'Regular'";
+    // Count Regular for today only (same criteria as appointments_regular.php)
+    $regularCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE appointment_date = CURDATE() AND status NOT IN ('Concluded', 'Cancelled') AND patient_type != 'senior_pwd' AND severity = 'Regular'";
     $regularResult = mysqli_query($conn, $regularCountQuery);
     $regularCount = mysqli_fetch_assoc($regularResult)['count'];
+
+    // Today's active appointments (same criteria as appointments_today.php)
+    $todayCountQuery = "SELECT COUNT(*) as count FROM appointments WHERE appointment_date = CURDATE() AND status NOT IN ('Concluded', 'Cancelled')";
+    $todayCountResult = mysqli_query($conn, $todayCountQuery);
+    $todayCount = $todayCountResult ? (int) mysqli_fetch_assoc($todayCountResult)['count'] : 0;
     ?>
 
     <!-- ======= Header ======= -->

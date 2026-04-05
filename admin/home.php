@@ -59,8 +59,8 @@ include 'alert.php';
                         <div class="card info-card sales-card">
 
                             <?php 
-                            // Get the number of appointments today (exclude cancelled)
-                            $sql = "SELECT COUNT(*) as total_appointments FROM appointments WHERE DATE(created_at) = CURDATE() AND status != 'Cancelled'";
+                            // Appointments scheduled for today (exclude cancelled)
+                            $sql = "SELECT COUNT(*) as total_appointments FROM appointments WHERE appointment_date = CURDATE() AND status != 'Cancelled'";
                             $result = mysqli_query($conn, $sql);
                             $row = mysqli_fetch_assoc($result);
                             $total_appointments = $row['total_appointments'];
@@ -91,8 +91,8 @@ include 'alert.php';
                         <div class="card info-card revenue-card">
 
                             <?php 
-                            // Get the number of concluded appointments today
-                            $sql = "SELECT COUNT(*) as total_concluded_appointments FROM appointments WHERE status = 'concluded' AND DATE(created_at) = CURDATE()";
+                            // Served today: concluded visits whose appointment date is today
+                            $sql = "SELECT COUNT(*) as total_concluded_appointments FROM appointments WHERE status = 'Concluded' AND appointment_date = CURDATE()";
                             $result = mysqli_query($conn, $sql);
                             $row = mysqli_fetch_assoc($result);
                             $total_concluded_appointments = $row['total_concluded_appointments'];
@@ -125,8 +125,8 @@ include 'alert.php';
                         <div class="card info-card customers-card">
 
                             <?php 
-                            // Get the total number of appointments (exclude cancelled)
-                            $sql = "SELECT COUNT(*) as total_appointments FROM appointments WHERE status != 'Cancelled'";
+                            // Active bookings scheduled for today (exclude cancelled; resets each day)
+                            $sql = "SELECT COUNT(*) as total_appointments FROM appointments WHERE appointment_date = CURDATE() AND status NOT IN ('Cancelled')";
                             $result = mysqli_query($conn, $sql);
                             $row = mysqli_fetch_assoc($result);
                             $total_appointments = $row['total_appointments'];
@@ -134,7 +134,7 @@ include 'alert.php';
 
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    Appointment Bookings
+                                    On Schedule <span>| Today</span>
                                 </h5>
 
                                 <div class="d-flex align-items-center">
@@ -143,7 +143,7 @@ include 'alert.php';
                                         <i class="bi bi-calendar-check"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6><?= $total_appointments == 0 ? '<small class="text-muted">No appointments booked</small>' : $total_appointments; ?>
+                                        <h6><?= $total_appointments == 0 ? '<small class="text-muted">None scheduled for today</small>' : $total_appointments; ?>
                                         </h6>
                                         <!-- <span class="text-success small pt-1 fw-bold">8%</span>
                                         <span class="text-muted small pt-2 ps-1">increase</span> -->
@@ -165,8 +165,9 @@ include 'alert.php';
                                 </h5>
 
                                 <?php
-                                // Compute today's slot availability
-                                $selected_date = date('M d,Y');
+                                // Today's slot availability (appointment_date stored as Y-m-d)
+                                $selected_date_ymd = date('Y-m-d');
+                                $selected_date_label = date('M d, Y', strtotime($selected_date_ymd));
 
                                 $time_slots = [
                                     '8:30 AM - 9:30 AM',
@@ -181,7 +182,7 @@ include 'alert.php';
 
                                 $booked_counts = [];
                                 if ($stmt = mysqli_prepare($conn, "SELECT time_slot, COUNT(*) as booked_count FROM appointments WHERE appointment_date = ? AND status != 'Cancelled' GROUP BY time_slot")) {
-                                    mysqli_stmt_bind_param($stmt, "s", $selected_date);
+                                    mysqli_stmt_bind_param($stmt, "s", $selected_date_ymd);
                                     mysqli_stmt_execute($stmt);
                                     $result = mysqli_stmt_get_result($stmt);
                                     while ($row = mysqli_fetch_assoc($result)) {
@@ -211,7 +212,7 @@ include 'alert.php';
                                 <div class="mb-2">
                                     <small class="text-muted">Availability for
                                         <span
-                                            class="fw-bold text-primary"><?= htmlspecialchars($selected_date); ?></span></small>
+                                            class="fw-bold text-primary"><?= htmlspecialchars($selected_date_label); ?></span></small>
                                 </div>
 
                                 <table class="table table-borderless datatable">

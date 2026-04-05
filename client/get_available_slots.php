@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['date'])) {
     ];
     
     // Get booked appointments for the selected date
-    $stmt = $conn->prepare("SELECT time_slot, COUNT(*) as booked_count FROM appointments WHERE appointment_date = ? GROUP BY time_slot");
+    $stmt = $conn->prepare("SELECT time_slot, COUNT(*) as booked_count FROM appointments WHERE appointment_date = ? AND status != 'Cancelled' GROUP BY time_slot");
     $stmt->bind_param("s", $selected_date);
     $stmt->execute();
     $result = $stmt->get_result();

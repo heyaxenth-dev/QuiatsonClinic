@@ -29,6 +29,7 @@ include 'alert.php';
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Regular Appointments</h5>
+                        <p class="text-muted small">Showing only appointments scheduled for today (<?= htmlspecialchars(date('F j, Y')); ?>). The list resets each calendar day.</p>
 
                         <!-- Table with stripped rows -->
                         <table class="table datatable">
@@ -53,7 +54,7 @@ include 'alert.php';
                                 <?php 
                                 $count = 0;
                                 // Fetch appointments from database
-                                $sql = "SELECT * FROM appointments WHERE status NOT IN ('Concluded', 'Cancelled') AND patient_type != 'senior_pwd' AND severity = 'Regular' ORDER BY created_at ASC";
+                                $sql = "SELECT * FROM appointments WHERE appointment_date = CURDATE() AND status NOT IN ('Concluded', 'Cancelled') AND patient_type != 'senior_pwd' AND severity = 'Regular' ORDER BY time_slot ASC, created_at ASC";
                                 $result = mysqli_query($conn, $sql);
                                 while ($row = mysqli_fetch_assoc($result)) {
 

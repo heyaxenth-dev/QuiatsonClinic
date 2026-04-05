@@ -26,14 +26,27 @@ function get_page_link($page_name) {
         <!-- End Dashboard Nav -->
 
         <li class="nav-item">
-            <a class="nav-link <?= ($current_page == 'appointments_urgent' || $current_page == 'appointments_regular' || $current_page == 'appointments_history') ? '' : 'collapsed' ?> "
+            <a class="nav-link <?= ($current_page == 'appointments_urgent' || $current_page == 'appointments_regular' || $current_page == 'appointments_today' || $current_page == 'appointments_history') ? '' : 'collapsed' ?> "
                 data-bs-toggle="collapse" href="#appointments-nav"
                 data-bs-toggle-tooltip="tooltip" data-bs-placement="right" 
-                title="Manage all patient appointments - view urgent/priority appointments, regular appointments, and appointment history">
+                title="Manage all patient appointments - view urgent/priority appointments, regular appointments, today's schedule, and appointment history">
                 <i class="bi bi-calendar4-week"></i><span>Appointments</span><i class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="appointments-nav"
-                class="nav-content collapse<?= $current_page == 'appointments_urgent' || $current_page == 'appointments_regular' || $current_page == 'appointments_history' ? 'show' : ''; ?>">
+                class="nav-content collapse<?= $current_page == 'appointments_urgent' || $current_page == 'appointments_regular' || $current_page == 'appointments_today' || $current_page == 'appointments_history' ? 'show' : ''; ?>">
+                <li>
+                    <a class="d-flex justify-content-between align-items-center <?= ($current_page == 'appointments_today') ? 'active' : '' ?>"
+                        href="<?= get_page_link('appointments_today')?>"
+                        data-bs-toggle="tooltip" data-bs-placement="right" title="View all patients scheduled for today. Reschedule, conclude, or print lab slips.">
+                        <span>
+                            <i class="bi bi-circle"></i>
+                            <span class="text-primary">Today</span>
+                        </span>
+                        <?php if (isset($todayCount) && $todayCount > 0): ?>
+                        <span class="badge bg-primary"><?= (int) $todayCount ?></span>
+                        <?php endif; ?>
+                    </a>
+                </li>
                 <li>
                     <a class="d-flex justify-content-between align-items-center <?= ($current_page == 'appointments_urgent') ? 'active' : '' ?>"
                         href="<?= get_page_link('appointments_urgent')?>"

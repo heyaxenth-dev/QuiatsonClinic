@@ -510,7 +510,7 @@ if ($is_reappointment && $original_appointment_id > 0) {
                                 <div class="row mt-2">
                                     <div class="col-md-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="symptom"
+                                            <input class="form-check-input" type="checkbox" name="symptom[]"
                                                 id="other_symptom" value="Other">
                                             <label class="form-check-label" for="other_symptom">Other</label>
                                         </div>
@@ -705,14 +705,14 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Handle "Other" symptom option - Define variables and function first
-    const otherSymptomRadio = document.getElementById('other_symptom');
+    const otherSymptomCheckbox = document.getElementById('other_symptom');
     const otherSymptomInput = document.getElementById('other_symptom_text');
     const otherSymptomContainer = document.getElementById('other_symptom_input_container');
 
     // Make toggle function available globally for history population
     function toggleOtherSymptomInput() {
-        if (otherSymptomRadio && otherSymptomContainer) {
-            if (otherSymptomRadio.checked) {
+        if (otherSymptomCheckbox && otherSymptomContainer) {
+            if (otherSymptomCheckbox.checked) {
                 otherSymptomContainer.style.display = 'block';
                 if (otherSymptomInput) {
                     otherSymptomInput.setAttribute('required', 'required');
@@ -769,13 +769,23 @@ document.addEventListener("DOMContentLoaded", function() {
         // Set symptoms (may be multiple, stored as comma-separated string)
         if (historyData.symptom) {
             const symptoms = historyData.symptom.split(',').map(s => s.trim()).filter(Boolean);
+            const matched = new Set();
             symptoms.forEach(sym => {
-                const symptomCheckbox = document.querySelector(
-                    `input[name="symptom[]"][value="${sym}"]`);
-                if (symptomCheckbox) {
-                    symptomCheckbox.checked = true;
-                }
+                document.querySelectorAll('input[name="symptom[]"]').forEach(cb => {
+                    if (cb.value === sym) {
+                        cb.checked = true;
+                        matched.add(sym);
+                    }
+                });
             });
+            const unmatched = symptoms.filter(s => !matched.has(s));
+            if (unmatched.length && otherSymptomCheckbox) {
+                otherSymptomCheckbox.checked = true;
+                if (otherSymptomInput) {
+                    otherSymptomInput.value = unmatched.join(', ');
+                }
+                toggleOtherSymptomInput();
+            }
         }
 
         // Show success message
@@ -926,27 +936,25 @@ document.addEventListener("DOMContentLoaded", function() {
     addClearFormButton();
 
     // Set up "Other" symptom option handlers (variables already defined above)
-    if (otherSymptomRadio && otherSymptomContainer) {
-        otherSymptomRadio.addEventListener('change', toggleOtherSymptomInput);
+    if (otherSymptomCheckbox && otherSymptomContainer) {
+        otherSymptomCheckbox.addEventListener('change', toggleOtherSymptomInput);
 
-        // Add change listeners to all symptom radios
-        document.querySelectorAll('input[name="symptom"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.id !== 'other_symptom') {
-                    otherSymptomContainer.style.display = 'none';
-                    otherSymptomInput.removeAttribute('required');
-                    otherSymptomInput.value = '';
-                } else {
+        // Reappointment: Lab Result Reading uses name="symptom" (single) — clear Other when that radio is chosen
+        const labResultReading = document.getElementById('lab_result_reading');
+        if (labResultReading) {
+            labResultReading.addEventListener('change', function() {
+                if (this.checked) {
+                    otherSymptomCheckbox.checked = false;
                     toggleOtherSymptomInput();
                 }
             });
-        });
+        }
 
-        // Handle form submission - replace "Other" with custom text if provided
+        // Handle form submission — submit custom text as symptom[] instead of literal "Other"
         const appointmentForm = document.getElementById('appointmentForm');
         if (appointmentForm) {
             appointmentForm.addEventListener('submit', function(e) {
-                if (otherSymptomRadio.checked) {
+                if (otherSymptomCheckbox.checked) {
                     if (!otherSymptomInput || !otherSymptomInput.value.trim()) {
                         e.preventDefault();
                         if (typeof Swal !== 'undefined') {
@@ -963,15 +971,13 @@ document.addEventListener("DOMContentLoaded", function() {
                         return false;
                     }
 
-                    // Create a hidden input with the custom symptom value
                     const hiddenInput = document.createElement('input');
                     hiddenInput.type = 'hidden';
-                    hiddenInput.name = 'symptom';
+                    hiddenInput.name = 'symptom[]';
                     hiddenInput.value = otherSymptomInput.value.trim();
                     this.appendChild(hiddenInput);
 
-                    // Remove the "Other" radio value
-                    otherSymptomRadio.disabled = true;
+                    otherSymptomCheckbox.disabled = true;
                 }
             });
         }

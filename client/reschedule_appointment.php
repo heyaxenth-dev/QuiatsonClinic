@@ -96,15 +96,15 @@ if (!empty($unavailableRow['count']) && (int)$unavailableRow['count'] > 0) {
     exit;
 }
 
-// Check capacity for the selected time slot (10 patients per slot)
-$check_stmt = $conn->prepare("SELECT COUNT(*) as booked_count FROM appointments WHERE appointment_date = ? AND time_slot = ? AND status != 'Cancelled'");
+// Check capacity for the selected time slot (10 patients per slot; exclude this appointment from the count)
+$check_stmt = $conn->prepare("SELECT COUNT(*) as booked_count FROM appointments WHERE appointment_date = ? AND time_slot = ? AND status != 'Cancelled' AND id != ?");
 if (!$check_stmt) {
     ob_end_clean();
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Database error (slot capacity): ' . $conn->error]);
     exit;
 }
-$check_stmt->bind_param("ss", $new_date, $new_time_slot);
+$check_stmt->bind_param("ssi", $new_date, $new_time_slot, $appointment_id);
 $check_stmt->execute();
 $check_result = $check_stmt->get_result();
 $booked_count = (int) $check_result->fetch_assoc()['booked_count'];

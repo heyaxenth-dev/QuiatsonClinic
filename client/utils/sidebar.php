@@ -11,28 +11,6 @@ function get_page_link($page_name) {
         return 'pages-error-404.html';
     }
 }
-
-$today = date('Y-m-d');
-$appointments = [];
-
-if ($user_id) {
-    $stmt = $conn->prepare("SELECT id, appointment_date, time_slot, status, symptom, patient_type, severity 
-                            FROM appointments 
-                            WHERE created_by = ? AND appointment_date = ? 
-                            ORDER BY time_slot ASC");
-    $stmt->bind_param("is", $user_id, $today);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $appointments[] = $row;
-    }
-    $stmt->close();
-}
-
-$total_appointments_today = count($appointments);
-
-// Optional badge count for today's appointments (set in specific pages like appointments_today.php)
-$today_appointments_badge = isset($total_appointments_today) ? (int) $total_appointments_today : null;
 ?>
 
 <!-- ======= Sidebar ======= -->
@@ -49,23 +27,6 @@ $today_appointments_badge = isset($total_appointments_today) ? (int) $total_appo
         <!-- End Home Nav -->
 
         <li class="nav-item">
-            <a class="nav-link d-flex align-items-center justify-content-between <?= ($current_page == 'appointments_today') ? '' : 'collapsed' ?> "
-                href="<?= get_page_link('appointments_today')?>" data-bs-toggle="tooltip" data-bs-placement="right"
-                title="View and manage your appointments scheduled for today. You can reschedule or cancel active appointments.">
-                <span>
-                    <i class="bi bi-calendar-day"></i>
-                    <span class="ms-1">Today's Appointments</span>
-                </span>
-                <?php if (!is_null($today_appointments_badge) && $today_appointments_badge >= 0): ?>
-                <span class="badge bg-primary rounded-pill">
-                    <?php echo $today_appointments_badge; ?>
-                </span>
-                <?php endif; ?>
-            </a>
-        </li>
-        <!-- End Today's Appointments Nav -->
-
-        <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'appointment') ? '' : 'collapsed' ?> "
                 href="<?= get_page_link('appointment')?>" data-bs-toggle="tooltip" data-bs-placement="right"
                 title="Book a new appointment. Select your preferred date and time, choose appointment type (regular or urgent), and provide reason for visit">
@@ -74,6 +35,15 @@ $today_appointments_badge = isset($total_appointments_today) ? (int) $total_appo
             </a>
         </li>
         <!-- End Appointment Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link <?= ($current_page == 'my_appointments') ? '' : 'collapsed' ?> "
+                href="<?= get_page_link('my_appointments')?>" data-bs-toggle="tooltip" data-bs-placement="right"
+                title="Reschedule, cancel, or update your Senior/PWD ID for active appointments">
+                <i class="bi bi-calendar-check"></i>
+                <span>My Appointments</span>
+            </a>
+        </li>
 
         <li class="nav-item">
             <a class="nav-link <?= ($current_page == 'lab_results') ? '' : 'collapsed' ?> "
