@@ -81,24 +81,24 @@ include 'alert.php';
                                         <span class="text-muted small pt-2 ps-1">increase</span> -->
                                     </div>
                                 </div>
-</div>
+                            </div>
                         </div>
                     </div>
                     <!-- End Appointments Card -->
 
                     <!-- Appointment Pendings Card -->
-                    <div class="col-xxl-4 col-md-6">
-                        <div class="card info-card revenue-card">
+                    <!-- <div class="col-xxl-4 col-md-6">
+                        <div class="card info-card revenue-card"> -->
 
-                            <?php 
+                    <?php 
                             // Served today: concluded visits whose appointment date is today
-                            $sql = "SELECT COUNT(*) as total_concluded_appointments FROM appointments WHERE status = 'Concluded' AND appointment_date = CURDATE()";
-                            $result = mysqli_query($conn, $sql);
-                            $row = mysqli_fetch_assoc($result);
-                            $total_concluded_appointments = $row['total_concluded_appointments'];
+                            // $sql = "SELECT COUNT(*) as total_concluded_appointments FROM appointments WHERE status = 'Concluded' AND appointment_date = CURDATE()";
+                            // $result = mysqli_query($conn, $sql);
+                            // $row = mysqli_fetch_assoc($result);
+                            // $total_concluded_appointments = $row['total_concluded_appointments'];
                             ?>
 
-                            <div class="card-body">
+                    <!-- <div class="card-body">
                                 <h5 class="card-title">
                                     Served <span>| Today</span>
                                 </h5>
@@ -110,14 +110,14 @@ include 'alert.php';
                                     </div>
                                     <div class="ps-3">
                                         <h6><?= $total_concluded_appointments == 0 ? '<small class="text-muted">No concluded appointments today</small>' : $total_concluded_appointments; ?>
-                                        </h6>
-                                        <!-- <span class="text-danger small pt-1 fw-bold">12%</span>
+                                        </h6> -->
+                    <!-- <span class="text-danger small pt-1 fw-bold">12%</span>
                                         <span class="text-muted small pt-2 ps-1">decrease</span> -->
-                                    </div>
+                    <!-- </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- End Appointment Pendings Card -->
 
                     <!-- Appointment Bookings Card -->

@@ -45,8 +45,8 @@ session_start();
                                 <div class="form-group">
                                     <label for="exampleInputEmail1" class="form-label">
                                         Username
-                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                           title="Enter the username you used when registering your admin account"></i>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                            title="Enter the username you used when registering your admin account"></i>
                                     </label>
                                     <input type="text" class="form-control form-control-lg" name="username"
                                         id="exampleInputEmail1" placeholder="Username" />
@@ -54,8 +54,8 @@ session_start();
                                 <div class="form-group" style="position: relative;">
                                     <label for="exampleInputPassword1" class="form-label">
                                         Password
-                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right" 
-                                           title="Enter your account password. Click the eye icon to show/hide your password."></i>
+                                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                                            title="Enter your account password. Click the eye icon to show/hide your password."></i>
                                     </label>
                                     <input type="password" class="form-control form-control-lg" name="password"
                                         id="exampleInputPassword1" placeholder="Password"
@@ -63,7 +63,7 @@ session_start();
 
                                     <!-- Eye Icon -->
                                     <a href="javascript:void(0)" id="togglePassword2"
-                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #333; text-decoration: none;"
+                                        style="position: absolute; right: 12px; top: 70%; transform: translateY(-50%); cursor: pointer; color: #333; text-decoration: none;"
                                         data-bs-toggle="tooltip" title="Click to show/hide password">
                                         <i class="bi bi-eye-slash"></i>
                                     </a>
